@@ -5,7 +5,7 @@ namespace Bissues.Models
 {
     public class AppUser : IdentityUser
     {
-        public bool IsAdmin { get; set; }
+        public bool IsAdmin { get; set; } = false;
         public AppUser()
         {
             

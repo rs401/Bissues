@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Bissues.Models
 {
-    public class Bissue
+    public class Bissue : BaseEntity
     {
         public int Id { get; set; }
         [Required]
