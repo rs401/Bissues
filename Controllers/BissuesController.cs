@@ -60,11 +60,10 @@ namespace Bissues.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,AppUserId,ProjectId,CreatedDate,ModifiedDate")] Bissue bissue)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,IsOpen,AppUserId,ProjectId,CreatedDate,ModifiedDate")] Bissue bissue)
         {
             if (ModelState.IsValid)
             {
-                /* Need to set AppUserId to current user */
                 _context.Add(bissue);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -97,7 +96,7 @@ namespace Bissues.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,AppUserId,ProjectId,CreatedDate,ModifiedDate")] Bissue bissue)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,IsOpen,AppUserId,ProjectId,CreatedDate,ModifiedDate")] Bissue bissue)
         {
             if (id != bissue.Id)
             {

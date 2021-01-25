@@ -19,6 +19,9 @@
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.IsOpen)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.AppUserId)
             </th>
             <th>
@@ -41,6 +44,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsOpen)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.AppUserId)
