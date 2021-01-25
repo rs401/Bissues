@@ -6,6 +6,7 @@ namespace Bissues.Models
     public class Message : BaseEntity
     {
         public int Id { get; set; }
+        [Required]
         public string Body { get; set; }
 
         /* FK AppUser the message belongs to */
