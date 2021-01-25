@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bissues.Data;
 using Bissues.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Bissues.Controllers
 {
@@ -46,6 +47,7 @@ namespace Bissues.Controllers
         }
 
         // GET: Bissues/Create
+        [Authorize]
         public IActionResult Create()
         {
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name");
@@ -55,12 +57,14 @@ namespace Bissues.Controllers
         // POST: Bissues/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Description,AppUserId,ProjectId,CreatedDate,ModifiedDate")] Bissue bissue)
         {
             if (ModelState.IsValid)
             {
+                /* Need to set AppUserId to current user */
                 _context.Add(bissue);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -70,6 +74,7 @@ namespace Bissues.Controllers
         }
 
         // GET: Bissues/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -89,6 +94,7 @@ namespace Bissues.Controllers
         // POST: Bissues/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,AppUserId,ProjectId,CreatedDate,ModifiedDate")] Bissue bissue)
@@ -123,6 +129,7 @@ namespace Bissues.Controllers
         }
 
         // GET: Bissues/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -142,6 +149,7 @@ namespace Bissues.Controllers
         }
 
         // POST: Bissues/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

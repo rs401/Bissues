@@ -58,6 +58,8 @@ namespace Bissues.Controllers
         {
             if (ModelState.IsValid)
             {
+                project.CreatedDate = DateTime.UtcNow;
+                project.ModifiedDate = DateTime.UtcNow;
                 _context.Add(project);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -97,6 +99,7 @@ namespace Bissues.Controllers
             {
                 try
                 {
+                    project.ModifiedDate = DateTime.UtcNow;
                     _context.Update(project);
                     await _context.SaveChangesAsync();
                 }
