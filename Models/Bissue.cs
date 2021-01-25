@@ -12,7 +12,7 @@ namespace Bissues.Models
         public string Title { get; set; }
         [Required]
         public string Description { get; set; }
-        public bool IsOpen { get; set; }
+        public bool IsOpen { get; set; } = true;
         public ICollection<Message> Messages { get; set; }
 
         /* FK Owner of the Bissue */
