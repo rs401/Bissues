@@ -5,10 +5,8 @@ namespace Bissues.Models
 {
     public class AppUser : IdentityUser
     {
-        public bool IsAdmin { get; set; } = false;
-        public AppUser()
-        {
-            
-        }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string DisaplayName { get; set; }
     }
 }

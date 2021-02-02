@@ -3,21 +3,26 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Bissues.Data.Migrations
 {
-    public partial class Modelsandtimestamps : Migration
+    public partial class first : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "Discriminator",
+                name: "DisaplayName",
                 table: "AspNetUsers",
                 type: "TEXT",
-                nullable: false,
-                defaultValue: "");
+                nullable: true);
 
-            migrationBuilder.AddColumn<bool>(
-                name: "IsAdmin",
+            migrationBuilder.AddColumn<string>(
+                name: "FirstName",
                 table: "AspNetUsers",
-                type: "INTEGER",
+                type: "TEXT",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "LastName",
+                table: "AspNetUsers",
+                type: "TEXT",
                 nullable: true);
 
             migrationBuilder.CreateTable(
@@ -43,6 +48,7 @@ namespace Bissues.Data.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Title = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
+                    IsOpen = table.Column<bool>(type: "INTEGER", nullable: false),
                     AppUserId = table.Column<int>(type: "INTEGER", nullable: false),
                     OwnerId = table.Column<string>(type: "TEXT", nullable: true),
                     ProjectId = table.Column<int>(type: "INTEGER", nullable: false),
@@ -129,11 +135,15 @@ namespace Bissues.Data.Migrations
                 name: "Projects");
 
             migrationBuilder.DropColumn(
-                name: "Discriminator",
+                name: "DisaplayName",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "IsAdmin",
+                name: "FirstName",
+                table: "AspNetUsers");
+
+            migrationBuilder.DropColumn(
+                name: "LastName",
                 table: "AspNetUsers");
         }
     }

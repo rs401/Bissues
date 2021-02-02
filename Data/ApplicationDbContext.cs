@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Bissues.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<AppUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -39,5 +39,7 @@ namespace Bissues.Data
 
             return base.SaveChanges();
         }
+
+        public DbSet<Bissues.Models.AppRole> AppRole { get; set; }
     }//END class ApplicationDbContext
 }
