@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -15,9 +15,10 @@ namespace Bissues.Data
             : base(options)
         {
         }
-        public DbSet<Project> Projects { get; set;}
-        public DbSet<Bissue> Bissues { get; set; }
-        public DbSet<Message> Messages { get; set; }
+        public DbSet<Bissues.Models.Project> Projects { get; set;}
+        public DbSet<Bissues.Models.Bissue> Bissues { get; set; }
+        public DbSet<Bissues.Models.Message> Messages { get; set; }
+        public DbSet<Bissues.Models.AppRole> AppRole { get; set; }
 
         public override int SaveChanges()
         {
@@ -40,6 +41,6 @@ namespace Bissues.Data
             return base.SaveChanges();
         }
 
-        public DbSet<Bissues.Models.AppRole> AppRole { get; set; }
+        
     }//END class ApplicationDbContext
 }
