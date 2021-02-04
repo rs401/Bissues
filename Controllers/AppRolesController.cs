@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using Bissues.Data;
 using Bissues.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Bissues.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AppRolesController : Controller
     {
         // private readonly ApplicationDbContext _context;
