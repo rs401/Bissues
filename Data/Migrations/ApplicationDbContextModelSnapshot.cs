@@ -221,6 +221,10 @@ namespace Bissues.Data.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("TEXT");
 
