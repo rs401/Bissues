@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Bissues.Data;
 using Bissues.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Dynamic;
 
 namespace Bissues.Controllers
 {
@@ -41,7 +42,14 @@ namespace Bissues.Controllers
                 return NotFound();
             }
 
-            return View(project);
+            /* Dynamic model to bundle the Projects Bissues with it. */
+            dynamic tmpmodel = new ExpandoObject();
+            tmpmodel.Project = project;
+            /* Get bissues if any */
+            ICollection<Bissue> bissues = _context.Bissues.Where(b => b.ProjectId == id).ToList();
+            tmpmodel.Bissues = bissues;
+
+            return View(tmpmodel);
         }
 
         // GET: Projects/Create

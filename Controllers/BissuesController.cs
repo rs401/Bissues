@@ -67,6 +67,9 @@ namespace Bissues.Controllers
                 bissue.CreatedDate = DateTime.UtcNow;
                 bissue.ModifiedDate = DateTime.UtcNow;
                 _context.Add(bissue);
+                var project = await _context.Projects.FindAsync(bissue.ProjectId);
+                project.ModifiedDate = DateTime.UtcNow;
+                _context.Update(project);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
