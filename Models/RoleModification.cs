@@ -2,6 +2,9 @@ using System.ComponentModel.DataAnnotations;
  
 namespace Bissues.Models
 {
+    /// <summary>
+    /// For internal use of editing roles, adding and removing users from a role
+    /// </summary>
     public class RoleModification
     {
         [Required]

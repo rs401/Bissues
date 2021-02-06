@@ -12,6 +12,9 @@ using System.Dynamic;
 
 namespace Bissues.Controllers
 {
+    /// <summary>
+    /// ProjectsController handles Projects requests
+    /// </summary>
     public class ProjectsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,12 +25,21 @@ namespace Bissues.Controllers
         }
 
         // GET: Projects
+        /// <summary>
+        /// Project Index GET View displays a list of all Projects
+        /// </summary>
+        /// <returns>Index view with a list of all Projects</returns>
         public async Task<IActionResult> Index()
         {
             return View(await _context.Projects.ToListAsync());
         }
 
         // GET: Projects/Details/5
+        /// <summary>
+        /// Project Details GET view displays Project details
+        /// </summary>
+        /// <param name="id">Project Id</param>
+        /// <returns>Details view with project details</returns>
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -54,6 +66,10 @@ namespace Bissues.Controllers
 
         // GET: Projects/Create
         [Authorize(Roles = "Admin")]
+        /// <summary>
+        /// Project Create GET view displays a form to create a Project, Only "Admin" role can create projects
+        /// </summary>
+        /// <returns>Project Create view</returns>
         public IActionResult Create()
         {
             return View();
@@ -65,6 +81,11 @@ namespace Bissues.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        /// <summary>
+        /// Project Create POST view takes a Project, sets created/modified dates and saves Project to db.
+        /// </summary>
+        /// <param name="project">The Project</param>
+        /// <returns>Create view</returns>
         public async Task<IActionResult> Create([Bind("Id,Name,Description,CreatedDate,ModifiedDate")] Project project)
         {
             if (ModelState.IsValid)
@@ -80,6 +101,11 @@ namespace Bissues.Controllers
 
         // GET: Projects/Edit/5
         [Authorize(Roles = "Admin")]
+        /// <summary>
+        /// Project Edit GET view displays form to edit Project
+        /// </summary>
+        /// <param name="id">Project Id</param>
+        /// <returns>Project Edit GET view</returns>
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -101,6 +127,12 @@ namespace Bissues.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        /// <summary>
+        /// Project Edit POST view takes the project and sets the ModifiedDate and updates the db
+        /// </summary>
+        /// <param name="id">Project Id</param>
+        /// <param name="project">Project model with edited information</param>
+        /// <returns>Edit view</returns>
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CreatedDate,ModifiedDate")] Project project)
         {
             if (id != project.Id)
@@ -134,6 +166,11 @@ namespace Bissues.Controllers
 
         // GET: Projects/Delete/5
         [Authorize(Roles = "Admin")]
+        /// <summary>
+        /// Project Delete GET view
+        /// </summary>
+        /// <param name="id">Project Id</param>
+        /// <returns>Delete view</returns>
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -155,6 +192,11 @@ namespace Bissues.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        /// <summary>
+        /// Project DeleteConfirmed POST view 
+        /// </summary>
+        /// <param name="id">Project Id</param>
+        /// <returns>Project Index view</returns>
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var project = await _context.Projects.FindAsync(id);

@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Bissues.Controllers
 {
+    /// <summary>
+    /// MessagesController handles Messages requests
+    /// </summary>
     public class MessagesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,6 +24,10 @@ namespace Bissues.Controllers
         }
 
         // GET: Messages
+        /// <summary>
+        /// Index returns the Messages Index view with a list of all messages. I should probably change this or remove it.
+        /// </summary>
+        /// <returns></returns>
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Messages.Include(m => m.Bissue);
@@ -28,6 +35,11 @@ namespace Bissues.Controllers
         }
 
         // GET: Messages/Details/5
+        /// <summary>
+        /// Details view I think I should also remove this
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -48,6 +60,10 @@ namespace Bissues.Controllers
 
         // GET: Messages/Create
         [Authorize]
+        /// <summary>
+        /// Message Create GET view displays a form to create a message.
+        /// </summary>
+        /// <returns>Create view displays a form to create a message</returns>
         public IActionResult Create()
         {
             ViewData["BissueId"] = new SelectList(_context.Bissues, "Id", "Description");
@@ -60,6 +76,11 @@ namespace Bissues.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        /// <summary>
+        /// Message Create POST takes a Message, sets the created/modified dates and saves to db. Need to add notification to Bissue owner
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Create([Bind("Id,Body,AppUserId,BissueId")] Message message)
         {
             if (ModelState.IsValid)
@@ -76,6 +97,11 @@ namespace Bissues.Controllers
 
         // GET: Messages/Edit/5
         [Authorize]
+        /// <summary>
+        /// Message Edit GET displays message form
+        /// </summary>
+        /// <param name="id">Message Id</param>
+        /// <returns>Edit view</returns>
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -98,6 +124,12 @@ namespace Bissues.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        /// <summary>
+        /// Message Edit POST 
+        /// </summary>
+        /// <param name="id">Message Id</param>
+        /// <param name="message">Message Body</param>
+        /// <returns>Message Edit view</returns>
         public async Task<IActionResult> Edit(int id, [Bind("Id,Body,AppUserId,BissueId,CreatedDate,ModifiedDate")] Message message)
         {
             if (id != message.Id)
@@ -131,6 +163,11 @@ namespace Bissues.Controllers
 
         // GET: Messages/Delete/5
         [Authorize]
+        /// <summary>
+        /// Message Delete GET view
+        /// </summary>
+        /// <param name="id">Message Id</param>
+        /// <returns>Message Delete view</returns>
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -153,6 +190,11 @@ namespace Bissues.Controllers
         [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        /// <summary>
+        /// Message DeleteConfirm POST
+        /// </summary>
+        /// <param name="id">Message Id</param>
+        /// <returns>Message Index view</returns>
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var message = await _context.Messages.FindAsync(id);

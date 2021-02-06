@@ -9,6 +9,9 @@ using Bissues.Models;
 
 namespace Bissues.Controllers
 {
+    /// <summary>
+    /// Home controller handles Home requests
+    /// </summary>
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

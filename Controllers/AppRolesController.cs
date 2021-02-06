@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.Authorization;
 namespace Bissues.Controllers
 {
     [Authorize(Roles = "Admin")]
+    /// <summary>
+    /// AppRolesController to handle AppRoles requests
+    /// </summary>
     public class AppRolesController : Controller
     {
         // private readonly ApplicationDbContext _context;
@@ -31,6 +34,10 @@ namespace Bissues.Controllers
         }
 
         // GET: AppRoles
+        /// <summary>
+        /// AppRoles Index
+        /// </summary>
+        /// <returns>Returns Index view with list of roles.</returns>
         public IActionResult Index()
         {
             return View(roleManager.Roles);
@@ -55,6 +62,10 @@ namespace Bissues.Controllers
         // }
 
         // GET: AppRoles/Create
+        /// <summary>
+        /// Create AppRole's
+        /// </summary>
+        /// <returns>Returns the Create view</returns>
         public IActionResult Create()
         {
             return View();
@@ -65,6 +76,11 @@ namespace Bissues.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        /// <summary>
+        /// Create AppRole POST
+        /// </summary>
+        /// <param name="appRole">The AppRole to be created.</param>
+        /// <returns>Returns the create view</returns>
         public async Task<IActionResult> Create([Bind("Id,RoleName")] AppRole appRole)
         {
             var roleExist = await roleManager.RoleExistsAsync(appRole.RoleName);
@@ -76,6 +92,11 @@ namespace Bissues.Controllers
         }
 
         // GET: AppRoles/Edit/5
+        /// <summary>
+        /// AppRole Edit GET, returns the Edit view with a RoleEdit model populated with members and non-members of the specified role
+        /// </summary>
+        /// <param name="id">The AppRole to be edited</param>
+        /// <returns>Returns the AppRoles Edit view with a created RoleEdit model</returns>
         public async Task<IActionResult> Edit(string id)
         {
             IdentityRole role = await roleManager.FindByIdAsync(id);
@@ -99,6 +120,11 @@ namespace Bissues.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        /// <summary>
+        /// AppRole Edit POST, takes in a RoleModification model and adds or removes users from said role
+        /// </summary>
+        /// <param name="model">The RoleModification model</param>
+        /// <returns>Success redirects to AppRoles Index, Failure returns to Role Edit view.</returns>
         public async Task<IActionResult> Edit(RoleModification model)
         {
             IdentityResult result;

@@ -21,6 +21,7 @@ namespace Bissues.Data
         public DbSet<Bissues.Models.Bissue> Bissues { get; set; }
         public DbSet<Bissues.Models.Message> Messages { get; set; }
         public DbSet<Bissues.Models.AppRole> AppRole { get; set; }
+        public DbSet<Bissues.Models.Notification> Notifications { get; set; }
 
         public override int SaveChanges()
         {

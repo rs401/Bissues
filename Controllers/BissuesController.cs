@@ -13,6 +13,9 @@ using System.Dynamic;
 
 namespace Bissues.Controllers
 {
+    /// <summary>
+    /// Bissues controller handles Bissue requests
+    /// </summary>
     public class BissuesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -23,6 +26,10 @@ namespace Bissues.Controllers
         }
 
         // GET: Bissues
+        /// <summary>
+        /// Bissues Index
+        /// </summary>
+        /// <returns>Returns Bissues Index view populated with a list of all Bissues</returns>
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Bissues.Include(b => b.Project);
@@ -30,6 +37,13 @@ namespace Bissues.Controllers
         }
 
         // GET: Bissues/Details/5
+        /// <summary>
+        /// Bissues Details view lists the details of the Bissue as well as all 
+        /// Messages related to the Bissue
+        /// </summary>
+        /// <param name="id">Bissue Id</param>
+        /// <returns>Details view lists the details of the Bissue as well as all 
+        /// Messages related to the Bissue</returns>
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -59,6 +73,10 @@ namespace Bissues.Controllers
 
         // GET: Bissues/Create
         [Authorize]
+        /// <summary>
+        /// Bissues Create GET view displays a form to create a Bissue
+        /// </summary>
+        /// <returns>Bissues Create view displays a form to create a Bissue</returns>
         public IActionResult Create()
         {
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name");
@@ -71,6 +89,13 @@ namespace Bissues.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        /// <summary>
+        /// Bissues Create POST takes a Bissue and saves the Bissue to the db 
+        /// and sets the created/modified date for the bissue as well as alters 
+        /// the Modified date of the related Project.
+        /// </summary>
+        /// <param name="bissue"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Create([Bind("Id,Title,Description,IsOpen,AppUserId,ProjectId,CreatedDate,ModifiedDate")] Bissue bissue)
         {
             if (ModelState.IsValid)
@@ -93,6 +118,9 @@ namespace Bissues.Controllers
         [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
+            /* Still need to figure out the issue with AppUsers not being set to 
+             * owners of things and make sure the authenticated user is either 
+             * the Bissue owner or an Admin to be able to edit or delete. */
             if (id == null)
             {
                 return NotFound();
