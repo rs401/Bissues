@@ -60,10 +60,12 @@ namespace Bissues.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Body,AppUserId,BissueId,CreatedDate,ModifiedDate")] Message message)
+        public async Task<IActionResult> Create([Bind("Id,Body,AppUserId,BissueId")] Message message)
         {
             if (ModelState.IsValid)
             {
+                message.CreatedDate = DateTime.UtcNow;
+                message.ModifiedDate = DateTime.UtcNow;
                 _context.Add(message);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

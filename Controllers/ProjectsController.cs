@@ -42,7 +42,7 @@ namespace Bissues.Controllers
                 return NotFound();
             }
 
-            /* Dynamic model to bundle the Projects Bissues with it. */
+            /* Dynamic model to bundle the Project's Bissues with it. */
             dynamic tmpmodel = new ExpandoObject();
             tmpmodel.Project = project;
             /* Get bissues if any */

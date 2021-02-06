@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Bissues.Data;
 using Bissues.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Dynamic;
 
 namespace Bissues.Controllers
 {
@@ -43,7 +45,16 @@ namespace Bissues.Controllers
                 return NotFound();
             }
 
-            return View(bissue);
+            /* Dynamic model to bundle the Bissue's Messages with it. */
+            dynamic tmpmodel = new ExpandoObject();
+            tmpmodel.Bissue = bissue;
+            /* Get bissues if any */
+            ICollection<Message> messages = _context.Messages.Where(m => m.BissueId == id).ToList();
+            tmpmodel.Messages = messages;
+
+            return View(tmpmodel);
+
+            // return View(bissue);
         }
 
         // GET: Bissues/Create
@@ -66,6 +77,7 @@ namespace Bissues.Controllers
             {
                 bissue.CreatedDate = DateTime.UtcNow;
                 bissue.ModifiedDate = DateTime.UtcNow;
+                
                 _context.Add(bissue);
                 var project = await _context.Projects.FindAsync(bissue.ProjectId);
                 project.ModifiedDate = DateTime.UtcNow;
