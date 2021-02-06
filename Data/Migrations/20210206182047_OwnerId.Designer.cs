@@ -3,14 +3,16 @@ using System;
 using Bissues.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Bissues.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210206182047_OwnerId")]
+    partial class OwnerId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,7 +111,7 @@ namespace Bissues.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("AppUser")
+                    b.Property<string>("AppUserId")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedDate")
@@ -125,9 +127,6 @@ namespace Bissues.Data.Migrations
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("OwnerId")
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("ProjectId")
                         .HasColumnType("INTEGER");
 
@@ -138,7 +137,7 @@ namespace Bissues.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("AppUserId");
 
                     b.HasIndex("ProjectId");
 
@@ -151,7 +150,7 @@ namespace Bissues.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("AppUser")
+                    b.Property<string>("AppUserId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("BissueId")
@@ -167,14 +166,11 @@ namespace Bissues.Data.Migrations
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("OwnerId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("BissueId");
+                    b.HasIndex("AppUserId");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("BissueId");
 
                     b.ToTable("Messages");
                 });
@@ -185,7 +181,7 @@ namespace Bissues.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("AppUser")
+                    b.Property<string>("AppUserId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("BissueId")
@@ -200,14 +196,11 @@ namespace Bissues.Data.Migrations
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("OwnerId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("BissueId");
+                    b.HasIndex("AppUserId");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("BissueId");
 
                     b.ToTable("Notifications");
                 });
@@ -217,9 +210,6 @@ namespace Bissues.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("AppUser")
-                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT");
@@ -236,12 +226,7 @@ namespace Bissues.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("OwnerId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
 
                     b.ToTable("Projects");
                 });
@@ -382,7 +367,7 @@ namespace Bissues.Data.Migrations
                 {
                     b.HasOne("Bissues.Models.AppUser", "Owner")
                         .WithMany("Bissues")
-                        .HasForeignKey("OwnerId");
+                        .HasForeignKey("AppUserId");
 
                     b.HasOne("Bissues.Models.Project", "Project")
                         .WithMany("Bissues")
@@ -397,15 +382,15 @@ namespace Bissues.Data.Migrations
 
             modelBuilder.Entity("Bissues.Models.Message", b =>
                 {
+                    b.HasOne("Bissues.Models.AppUser", "Owner")
+                        .WithMany("Messages")
+                        .HasForeignKey("AppUserId");
+
                     b.HasOne("Bissues.Models.Bissue", "Bissue")
                         .WithMany("Messages")
                         .HasForeignKey("BissueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Bissues.Models.AppUser", "Owner")
-                        .WithMany("Messages")
-                        .HasForeignKey("OwnerId");
 
                     b.Navigation("Bissue");
 
@@ -414,26 +399,17 @@ namespace Bissues.Data.Migrations
 
             modelBuilder.Entity("Bissues.Models.Notification", b =>
                 {
+                    b.HasOne("Bissues.Models.AppUser", "Owner")
+                        .WithMany("Notifications")
+                        .HasForeignKey("AppUserId");
+
                     b.HasOne("Bissues.Models.Bissue", "Bissue")
                         .WithMany()
                         .HasForeignKey("BissueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Bissues.Models.AppUser", "Owner")
-                        .WithMany("Notifications")
-                        .HasForeignKey("OwnerId");
-
                     b.Navigation("Bissue");
-
-                    b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("Bissues.Models.Project", b =>
-                {
-                    b.HasOne("Bissues.Models.AppUser", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId");
 
                     b.Navigation("Owner");
                 });

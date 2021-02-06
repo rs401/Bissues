@@ -17,5 +17,12 @@ namespace Bissues.Models
         /// </summary>
         /// <value>the DateTime the entity was modified</value>
         public DateTime ModifiedDate { get; set; }
+        /* FK Owner of the BaseEntity */
+        /// <summary>
+        /// Owner of the BaseEntity
+        /// </summary>
+        /// <value>Owner of the BaseEntity</value>
+        public string AppUser { get; set; }
+        public virtual AppUser Owner { get; set; }
     }
 }

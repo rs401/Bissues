@@ -35,12 +35,12 @@ namespace Bissues.Models
         public ICollection<Message> Messages { get; set; }
 
         /* FK Owner of the Bissue */
-        /// <summary>
-        /// Owner of the Bissue
-        /// </summary>
-        /// <value>Owner of the Bissue</value>
-        public int AppUserId { get; set; }
-        public virtual AppUser Owner { get; set; }
+        // /// <summary>
+        // /// Owner of the Bissue
+        // /// </summary>
+        // /// <value>Owner of the Bissue</value>
+        // public string AppUserId { get; set; }
+        // public virtual AppUser Owner { get; set; }
 
         /* FK Project the Bissue belongs to */
         /// <summary>

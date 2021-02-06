@@ -15,13 +15,13 @@ namespace Bissues.Models
         public bool IsUnread { get; set; } = true;
 
         //FK User and Bissue
-        /* FK AppUser the Notification belongs to */
-        /// <summary>
-        /// AppUser that created the bissue that was modified
-        /// </summary>
-        /// <value>AppUser that created the bissue that was modified</value>
-        public int AppUserId { get; set; }
-        public virtual AppUser Owner { get; set; }
+        // /* FK AppUser the Notification belongs to */
+        // /// <summary>
+        // /// AppUser that created the bissue that was modified
+        // /// </summary>
+        // /// <value>AppUser that created the bissue that was modified</value>
+        // public string AppUserId { get; set; }
+        // public virtual AppUser Owner { get; set; }
         /* FK Bissue the Notification belongs to */
         /// <summary>
         /// The Bissue that was modified

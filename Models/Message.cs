@@ -17,12 +17,12 @@ namespace Bissues.Models
         public string Body { get; set; }
 
         /* FK AppUser the message belongs to */
-        /// <summary>
-        /// The AppUser that created the message
-        /// </summary>
-        /// <value>The AppUser that created the message</value>
-        public int AppUserId { get; set; }
-        public virtual AppUser Owner { get; set; }
+        // /// <summary>
+        // /// The AppUser that created the message
+        // /// </summary>
+        // /// <value>The AppUser that created the message</value>
+        // public string AppUserId { get; set; }
+        // public virtual AppUser Owner { get; set; }
 
         /* FK Bissue the message belongs to */
         /// <summary>
