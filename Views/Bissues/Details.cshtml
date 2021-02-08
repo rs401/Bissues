@@ -59,9 +59,9 @@
     </p>
     @if (SignInManager.IsSignedIn(User) && User.Identity.Name == owner.UserName)
     {
-        <a asp-controller="Bissues" asp-action="Edit" asp-route-id="@Model.Bissue.Id">Edit</a> <span>|</span>
+        <button class = "btn btn-link" asp-controller="Bissues" asp-action="Edit" asp-route-id="@Model.Bissue.Id">Edit</button> <span>|</span>
     }
-    <a asp-action="Index">Back to List</a>
+    <button class = "btn btn-link" onclick="goBack()">Back</button>
 </div>
 <div>
     <h2>Messages</h2>
@@ -73,5 +73,11 @@
                 @msg.Body
             </p>
         }
+    }
+    else
+    {
+        <p>
+            No Messages yet!
+        </p>
     }
 </div>

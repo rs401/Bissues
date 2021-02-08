@@ -59,7 +59,14 @@ namespace Bissues.Controllers
             tmpmodel.Project = project;
             /* Get bissues if any */
             ICollection<Bissue> bissues = _context.Bissues.Where(b => b.ProjectId == id).ToList();
-            tmpmodel.Bissues = bissues;
+            if(bissues.Count <= 0)
+            {
+                tmpmodel.Bissues = null;
+            }
+            else
+            {
+                tmpmodel.Bissues = bissues;
+            }
 
             return View(tmpmodel);
         }

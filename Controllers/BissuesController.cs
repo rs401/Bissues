@@ -65,10 +65,10 @@ namespace Bissues.Controllers
 
             // Using ViewData to send Owner
             var user = await _userManager.FindByIdAsync(bissue.AppUserId);
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var currentUsername = !string.IsNullOrEmpty((string)userId)
-                ? userId
-                : "Anonymous";
+            // string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            // var currentUsername = !string.IsNullOrEmpty((string)userId)
+            //     ? userId
+            //     : "Anonymous";
 
             // AppUser user = _context.AppUsers.Where(au => au.Id == currentUsername).Select();
             // AppUser theUser = _context.AppUsers.Find(currentUsername);
@@ -81,7 +81,14 @@ namespace Bissues.Controllers
             tmpmodel.Bissue = bissue;
             /* Get bissues if any */
             ICollection<Message> messages = _context.Messages.Where(m => m.BissueId == id).ToList();
-            tmpmodel.Messages = messages;
+            if(messages.Count <= 0)
+            {
+                tmpmodel.Messages = null;
+            }
+            else
+            {
+                tmpmodel.Messages = messages;
+            }
 
             return View(tmpmodel);
 
