@@ -22,7 +22,7 @@ namespace Bissues.Models
         /// Owner of the BaseEntity
         /// </summary>
         /// <value>Owner of the BaseEntity</value>
-        public string AppUser { get; set; }
-        public virtual AppUser Owner { get; set; }
+        public string AppUserId { get; set; }
+        public virtual AppUser AppUser { get; set; }
     }
 }

@@ -26,6 +26,7 @@ namespace Bissues.Data
         public DbSet<Bissues.Models.Message> Messages { get; set; }
         public DbSet<Bissues.Models.AppRole> AppRole { get; set; }
         public DbSet<Bissues.Models.Notification> Notifications { get; set; }
+        public DbSet<Bissues.Models.AppUser> AppUsers { get; set; }
 
         public override int SaveChanges()
         {
@@ -87,7 +88,7 @@ namespace Bissues.Data
                 if (entityEntry.State == EntityState.Added)
                 {
                     ((BaseEntity)entityEntry.Entity).CreatedDate = DateTime.Now;
-                    ((BaseEntity)entityEntry.Entity).AppUser = currentUsername;
+                    ((BaseEntity)entityEntry.Entity).AppUserId = currentUsername;
                 }
             }
         }

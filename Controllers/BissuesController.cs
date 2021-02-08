@@ -10,6 +10,8 @@ using Bissues.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Dynamic;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace Bissues.Controllers
 {
@@ -19,10 +21,12 @@ namespace Bissues.Controllers
     public class BissuesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<AppUser> _userManager;
 
-        public BissuesController(ApplicationDbContext context)
+        public BissuesController(ApplicationDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Bissues
@@ -59,6 +63,19 @@ namespace Bissues.Controllers
                 return NotFound();
             }
 
+            // Using ViewData to send Owner
+            var user = await _userManager.FindByIdAsync(bissue.AppUserId);
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentUsername = !string.IsNullOrEmpty((string)userId)
+                ? userId
+                : "Anonymous";
+
+            // AppUser user = _context.AppUsers.Where(au => au.Id == currentUsername).Select();
+            // AppUser theUser = _context.AppUsers.Find(currentUsername);
+            if(user != null)
+            {
+                ViewData["Owner"] = bissue.AppUser;
+            }
             /* Dynamic model to bundle the Bissue's Messages with it. */
             dynamic tmpmodel = new ExpandoObject();
             tmpmodel.Bissue = bissue;
