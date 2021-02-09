@@ -64,9 +64,16 @@ namespace Bissues.Controllers
         /// Message Create GET view displays a form to create a message.
         /// </summary>
         /// <returns>Create view displays a form to create a message</returns>
-        public IActionResult Create()
+        public IActionResult Create(int? bid)
         {
-            ViewData["BissueId"] = new SelectList(_context.Bissues, "Id", "Description");
+            if(bid != null)
+            {
+                ViewData["BissueId"] = new SelectList(_context.Bissues.Where(b => b.Id == bid).ToList(), "Id", "Description");
+            }
+            else
+            {
+                ViewData["BissueId"] = new SelectList(_context.Bissues, "Id", "Description");
+            }
             return View();
         }
 
@@ -89,7 +96,8 @@ namespace Bissues.Controllers
                 message.ModifiedDate = DateTime.UtcNow;
                 _context.Add(message);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                // return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Bissues", new { id = message.BissueId});
             }
             ViewData["BissueId"] = new SelectList(_context.Bissues, "Id", "Description", message.BissueId);
             return View(message);

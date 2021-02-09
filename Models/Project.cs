@@ -29,11 +29,11 @@ namespace Bissues.Models
         /// Collection of Bissues related to the Project
         /// </summary>
         /// <value>Collection of Bissues related to the Project</value>
-        public virtual ICollection<Bissue> Bissues { get; set; }
+        public ICollection<Bissue> Bissues { get; set; }
         
-        public Project()
-        {
+        // public Project()
+        // {
             
-        }
+        // }
     }
 }

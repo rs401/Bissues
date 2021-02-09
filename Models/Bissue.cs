@@ -10,7 +10,7 @@ namespace Bissues.Models
     public class Bissue : BaseEntity
     {
         //https://www.youtube.com/watch?v=Pi46L7UYP8I&t=1079s
-        [Key]
+        // [Key]
         public int Id { get; set; }
         [Required]
         [MaxLength(50)]

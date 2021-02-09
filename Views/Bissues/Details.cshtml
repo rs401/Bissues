@@ -57,7 +57,7 @@
     <p>
         Need to also add || admin role check
     </p>
-    @if (SignInManager.IsSignedIn(User) && User.Identity.Name == owner.UserName)
+    @if (SignInManager.IsSignedIn(User) && User.Identity.Name == owner.UserName || User.IsInRole("Admin"))
     {
         <button class = "btn btn-link" asp-controller="Bissues" asp-action="Edit" asp-route-id="@Model.Bissue.Id">Edit</button> <span>|</span>
     }
@@ -65,6 +65,7 @@
 </div>
 <div>
     <h2>Messages</h2>
+    <a asp-controller="Messages" asp-route-bid="@Model.Bissue.Id" asp-action="Create">Reply</a>
     @if(Model.Messages != null)
     {
         @foreach(var msg in Model.Messages)

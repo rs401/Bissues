@@ -51,7 +51,7 @@
         <h2>
             Bissues
         </h2>
-        <a asp-controller="Bissues" asp-route-id="@Model.Project.Id" asp-action="Create">Create New Bissue</a>
+        <a asp-controller="Bissues" asp-route-pid="@Model.Project.Id" asp-action="Create">Create New Bissue</a>
         @if(Model.Bissues != null)
         {
             @foreach (var bissue in Model.Bissues)

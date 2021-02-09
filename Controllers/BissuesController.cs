@@ -101,11 +101,11 @@ namespace Bissues.Controllers
         /// Bissues Create GET view displays a form to create a Bissue
         /// </summary>
         /// <returns>Bissues Create view displays a form to create a Bissue</returns>
-        public IActionResult Create(int? id)
+        public IActionResult Create(int? pid)
         {
-            if(id != null)
+            if(pid != null)
             {
-                ViewData["ProjectId"] = new SelectList(_context.Projects.Where(p => p.Id == id).ToList(), "Id", "Name");
+                ViewData["ProjectId"] = new SelectList(_context.Projects.Where(p => p.Id == pid).ToList(), "Id", "Name");
             }
             else
             {
