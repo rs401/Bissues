@@ -28,47 +28,47 @@ namespace Bissues.Data
         public DbSet<Bissues.Models.Notification> Notifications { get; set; }
         public DbSet<Bissues.Models.AppUser> AppUsers { get; set; }
 
-        public override int SaveChanges()
-        {
-            // var entries = ChangeTracker
-            //     .Entries()
-            //     .Where(e => e.Entity is BaseEntity && (
-            //             e.State == EntityState.Added
-            //             || e.State == EntityState.Modified));
+        // public override int SaveChanges()
+        // {
+        //     var entries = ChangeTracker
+        //         .Entries()
+        //         .Where(e => e.Entity is BaseEntity && (
+        //                 e.State == EntityState.Added
+        //                 || e.State == EntityState.Modified));
 
-            // foreach (var entityEntry in entries)
-            // {
-            //     ((BaseEntity)entityEntry.Entity).ModifiedDate = DateTime.Now;
+        //     foreach (var entityEntry in entries)
+        //     {
+        //         ((BaseEntity)entityEntry.Entity).ModifiedDate = DateTime.Now;
 
-            //     if (entityEntry.State == EntityState.Added)
-            //     {
-            //         ((BaseEntity)entityEntry.Entity).CreatedDate = DateTime.Now;
-            //     }
-            // }
-            SetOwnerAndDates();
-            return base.SaveChanges();
-        }
+        //         if (entityEntry.State == EntityState.Added)
+        //         {
+        //             ((BaseEntity)entityEntry.Entity).CreatedDate = DateTime.Now;
+        //         }
+        //     }
+        //     // SetOwnerAndDates();
+        //     return base.SaveChanges();
+        // }
 
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            // var entries = ChangeTracker
-            //     .Entries()
-            //     .Where(e => e.Entity is BaseEntity && (
-            //             e.State == EntityState.Added
-            //             || e.State == EntityState.Modified));
+        // public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        // {
+        //     var entries = ChangeTracker
+        //         .Entries()
+        //         .Where(e => e.Entity is BaseEntity && (
+        //                 e.State == EntityState.Added
+        //                 || e.State == EntityState.Modified));
 
-            // foreach (var entityEntry in entries)
-            // {
-            //     ((BaseEntity)entityEntry.Entity).ModifiedDate = DateTime.Now;
+        //     foreach (var entityEntry in entries)
+        //     {
+        //         ((BaseEntity)entityEntry.Entity).ModifiedDate = DateTime.Now;
 
-            //     if (entityEntry.State == EntityState.Added)
-            //     {
-            //         ((BaseEntity)entityEntry.Entity).CreatedDate = DateTime.Now;
-            //     }
-            // }
-            SetOwnerAndDates();
-            return await base.SaveChangesAsync();
-        }
+        //         if (entityEntry.State == EntityState.Added)
+        //         {
+        //             ((BaseEntity)entityEntry.Entity).CreatedDate = DateTime.Now;
+        //         }
+        //     }
+        //     // SetOwnerAndDates();
+        //     return await base.SaveChangesAsync();
+        // }
 
         private void SetOwnerAndDates()
         {

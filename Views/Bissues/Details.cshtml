@@ -54,12 +54,9 @@
     </dl>
 </div>
 <div>
-    <p>
-        Need to also add || admin role check
-    </p>
     @if (SignInManager.IsSignedIn(User) && User.Identity.Name == owner.UserName || User.IsInRole("Admin"))
     {
-        <button class = "btn btn-link" asp-controller="Bissues" asp-action="Edit" asp-route-id="@Model.Bissue.Id">Edit</button> <span>|</span>
+        <a class = "btn btn-link" asp-controller="Bissues" asp-action="Edit" asp-route-id="@Model.Bissue.Id">Edit</a> <span>|</span>
     }
     <button class = "btn btn-link" onclick="goBack()">Back</button>
 </div>
