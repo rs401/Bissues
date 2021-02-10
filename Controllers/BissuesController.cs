@@ -127,12 +127,13 @@ namespace Bissues.Controllers
         /// </summary>
         /// <param name="bissue"></param>
         /// <returns></returns>
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,IsOpen,AppUserId,ProjectId,CreatedDate,ModifiedDate")] Bissue bissue)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,IsOpen,AppUserId,AppUser,ProjectId,CreatedDate,ModifiedDate")] Bissue bissue)
         {
             if (ModelState.IsValid)
             {
                 bissue.CreatedDate = DateTime.UtcNow;
                 bissue.ModifiedDate = DateTime.UtcNow;
+                bissue.AppUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 
                 _context.Add(bissue);
                 var project = await _context.Projects.FindAsync(bissue.ProjectId);
@@ -184,6 +185,8 @@ namespace Bissues.Controllers
                 try
                 {
                     bissue.ModifiedDate = DateTime.UtcNow;
+                    // Can't figure out what the foreign key constraint failed error is caused by
+                    // bissue.AppUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
                     _context.Update(bissue);
                     await _context.SaveChangesAsync();
                 }
