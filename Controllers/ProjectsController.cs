@@ -140,7 +140,7 @@ namespace Bissues.Controllers
         /// <param name="id">Project Id</param>
         /// <param name="project">Project model with edited information</param>
         /// <returns>Edit view</returns>
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CreatedDate,ModifiedDate")] Project project)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,CreatedDate,ModifiedDate")] Project project)
         {
             if (id != project.Id)
             {
