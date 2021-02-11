@@ -36,8 +36,8 @@ namespace Bissues.Controllers
         /// <returns>Returns Bissues Index view populated with a list of all Bissues</returns>
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Bissues.Include(b => b.Project);
-            return View(await applicationDbContext.ToListAsync());
+            var bissues = await _context.Bissues.Include(b => b.Project).OrderByDescending(b => b.IsOpen).ThenByDescending(b => b.ModifiedDate).ToListAsync();
+            return View(bissues);
         }
 
         // GET: Bissues/Details/5
