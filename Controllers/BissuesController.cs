@@ -72,8 +72,7 @@ namespace Bissues.Controllers
 
             // AppUser user = _context.AppUsers.Where(au => au.Id == currentUsername).Select();
             // AppUser theUser = _context.AppUsers.Find(currentUsername);
-            System.Console.WriteLine("**********************************");
-            System.Console.WriteLine(user);
+            
             if(user != null)
             {
                 ViewData["Owner"] = bissue.AppUser;
