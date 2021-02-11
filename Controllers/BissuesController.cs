@@ -186,6 +186,8 @@ namespace Bissues.Controllers
                 {
                     bissue.ModifiedDate = DateTime.UtcNow;
                     // Can't figure out what the foreign key constraint failed error is caused by
+                    System.Console.WriteLine("**********************************");
+                    System.Console.WriteLine(bissue.ProjectId);
                     // bissue.AppUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
                     _context.Update(bissue);
                     await _context.SaveChangesAsync();
