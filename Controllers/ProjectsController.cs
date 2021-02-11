@@ -58,7 +58,7 @@ namespace Bissues.Controllers
             dynamic tmpmodel = new ExpandoObject();
             tmpmodel.Project = project;
             /* Get bissues if any */
-            ICollection<Bissue> bissues = _context.Bissues.Where(b => b.ProjectId == id).ToList();
+            ICollection<Bissue> bissues = _context.Bissues.Where(b => b.ProjectId == id).OrderByDescending(b => b.IsOpen).ThenByDescending(b => b.ModifiedDate).ToList();
             if(bissues.Count <= 0)
             {
                 tmpmodel.Bissues = null;

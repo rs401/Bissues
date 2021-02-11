@@ -59,7 +59,16 @@
                 <div class = "card">
                     <a asp-controller="Bissues" asp-action="Details" asp-route-id="@bissue.Id" class = "btn text-left text-decoration-none">
                         <div class="card-body">
-                            <h5 class="card-title">@bissue.Title</h5>
+                            <p class="card-title"><b>@bissue.Title</b> 
+                                @if(bissue.IsOpen)
+                                {
+                                    <span class="text-success">Open</span>
+                                }
+                                else
+                                {
+                                    <span class="text-danger">Closed</span>
+                                }
+                            </p>
                             <p class="card-text">@bissue.Description</p>
                         </div>
                     </a>
