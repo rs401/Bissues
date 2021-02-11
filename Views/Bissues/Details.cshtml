@@ -54,7 +54,7 @@
     </dl>
 </div>
 <div>
-    @if (SignInManager.IsSignedIn(User) && (User.Identity.Name == owner.UserName || User.IsInRole("Admin")))
+    @if (SignInManager.IsSignedIn(User) && User.Identity.Name == owner.UserName || User.IsInRole("Admin"))
     {
         <a class = "btn btn-link" asp-controller="Bissues" asp-action="Edit" asp-route-id="@Model.Bissue.Id">Edit</a> <span>|</span>
     }

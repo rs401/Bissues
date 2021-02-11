@@ -72,6 +72,8 @@ namespace Bissues.Controllers
 
             // AppUser user = _context.AppUsers.Where(au => au.Id == currentUsername).Select();
             // AppUser theUser = _context.AppUsers.Find(currentUsername);
+            System.Console.WriteLine("**********************************");
+            System.Console.WriteLine(user);
             if(user != null)
             {
                 ViewData["Owner"] = bissue.AppUser;
@@ -185,10 +187,7 @@ namespace Bissues.Controllers
                 try
                 {
                     bissue.ModifiedDate = DateTime.UtcNow;
-                    // Can't figure out what the foreign key constraint failed error is caused by
-                    System.Console.WriteLine("**********************************");
-                    System.Console.WriteLine(bissue.ProjectId);
-                    // bissue.AppUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                    bissue.AppUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
                     _context.Update(bissue);
                     await _context.SaveChangesAsync();
                 }
