@@ -141,7 +141,8 @@ namespace Bissues.Controllers
                 project.ModifiedDate = DateTime.UtcNow;
                 _context.Update(project);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                // return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Projects", new { id = bissue.ProjectId });
             }
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", bissue.ProjectId);
             return View(bissue);
@@ -174,7 +175,7 @@ namespace Bissues.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,IsOpen,AppUserId,ProjectId,CreatedDate,ModifiedDate")] Bissue bissue)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,IsOpen,AppUserId,AppUser,ProjectId,CreatedDate,ModifiedDate")] Bissue bissue)
         {
             if (id != bissue.Id)
             {

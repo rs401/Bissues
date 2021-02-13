@@ -92,7 +92,7 @@ namespace Bissues.Controllers
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public async Task<IActionResult> Create([Bind("Id,Body,AppUserId,BissueId")] Message message)
+        public async Task<IActionResult> Create([Bind("Id,Body,AppUserId,AppUser,BissueId")] Message message)
         {
             if (ModelState.IsValid)
             {
@@ -147,7 +147,7 @@ namespace Bissues.Controllers
         /// <param name="id">Message Id</param>
         /// <param name="message">Message Body</param>
         /// <returns>Message Edit view</returns>
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Body,AppUserId,BissueId,CreatedDate,ModifiedDate")] Message message)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Body,AppUserId,AppUser,BissueId,CreatedDate,ModifiedDate")] Message message)
         {
             if (id != message.Id)
             {
@@ -158,6 +158,8 @@ namespace Bissues.Controllers
             {
                 try
                 {
+                    message.ModifiedDate = DateTime.UtcNow;
+                    message.AppUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
                     _context.Update(message);
                     await _context.SaveChangesAsync();
                 }
@@ -172,7 +174,8 @@ namespace Bissues.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                // return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Bissues", new { id = message.BissueId });
             }
             ViewData["BissueId"] = new SelectList(_context.Bissues, "Id", "Description", message.BissueId);
             return View(message);
