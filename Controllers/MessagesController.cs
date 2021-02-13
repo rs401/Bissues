@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Bissues.Data;
 using Bissues.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace Bissues.Controllers
 {
@@ -17,10 +19,12 @@ namespace Bissues.Controllers
     public class MessagesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<AppUser> _userManager;
 
-        public MessagesController(ApplicationDbContext context)
+        public MessagesController(ApplicationDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Messages
@@ -94,9 +98,14 @@ namespace Bissues.Controllers
             {
                 message.CreatedDate = DateTime.UtcNow;
                 message.ModifiedDate = DateTime.UtcNow;
+                message.AppUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 _context.Add(message);
+                var bissue = await _context.Bissues.FindAsync(message.BissueId);
+                bissue.ModifiedDate = DateTime.UtcNow;
+                _context.Update(bissue);
                 await _context.SaveChangesAsync();
                 // return RedirectToAction(nameof(Index));
+                //public virtual RedirectToActionResult RedirectToActionPermanent(string actionName, string controllerName, object routeValues);
                 return RedirectToAction("Details", "Bissues", new { id = message.BissueId});
             }
             ViewData["BissueId"] = new SelectList(_context.Bissues, "Id", "Description", message.BissueId);
