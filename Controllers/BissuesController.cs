@@ -165,6 +165,9 @@ namespace Bissues.Controllers
             {
                 return NotFound();
             }
+            //Passing the appuserid of the owner
+            ViewData["AppUserId"] = bissue.AppUserId;
+            ViewData["CreatedDate"] = bissue.CreatedDate;
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", bissue.ProjectId);
             return View(bissue);
         }
@@ -187,7 +190,6 @@ namespace Bissues.Controllers
                 try
                 {
                     bissue.ModifiedDate = DateTime.UtcNow;
-                    bissue.AppUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
                     _context.Update(bissue);
                     await _context.SaveChangesAsync();
                 }

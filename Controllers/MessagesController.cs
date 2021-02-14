@@ -131,6 +131,8 @@ namespace Bissues.Controllers
             {
                 return NotFound();
             }
+            ViewData["AppUserId"] = message.AppUserId;
+            ViewData["CreatedDate"] = message.CreatedDate;
             ViewData["BissueId"] = new SelectList(_context.Bissues, "Id", "Description", message.BissueId);
             return View(message);
         }
@@ -159,7 +161,6 @@ namespace Bissues.Controllers
                 try
                 {
                     message.ModifiedDate = DateTime.UtcNow;
-                    message.AppUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
                     _context.Update(message);
                     await _context.SaveChangesAsync();
                 }

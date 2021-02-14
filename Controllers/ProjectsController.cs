@@ -125,6 +125,7 @@ namespace Bissues.Controllers
             {
                 return NotFound();
             }
+            ViewData["CreatedDate"] = project.CreatedDate;
             return View(project);
         }
 
