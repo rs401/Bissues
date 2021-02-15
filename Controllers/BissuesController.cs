@@ -152,9 +152,9 @@ namespace Bissues.Controllers
         [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
-            /* Still need to figure out the issue with AppUsers not being set to 
-             * owners of things and make sure the authenticated user is either 
-             * the Bissue owner or an Admin to be able to edit or delete. */
+            /* Still need to verify user is owner
+             * await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+             * */
             if (id == null)
             {
                 return NotFound();
@@ -165,6 +165,17 @@ namespace Bissues.Controllers
             {
                 return NotFound();
             }
+            // Verify user is owner or admin
+            var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if(reqUser.Id != bissue.AppUserId && !User.IsInRole("Admin"))
+            {
+                System.Console.WriteLine(new string('-',40));
+                System.Console.WriteLine($"{reqUser.Id} != {bissue.AppUserId}");
+                // return new UnauthorizedResult();
+                // return Unauthorized();
+                return new ForbidResult();
+            }
+            
             //Passing the appuserid of the owner
             ViewData["AppUserId"] = bissue.AppUserId;
             ViewData["CreatedDate"] = bissue.CreatedDate;
