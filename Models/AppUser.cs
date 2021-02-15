@@ -23,7 +23,7 @@ namespace Bissues.Models
         /// The AppUser's Display Name
         /// </summary>
         /// <value>The AppUser's Display Name</value>
-        public string DisaplayName { get; set; }
+        public string DisplayName { get; set; }
         /// <summary>
         /// Collection of Bissues belonging to the user
         /// </summary>
