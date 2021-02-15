@@ -67,9 +67,12 @@
     {
         @foreach(var msg in Model.Messages)
         {
-            <p>
-                @msg.Body
-            </p>
+            <div class = "card">
+                <div class = "card-body">
+                    <p class = "card-title"><small>@msg.AppUser.DisplayName</small></p>
+                    <p class = "card-text">@msg.Body</p>
+                </div>
+            </div>
         }
     }
     else

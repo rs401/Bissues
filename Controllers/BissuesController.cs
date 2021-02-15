@@ -81,7 +81,7 @@ namespace Bissues.Controllers
             dynamic tmpmodel = new ExpandoObject();
             tmpmodel.Bissue = bissue;
             /* Get bissues if any */
-            ICollection<Message> messages = _context.Messages.Where(m => m.BissueId == id).ToList();
+            ICollection<Message> messages = _context.Messages.Where(m => m.BissueId == id).Include(m => m.AppUser).ToList();
             if(messages.Count <= 0)
             {
                 tmpmodel.Messages = null;
