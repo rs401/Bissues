@@ -56,7 +56,7 @@
         {
             @foreach (var bissue in Model.Bissues)
             {
-                <div class = "card">
+                <div class = "card mb-2 text-dark">
                     <a asp-controller="Bissues" asp-action="Details" asp-route-id="@bissue.Id" class = "btn text-left text-decoration-none">
                         <div class="card-body">
                             <p class="card-title"><b>@bissue.Title</b> 
