@@ -72,7 +72,7 @@ namespace Bissues.Controllers
         {
             if(bid != null)
             {
-                ViewData["BissueId"] = new SelectList(_context.Bissues.Where(b => b.Id == bid).ToList(), "Id", "Description");
+                ViewData["BissueId"] = new SelectList(_context.Bissues.Where(b => b.Id == bid).ToList(), "Id", "Title");
             }
             else
             {
