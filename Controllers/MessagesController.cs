@@ -28,6 +28,7 @@ namespace Bissues.Controllers
         }
 
         // GET: Messages
+        [Authorize(Roles = "Admin")]
         /// <summary>
         /// Index returns the Messages Index view with a list of all messages. I should probably change this or remove it.
         /// </summary>
@@ -100,9 +101,19 @@ namespace Bissues.Controllers
                 message.ModifiedDate = DateTime.UtcNow;
                 message.AppUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 _context.Add(message);
+                // Update Bissue modified date
                 var bissue = await _context.Bissues.FindAsync(message.BissueId);
                 bissue.ModifiedDate = DateTime.UtcNow;
                 _context.Update(bissue);
+                // Construct notification
+                Notification notification = new Notification();
+                notification.AppUser = bissue.AppUser;
+                notification.AppUserId = bissue.AppUserId;
+                notification.Bissue = bissue;
+                notification.BissueId = bissue.Id;
+                notification.CreatedDate = DateTime.UtcNow;
+                notification.ModifiedDate = DateTime.UtcNow;
+                _context.Add(notification);
                 await _context.SaveChangesAsync();
                 // return RedirectToAction(nameof(Index));
                 //public virtual RedirectToActionResult RedirectToActionPermanent(string actionName, string controllerName, object routeValues);
@@ -170,6 +181,19 @@ namespace Bissues.Controllers
                 {
                     message.ModifiedDate = DateTime.UtcNow;
                     _context.Update(message);
+                    // Update Bissue modified date
+                    var bissue = await _context.Bissues.FindAsync(message.BissueId);
+                    bissue.ModifiedDate = DateTime.UtcNow;
+                    _context.Update(bissue);
+                    // Construct notification
+                    Notification notification = new Notification();
+                    notification.AppUser = bissue.AppUser;
+                    notification.AppUserId = bissue.AppUserId;
+                    notification.Bissue = bissue;
+                    notification.BissueId = bissue.Id;
+                    notification.CreatedDate = DateTime.UtcNow;
+                    notification.ModifiedDate = DateTime.UtcNow;
+                    _context.Add(notification);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -191,7 +215,7 @@ namespace Bissues.Controllers
         }
 
         // GET: Messages/Delete/5
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         /// <summary>
         /// Message Delete GET view
         /// </summary>
@@ -216,7 +240,7 @@ namespace Bissues.Controllers
         }
 
         // POST: Messages/Delete/5
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         /// <summary>
