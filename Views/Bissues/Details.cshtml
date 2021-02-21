@@ -9,49 +9,27 @@
     var owner = ViewData["Owner"] as Bissues.Models.AppUser;
 }
 
-<h1>Details</h1>
+<a class="text-light" asp-controller="Projects" asp-action="Details" asp-route-id="@Model.Bissue.Project.Id">Project: @Model.Bissue.Project.Name</a>
 
 <div>
-    <h4>Bissue</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            Title
-        </dt>
-        <dd class = "col-sm-10">
-            @Model.Bissue.Title
-        </dd>
-        <dt class = "col-sm-2">
-            Description
-        </dt>
-        <dd class = "description col-sm-10">
-            @Model.Bissue.Description
-        </dd>
-        <dt class = "col-sm-2">
-            IsOpen
-        </dt>
-        <dd class = "col-sm-10">
-            @Model.Bissue.IsOpen
-        </dd>
-        <dt class = "col-sm-2">
-            Project
-        </dt>
-        <dd class = "col-sm-10">
-            @Model.Bissue.Project.Name
-        </dd>
-        <dt class = "col-sm-2">
-            Created
-        </dt>
-        <dd class = "col-sm-10">
-            @Model.Bissue.CreatedDate.ToString("MMM dd, yyyy")
-        </dd>
-        <dt class = "col-sm-2">
-            Modified
-        </dt>
-        <dd class = "col-sm-10">
-            @Model.Bissue.ModifiedDate.ToString("MMM dd, yyyy")
-        </dd>
-    </dl>
+    <h2>Bissue: @Model.Bissue.Title</h2>
+    User: @Model.Bissue.AppUser.DisplayName <br />
+    @if(@Model.Bissue.IsOpen)
+    {
+        <span class="text-success">Open</span>
+    }
+    else
+    {
+        <span class="text-danger">Closed</span>
+    }
+    <small>Created: @Model.Bissue.CreatedDate.ToString("MMM dd, yyyy hh:mm tt") | Last Modified: @Model.Bissue.ModifiedDate.ToString("MMM dd, yyyy hh:mm tt")</small>
+    <hr class="border-light" />
+    
+    <div class="description pl-md-4 pr-md-4 pb-md-3 mb-md-2">
+        <h5>Description:</h5>
+        @Model.Bissue.Description
+    </div>
+    
 </div>
 <div>
     @if (SignInManager.IsSignedIn(User) && User.Identity.Name == owner.UserName || User.IsInRole("Admin"))
