@@ -192,6 +192,13 @@ namespace Bissues.Controllers
                 return NotFound();
             }
 
+            // Verify user is owner or admin
+            var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if(reqUser.Id != bissue.AppUserId && !User.IsInRole("Admin"))
+            {
+                return new ForbidResult();
+            }
+
             if (ModelState.IsValid)
             {
                 try
