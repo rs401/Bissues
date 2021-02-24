@@ -169,10 +169,6 @@ namespace Bissues.Controllers
             var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if(reqUser.Id != bissue.AppUserId && !User.IsInRole("Admin"))
             {
-                System.Console.WriteLine(new string('-',40));
-                System.Console.WriteLine($"{reqUser.Id} != {bissue.AppUserId}");
-                // return new UnauthorizedResult();
-                // return Unauthorized();
                 return new ForbidResult();
             }
             
@@ -238,6 +234,13 @@ namespace Bissues.Controllers
                 return NotFound();
             }
 
+            // Verify user is owner or admin
+            var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if(reqUser.Id != bissue.AppUserId && !User.IsInRole("Admin"))
+            {
+                return new ForbidResult();
+            }
+
             return View(bissue);
         }
 
@@ -248,6 +251,12 @@ namespace Bissues.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var bissue = await _context.Bissues.FindAsync(id);
+            // Verify user is owner or admin
+            var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if(reqUser.Id != bissue.AppUserId && !User.IsInRole("Admin"))
+            {
+                return new ForbidResult();
+            }
             _context.Bissues.Remove(bissue);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
