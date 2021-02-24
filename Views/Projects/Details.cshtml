@@ -8,37 +8,14 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
-
 <div>
-    <h4>Project</h4>
+    <small class="text-muted">Project</small>
+    <p class="display-4">@Model.Project.Name</p>
+    <small>Created: @Model.Project.CreatedDate.ToString("MMM dd, yyyy") - Last Modified: @Model.Project.ModifiedDate.ToString("MMM dd, yyyy")</small>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            Project Name
-        </dt>
-        <dd class = "col-sm-10">
-            @Model.Project.Name
-        </dd>
-        <dt class = "col-sm-2">
-            Description
-        </dt>
-        <dd class = "description col-sm-10">
-            @Model.Project.Description
-        </dd>
-        <dt class = "col-sm-2">
-            CreatedDate
-        </dt>
-        <dd class = "col-sm-10">
-            @Model.Project.CreatedDate.ToString("MMM dd, yyyy")
-        </dd>
-        <dt class = "col-sm-2">
-            ModifiedDate
-        </dt>
-        <dd class = "col-sm-10">
-            @Model.Project.ModifiedDate.ToString("MMM dd, yyyy")
-        </dd>
-    </dl>
+    <small class="text-muted">Description</small>
+    <p>@Model.Project.Description</p>
+    
 </div>
 <div>
     @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
@@ -51,7 +28,7 @@
         <h2>
             Bissues
         </h2>
-        <a asp-controller="Bissues" asp-route-pid="@Model.Project.Id" asp-action="Create">Create New Bissue</a>
+        <a class="btn btn-primary mb-md-3" asp-controller="Bissues" asp-route-pid="@Model.Project.Id" asp-action="Create">Create New Bissue</a>
         @if(Model.Bissues != null)
         {
             @foreach (var bissue in Model.Bissues)

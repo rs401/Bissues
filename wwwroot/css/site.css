@@ -1,6 +1,11 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
-
+:root {
+  --primary-bg-color: #003946;
+  --primary-fg-color: #e5e5e5;
+  --secondary-bg-color: #2c0800;
+  --secondary-fg-color: #006379;
+}
 a.navbar-brand {
   white-space: normal;
   text-align: center;
@@ -9,13 +14,13 @@ a.navbar-brand {
 
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+  color: var(--secondary-fg-color);
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+  color: var(--primary-fg-color);
+  background-color: var(--secondary-fg-color);
+  border-color: var(--secondary-fg-color);
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
@@ -36,10 +41,10 @@ html {
 }
 
 .border-top {
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px solid var(--primary-fg-color);
 }
 .border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--primary-fg-color);
 }
 
 .box-shadow {
@@ -56,13 +61,13 @@ button.accept-policy {
 html {
   position: relative;
   min-height: 100%;
-  background-color: #00242C !important;
+  background-color: var(--primary-bg-color) !important;
 }
 
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
-  background-color: #00242C !important;
+  background-color: var(--primary-bg-color) !important;
 }
 .footer {
   position: absolute;
@@ -75,4 +80,10 @@ body {
 /* New line, carriage return, line feed, for descriptions. */
 .description {
   white-space: pre-line;
+}
+
+hr { 
+  background-color: var(--primary-fg-color);
+  height: 1px;
+  border: 0;
 }
