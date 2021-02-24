@@ -175,7 +175,12 @@ namespace Bissues.Controllers
             {
                 return NotFound();
             }
-
+            // Authorization
+            var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if(reqUser.Id != message.AppUserId && !User.IsInRole("Admin"))
+            {
+                return new ForbidResult();
+            }
             if (ModelState.IsValid)
             {
                 try
@@ -235,6 +240,13 @@ namespace Bissues.Controllers
             if (message == null)
             {
                 return NotFound();
+            }
+
+            // Authorization
+            var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if(reqUser.Id != message.AppUserId && !User.IsInRole("Admin"))
+            {
+                return new ForbidResult();
             }
 
             return View(message);
