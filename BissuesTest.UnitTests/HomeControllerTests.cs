@@ -36,13 +36,26 @@ namespace BissuesTest.UnitTests
                 response.Content.Headers.ContentType.ToString());
         }
 
-
-        [Fact]
-        public void Test1()
+        [Theory]
+        [InlineData("/Home/Fail")]
+        public async Task NotFoundErrorTest(string url)
         {
             // Arrange
+            var client = _factory.CreateClient();
+
             // Act
+            var response = await client.GetAsync(url);
+
             // Assert
+            Assert.Equal(System.Net.HttpStatusCode.NotFound,response.StatusCode);
         }
+
+        // [Fact]
+        // public void Test1()
+        // {
+        //     // Arrange
+        //     // Act
+        //     // Assert
+        // }
     }
 }
