@@ -6,6 +6,7 @@ project.lock.json
 nupkg/
 *.BAK
 notes.md
+app.db
 
 # Visual Studio Code
 .vscode
