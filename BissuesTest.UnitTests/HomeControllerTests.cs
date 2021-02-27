@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Bissues;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
-
 using Xunit;
 
 namespace BissuesTest.UnitTests
