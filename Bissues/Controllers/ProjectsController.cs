@@ -31,7 +31,7 @@ namespace Bissues.Controllers
         /// <returns>Index view with a list of all Projects</returns>
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Projects.ToListAsync());
+            return View(await _context.Projects.Include("Bissues").ToListAsync());
         }
 
         // GET: Projects/Details/5
