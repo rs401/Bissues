@@ -20,7 +20,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/rs401/Bissues">
-    <img src="img/logo.svg" alt="Logo">
+    <img src="img/logo2.svg" alt="Logo">
   </a>
 
   <h3 align="center">Bissues</h3>
@@ -135,7 +135,7 @@ Example:
 
 ```bash
 git clone git@github.com:rs401/Bissues.git
-cd Bissues/Bissues/
+cd BissuesProject/Bissues/
 dotnet run
 ```
 
