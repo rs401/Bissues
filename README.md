@@ -72,8 +72,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Bissues is a Bug and Issue tracker, developed for a course project  
-@[Champlain College](https://twitter.com/ChamplainEdu).
+Bissues is a Bug and Issue tracker, developed for a course project at 
+[&#64;Champlain College](https://twitter.com/ChamplainEdu).
 
 Bissues is a Bug and Issue tracking system for software developers and the users 
 of their software. The purpose is to provide an open line of communication 
