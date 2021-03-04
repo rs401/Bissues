@@ -135,7 +135,7 @@ Example:
 
 ```bash
 git clone git@github.com:rs401/Bissues.git
-cd BissuesProject/Bissues/
+cd Bissues/Bissues/
 dotnet run
 ```
 
