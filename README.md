@@ -72,12 +72,44 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Work in progress
+Bissues is a Bug and Issue tracker, developed for a course project  
+@[Champlain College](https://twitter.com/ChamplainEdu).
+
+Bissues is a Bug and Issue tracking system for software developers and the users 
+of their software. The purpose is to provide an open line of communication 
+between developers and users, to resolve issues and bugs in a structured 
+iterative manner.
+
+When a user is not getting expected results from a program, the user files an 
+“Issue” and requests support. A “Bug” is an error in code that allows undesired 
+behavior. The issue raised by a user may be a bug in the code or a 
+user/environment error (requirements not met, dependency missing). 
+
+An issue tracker allows communication between the developer and the user, to 
+resolve the issue. A bug tracker identifies a bug, and allows communication 
+between developers to resolve the bug. A bug/issue tracker would allow all the 
+developers and users to offer feedback on any bug/issue.
+
+Users and developers can create an account in the Bissues system. Developers are 
+be able to create new projects and bissues to be tracked. Users are able to 
+create new bissues for existing projects.
+
+Each bissue has a details view that shows all communications about the bissue 
+and actions taken to resolve the bissue. The details view also shows all 
+timestamps related to the bissue: date created, date last modified, date 
+expected resolution, date actually resolved.
+
 
 
 ### Built With
 
+Bissues was developed using ASP.NET Core 5.0 with an extended ASP.NET Identity 
+for user accounts, an MVC design pattern. The backend language is C# and uses 
+Entity Framework ORM with a PostgreSQL database. The frontend uses cshtml Razor 
+pages with Bootstrap, CSS3, and javascript. 
 
+The applications I used to develop this project are MS VS Code editor, ZSH 
+shell, Git version control and Mozilla Firefox web browser.
 
 
 <!-- GETTING STARTED -->
