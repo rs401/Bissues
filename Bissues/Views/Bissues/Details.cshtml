@@ -36,11 +36,11 @@
     {
         <a class = "btn btn-link" asp-controller="Bissues" asp-action="Edit" asp-route-id="@Model.Bissue.Id">Edit</a> <span>|</span>
     }
-    <button class = "btn btn-link" onclick="goBack()">Back</button>
+    <a asp-controller="Messages" asp-route-bid="@Model.Bissue.Id" asp-action="Create" class="btn btn-primary">New Message</a>
+    <a class = "btn btn-primary" href="javascript:goBack();">Back</a>
 </div>
 <div>
     <h2>Messages</h2>
-    <a asp-controller="Messages" asp-route-bid="@Model.Bissue.Id" asp-action="Create">Reply</a>
     @if(Model.Messages != null)
     {
         @foreach(var msg in Model.Messages)
