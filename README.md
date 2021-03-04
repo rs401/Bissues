@@ -115,14 +115,29 @@ shell, Git version control and Mozilla Firefox web browser.
 <!-- GETTING STARTED -->
 ## Getting Started
 
+To run a local copy of Bissues you will need to install the prerequisites and 
+follow the Installation steps.
 
 ### Prerequisites
 
+* [.NET 5.0 SDK](https://dotnet.microsoft.com/download/dotnet/5.0)
+
+You can follow the .NET 5.0 SDK installation instructions [here](https://docs.microsoft.com/en-us/dotnet/core/install/).
 
 ### Installation
 
+Once you have the .NET 5.0 SDK installed and access to the .NET CLI Tools, you 
+can obtain a copy of the source code and navigate to the BissuesProject/Bissues/ 
+directory and execute `dotnet run`. `dotnet run` will `restore` and `build` the 
+project and then run the Bissues application.
 
+Example:
 
+```bash
+git clone git@github.com:rs401/Bissues.git
+cd Bissues/Bissues/
+dotnet run
+```
 
 <!-- USAGE EXAMPLES -->
 ## Usage
