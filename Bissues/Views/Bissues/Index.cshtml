@@ -1,4 +1,4 @@
-@model IEnumerable<Bissues.Models.Bissue>
+@model Bissues.ViewModels.BissuesIndexViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -7,10 +7,10 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-primary" asp-action="Create">Create Bissue</a>
 </p>
 
-@foreach (var item in Model)
+@foreach (var item in Model.Bissues)
 {
     <div class = "card mb-2">
         <a asp-controller="Bissues" asp-action="Details" asp-route-id="@item.Id" class = "btn text-left text-decoration-none">
@@ -32,3 +32,29 @@
         </a>
     </div>
 }
+
+<table cellpadding="0" cellspacing="0">
+    <tr>
+        @for (int i = 1; i <= Model.PageCount; i++)
+        {
+            <td>
+                @if (i != Model.CurrentIndex)
+                {
+                    <a class="btn btn-outline-primary m-1" asp-action="Index" asp-route-index="@i" >@i</a>
+                }
+                else
+                {
+                    <span class="btn btn-outline-secondary">@i</span>
+                }
+            </td>
+        }
+    </tr>
+</table>
+<input type="hidden" id="hfCurrentPageIndex" name="currentIndex"/>
+
+<script type="text/javascript">
+    function PagerClick(index) {
+        document.getElementById("hfCurrentPageIndex").value = index;
+        document.forms[0].submit();
+    }
+</script>

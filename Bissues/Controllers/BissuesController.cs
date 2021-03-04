@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bissues.Data;
 using Bissues.Models;
+using Bissues.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Dynamic;
@@ -34,10 +35,25 @@ namespace Bissues.Controllers
         /// Bissues Index
         /// </summary>
         /// <returns>Returns Bissues Index view populated with a list of all Bissues</returns>
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? index)
         {
-            var bissues = await _context.Bissues.Include(b => b.Project).OrderByDescending(b => b.IsOpen).ThenByDescending(b => b.ModifiedDate).ToListAsync();
-            return View(bissues);
+            // var bissues = await _context.Bissues.Include(b => b.Project).OrderByDescending(b => b.IsOpen).ThenByDescending(b => b.ModifiedDate).ToListAsync();
+            if(index == null)
+            {
+                return View(GetBissues(1));
+            }
+            return View(GetBissues((int)index));
+        }
+        
+        private BissuesIndexViewModel GetBissues(int index)
+        {
+            int maxRows = 10;
+            BissuesIndexViewModel bivModel = new BissuesIndexViewModel();
+            var bissues = _context.Bissues.Include(b => b.Project).OrderByDescending(b => b.IsOpen).ThenByDescending(b => b.ModifiedDate).ToList();
+            bivModel.Bissues = bissues.Skip((index - 1) * maxRows).Take(maxRows).ToList();
+            bivModel.CurrentIndex = index;
+            bivModel.PageCount = (bissues.Count / maxRows) + 1;
+            return bivModel;
         }
 
         // GET: Bissues/Details/5

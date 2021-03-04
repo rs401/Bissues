@@ -31,6 +31,12 @@ a {
   border-color: var(--secondary-bg-color);
 }
 
+.btn-outline-primary {
+  color: var(--primary-bg-color);
+  background-color: var(--primary-fg-color);
+  border-color: var(--secondary-bg-color);
+}
+
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
   color: #fff;
   background-color: #1b6ec2;
