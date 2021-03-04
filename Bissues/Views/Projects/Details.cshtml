@@ -22,40 +22,40 @@
     {
         <a asp-action="Edit" asp-route-id="@Model.Project.Id">Edit</a> <span>|</span>
     }
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-primary" asp-controller="Bissues" asp-route-pid="@Model.Project.Id" asp-action="Create">Create New Bissue</a>
+    <a class="btn btn-primary" asp-action="Index">Back to List</a>
 </div>
 <div>
-        <h2>
-            Bissues
-        </h2>
-        <a class="btn btn-primary mb-md-3" asp-controller="Bissues" asp-route-pid="@Model.Project.Id" asp-action="Create">Create New Bissue</a>
-        @if(Model.Bissues != null)
+    <h2>
+        Bissues
+    </h2>
+    @if(Model.Bissues != null)
+    {
+        @foreach (var bissue in Model.Bissues)
         {
-            @foreach (var bissue in Model.Bissues)
-            {
-                <div class = "card mb-2 text-dark">
-                    <a asp-controller="Bissues" asp-action="Details" asp-route-id="@bissue.Id" class = "btn text-left text-decoration-none">
-                        <div class="card-body">
-                            <p class="card-title"><b>@bissue.Title</b> 
-                                @if(bissue.IsOpen)
-                                {
-                                    <span class="text-success">Open</span>
-                                }
-                                else
-                                {
-                                    <span class="text-danger">Closed</span>
-                                }
-                                <small>Last Modified: @bissue.ModifiedDate.ToString("MM/dd/yy")</small>
-                            </p>
-                            <p class="card-text">@bissue.Description</p>
-                        </div>
-                    </a>
-                </div>
-            }
+            <div class = "card mb-2 text-dark">
+                <a asp-controller="Bissues" asp-action="Details" asp-route-id="@bissue.Id" class = "btn text-left text-decoration-none">
+                    <div class="card-body">
+                        <p class="card-title"><b>@bissue.Title</b> 
+                            @if(bissue.IsOpen)
+                            {
+                                <span class="text-success">Open</span>
+                            }
+                            else
+                            {
+                                <span class="text-danger">Closed</span>
+                            }
+                            <small>Last Modified: @bissue.ModifiedDate.ToString("MM/dd/yy")</small>
+                        </p>
+                        <p class="card-text">@bissue.Description</p>
+                    </div>
+                </a>
+            </div>
         }
-        else{
-            <p>
-                No Bissues yet!
-            </p>
-        }
+    }
+    else{
+        <p>
+            No Bissues yet!
+        </p>
+    }
 </div>
