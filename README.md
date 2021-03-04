@@ -147,19 +147,30 @@ dotnet run
 <!-- ROADMAP -->
 ## Roadmap
 
+See the [open issues](https://github.com/rs401/Bissues/issues) for a list of 
+proposed features (and known issues).
 
-
+Future plans I have for this project are to bundle the project in a Docker 
+image. Configure the application to use other database storage solutions. Add 
+social login functionality.
 
 <!-- CONTRIBUTING -->
 ## Contributing
 
+If you would like to contribute, I would love to see your ideas and learn from 
+them. 
 
+1. Fork this repository
+2. Checkout a new branch
+3. Push your changes
+4. Submit pull request
 
+There is a first-timers pull request guide [here](https://github.com/firstcontributions/first-contributions).
 
 <!-- LICENSE -->
 ## License
 
-Distributed under the I-Haven't-Decided-Yet License. See `LICENSE` for more information.
+Distributed under the Apache License 2.0. See `LICENSE` for more information.
 
 
 
