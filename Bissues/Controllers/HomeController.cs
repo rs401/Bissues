@@ -35,6 +35,11 @@ namespace Bissues.Controllers
             return View(model);
         }
 
+        public IActionResult About()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
