@@ -64,7 +64,7 @@ namespace Bissues.Controllers
         /// <param name="id">Bissue Id</param>
         /// <returns>Details view lists the details of the Bissue as well as all 
         /// Messages related to the Bissue</returns>
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, int? currentIndex)
         {
             if (id == null)
             {
@@ -79,37 +79,23 @@ namespace Bissues.Controllers
                 return NotFound();
             }
 
-            // Using ViewData to send Owner
-            var user = await _userManager.FindByIdAsync(bissue.AppUserId);
-            // string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            // var currentUsername = !string.IsNullOrEmpty((string)userId)
-            //     ? userId
-            //     : "Anonymous";
-
-            // AppUser user = _context.AppUsers.Where(au => au.Id == currentUsername).Select();
-            // AppUser theUser = _context.AppUsers.Find(currentUsername);
-            
-            if(user != null)
+            if(currentIndex == null)
             {
-                ViewData["Owner"] = bissue.AppUser;
+                return View(GetDetailsViewModel((int)id,1));
             }
-            /* Dynamic model to bundle the Bissue's Messages with it. */
-            dynamic tmpmodel = new ExpandoObject();
-            tmpmodel.Bissue = bissue;
-            /* Get bissues if any */
-            ICollection<Message> messages = _context.Messages.Where(m => m.BissueId == id).Include(m => m.AppUser).OrderBy(m => m.CreatedDate).ToList();
-            if(messages.Count <= 0)
-            {
-                tmpmodel.Messages = null;
-            }
-            else
-            {
-                tmpmodel.Messages = messages;
-            }
-
-            return View(tmpmodel);
-
-            // return View(bissue);
+            return View(GetDetailsViewModel((int)id,(int)currentIndex));
+        }
+        private BissuesDetailsViewModel GetDetailsViewModel(int id, int index)
+        {
+            int maxRows = 10;
+            BissuesDetailsViewModel bdvModel = new BissuesDetailsViewModel();
+            var bissue = _context.Bissues.Include(b => b.AppUser).FirstOrDefault(b => b.Id == id);
+            bdvModel.Bissue = bissue;
+            var messages = _context.Messages.Where(m => m.BissueId == id).Include(m => m.AppUser).OrderBy(m => m.CreatedDate).ToList();
+            bdvModel.Messages = messages.Skip((index - 1) * maxRows).Take(maxRows).ToList();
+            bdvModel.CurrentIndex = index;
+            bdvModel.PageCount = (messages.Count / maxRows) + 1;
+            return bdvModel;
         }
 
         // GET: Bissues/Create

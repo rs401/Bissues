@@ -2,7 +2,7 @@
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
 
-@model dynamic
+@model Bissues.ViewModels.BissuesDetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -33,7 +33,7 @@
     
 </div>
 <div>
-    @if (SignInManager.IsSignedIn(User) && User.Identity.Name == owner.UserName || User.IsInRole("Admin"))
+    @if (SignInManager.IsSignedIn(User) && User.Identity.Name == Model.Bissue.AppUser.UserName || User.IsInRole("Admin"))
     {
         <a class = "btn btn-link" asp-controller="Bissues" asp-action="Edit" asp-route-id="@Model.Bissue.Id">Edit</a> <span>|</span>
     }
@@ -68,3 +68,21 @@
         </p>
     }
 </div>
+
+<table cellpadding="0" cellspacing="0">
+    <tr>
+        @for (int i = 1; i <= Model.PageCount; i++)
+        {
+            <td>
+                @if (i != Model.CurrentIndex)
+                {
+                    <a class="btn btn-outline-primary m-1" asp-action="Details" asp-route-id="@Model.Bissue.Id" asp-route-currentIndex="@i" >@i</a>
+                }
+                else
+                {
+                    <span class="btn btn-outline-secondary">@i</span>
+                }
+            </td>
+        }
+    </tr>
+</table>

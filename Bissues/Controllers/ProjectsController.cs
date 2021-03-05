@@ -61,27 +61,6 @@ namespace Bissues.Controllers
             }
             return View(GetDetailViewModel((int)id,(int)currentIndex));
         }
-        [HttpPost]
-        public async Task<IActionResult> Details(int id, int currentIndex)
-        {
-            // if (id == null)
-            // {
-            //     return NotFound();
-            // }
-
-            var project = await _context.Projects
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (project == null)
-            {
-                return NotFound();
-            }
-
-            // if(currentIndex == null)
-            // {
-            //     return View(GetDetailViewModel((int)id,1));
-            // }
-            return View(GetDetailViewModel(id,currentIndex));
-        }
 
         private ProjectsDetailViewModel GetDetailViewModel(int id, int index)
         {
