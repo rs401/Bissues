@@ -36,14 +36,6 @@ namespace Bissues.Models
         /// <value>collection of messages related to the Bissue</value>
         public ICollection<Message> Messages { get; set; }
 
-        /* FK Owner of the Bissue */
-        // /// <summary>
-        // /// Owner of the Bissue
-        // /// </summary>
-        // /// <value>Owner of the Bissue</value>
-        // public string AppUserId { get; set; }
-        // public AppUser Owner { get; set; }
-
         /* FK Project the Bissue belongs to */
         /// <summary>
         /// Project the Bissue belongs to
@@ -51,6 +43,22 @@ namespace Bissues.Models
         /// <value>Project the Bissue belongs to</value>
         public int ProjectId { get; set; }
         public virtual Project Project { get; set; }
+        /// <summary>
+        /// Label if the Bissue is an "Issue" or a "Bug"
+        /// </summary>
+        /// <value>enum Issue=0,Bug=1</value>
+        public BissueLabel Label { get; set; } = BissueLabel.Issue;
+        /// <summary>
+        /// If the Bissue is labeled as a Bug, there will be a developer 
+        /// assigned to oversee a fix.
+        /// </summary>
+        /// <value>The AppUser.Id of the developer assigned to fix</value>
+        public string AssignedDeveloperId { get; set; } = "";
+        /// <summary>
+        /// The datetime the Bissue was marked closed
+        /// </summary>
+        /// <value>The datetime the Bissue was marked closed</value>
+        public DateTime ClosedDate { get; set; }
 
     }
 }

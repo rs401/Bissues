@@ -6,7 +6,6 @@
 
 @{
     ViewData["Title"] = "Details";
-    var owner = ViewData["Owner"] as Bissues.Models.AppUser;
 }
 
 <a class="text-light" asp-controller="Projects" asp-action="Details" asp-route-id="@Model.Bissue.Project.Id">Project: @Model.Bissue.Project.Name</a>
@@ -14,6 +13,7 @@
 <div>
     <h2>Bissue: @Model.Bissue.Title</h2>
     User: @Model.Bissue.AppUser.DisplayName <br />
+    Status: 
     @if(@Model.Bissue.IsOpen)
     {
         <span class="text-success">Open</span>
@@ -21,6 +21,15 @@
     else
     {
         <span class="text-danger">Closed</span>
+    }
+    &nbsp;Label: 
+    @if(@Model.Bissue.Label == 0)
+    {
+        <span class="text-success">Issue</span>
+    }
+    else
+    {
+        <span class="text-danger">Bug</span>
     }
     <small>Created: @Model.Bissue.CreatedDate.ToString("MMM dd, yyyy hh:mm tt") | Last Modified: @Model.Bissue.ModifiedDate.ToString("MMM dd, yyyy hh:mm tt")</small>
     <hr/>
