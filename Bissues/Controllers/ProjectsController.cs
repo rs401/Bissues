@@ -9,6 +9,7 @@ using Bissues.Data;
 using Bissues.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Dynamic;
+using Bissues.ViewModels;
 
 namespace Bissues.Controllers
 {
@@ -40,7 +41,7 @@ namespace Bissues.Controllers
         /// </summary>
         /// <param name="id">Project Id</param>
         /// <returns>Details view with project details</returns>
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, int? currentIndex)
         {
             if (id == null)
             {
@@ -54,21 +55,45 @@ namespace Bissues.Controllers
                 return NotFound();
             }
 
-            /* Dynamic model to bundle the Project's Bissues with it. */
-            dynamic tmpmodel = new ExpandoObject();
-            tmpmodel.Project = project;
-            /* Get bissues if any */
-            ICollection<Bissue> bissues = _context.Bissues.Where(b => b.ProjectId == id).OrderByDescending(b => b.IsOpen).ThenByDescending(b => b.ModifiedDate).ToList();
-            if(bissues.Count <= 0)
+            if(currentIndex == null)
             {
-                tmpmodel.Bissues = null;
+                return View(GetDetailViewModel((int)id,1));
             }
-            else
+            return View(GetDetailViewModel((int)id,(int)currentIndex));
+        }
+        [HttpPost]
+        public async Task<IActionResult> Details(int id, int currentIndex)
+        {
+            // if (id == null)
+            // {
+            //     return NotFound();
+            // }
+
+            var project = await _context.Projects
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (project == null)
             {
-                tmpmodel.Bissues = bissues;
+                return NotFound();
             }
 
-            return View(tmpmodel);
+            // if(currentIndex == null)
+            // {
+            //     return View(GetDetailViewModel((int)id,1));
+            // }
+            return View(GetDetailViewModel(id,currentIndex));
+        }
+
+        private ProjectsDetailViewModel GetDetailViewModel(int id, int index)
+        {
+            int maxRows = 10;
+            ProjectsDetailViewModel pdvModel = new ProjectsDetailViewModel();
+            var project = _context.Projects.Find(id);
+            pdvModel.Project = project;
+            var bissues = _context.Bissues.Where(b => b.ProjectId == id).OrderByDescending(b => b.IsOpen).ThenByDescending(b => b.ModifiedDate).ToList();
+            pdvModel.Bissues = bissues.Skip((index - 1) * maxRows).Take(maxRows).ToList();
+            pdvModel.CurrentIndex = index;
+            pdvModel.PageCount = (bissues.Count / maxRows) + 1;
+            return pdvModel;
         }
 
         // GET: Projects/Create
