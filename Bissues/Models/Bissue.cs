@@ -58,7 +58,7 @@ namespace Bissues.Models
         /// The datetime the Bissue was marked closed
         /// </summary>
         /// <value>The datetime the Bissue was marked closed</value>
-        public DateTime ClosedDate { get; set; }
+        public DateTime? ClosedDate { get; set; }
 
     }
 }

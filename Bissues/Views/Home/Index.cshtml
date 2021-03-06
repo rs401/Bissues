@@ -12,6 +12,43 @@
         </p>
     </div>
         <hr/>
+        <div class="container">
+            <div class="row mt-2">
+                <div class="col">
+                    <div class="p-3 border">
+                        Total Issues: @Model.IssueCount
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="p-3 border">
+                        Total Opened Issues: @Model.IssueOpened
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="p-3 border">
+                        Total Closed Issues: @Model.IssueClosed
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col">
+                    <div class="p-3 border">
+                        Total Bugs: @Model.BugCount
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="p-3 border">
+                        Total Opened Bugs: @Model.BugOpened
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="p-3 border">
+                        Total Closed Bugs: @Model.BugClosed
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr/>
         <h4>Recent Bissues</h4>
         @foreach (var bissue in Model.Bissues)
         {

@@ -11,7 +11,8 @@ namespace Bissues.Migrations
                 name: "ClosedDate",
                 table: "Bissues",
                 type: "timestamp without time zone",
-                nullable: true);
+                nullable: false,
+                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
