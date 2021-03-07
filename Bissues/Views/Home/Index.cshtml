@@ -11,65 +11,112 @@
             at Champlain College.
         </p>
     </div>
-        <hr/>
-        <div class="container">
-            <div class="row mt-2">
-                <div class="col">
-                    <div class="p-3 border">
-                        Total Issues: @Model.IssueCount
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="p-3 border">
-                        Total Opened Issues: @Model.IssueOpened
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="p-3 border">
-                        Total Closed Issues: @Model.IssueClosed
-                    </div>
+    <hr/>
+    <div class="container">
+        <div class="row mt-2">
+            <div class="col">
+                <div class="p-3 border">
+                    Total Issues: @Model.IssueCount
                 </div>
             </div>
-            <div class="row mt-2">
-                <div class="col">
-                    <div class="p-3 border">
-                        Total Bugs: @Model.BugCount
-                    </div>
+            <div class="col">
+                <div class="p-3 border">
+                    Opened Issues: @Model.IssueOpened
                 </div>
-                <div class="col">
-                    <div class="p-3 border">
-                        Total Opened Bugs: @Model.BugOpened
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="p-3 border">
-                        Total Closed Bugs: @Model.BugClosed
-                    </div>
+            </div>
+            <div class="col">
+                <div class="p-3 border">
+                    Closed Issues: @Model.IssueClosed
                 </div>
             </div>
         </div>
-        <hr/>
-        <h4>Recent Bissues</h4>
-        @foreach (var bissue in Model.Bissues)
-        {
-            <div class = "card mb-2">
-                <a asp-controller="Bissues" asp-action="Details" asp-route-id="@bissue.Id" class = "btn text-left text-decoration-none">
-                    <div class="card-body">
-                        <p class="card-title"><b>@bissue.Title</b> 
-                            @if(bissue.IsOpen)
-                            {
-                                <span class="text-success">Open</span>
-                            }
-                            else
-                            {
-                                <span class="text-danger">Closed</span>
-                            }
-                        </p>
-                        <p class="card-text">@bissue.Description</p>
-                        <footer>Project: @bissue.Project.Name</footer>
-                    </div>
-                </a>
+        <div class="row mt-2">
+            <div class="col">
+                <div class="p-3 border">
+                    Total Bugs: @Model.BugCount
+                </div>
             </div>
-        }
+            <div class="col">
+                <div class="p-3 border">
+                    Opened Bugs: @Model.BugOpened
+                </div>
+            </div>
+            <div class="col">
+                <div class="p-3 border">
+                    Closed Bugs: @Model.BugClosed
+                </div>
+            </div>
+        </div>
+        <canvas id="statChart" width="800" height="400"></canvas>
+    </div>
+    <hr/>
+    <h4>Recent Bissues</h4>
+    @foreach (var bissue in Model.Bissues)
+    {
+        <div class = "card mb-2">
+            <a asp-controller="Bissues" asp-action="Details" asp-route-id="@bissue.Id" class = "btn text-left text-decoration-none">
+                <div class="card-body">
+                    <p class="card-title"><b>@bissue.Title</b> 
+                        @if(bissue.IsOpen)
+                        {
+                            <span class="text-success">Open</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">Closed</span>
+                        }
+                    </p>
+                    <p class="card-text">@bissue.Description</p>
+                    <footer>Project: @bissue.Project.Name</footer>
+                </div>
+            </a>
+        </div>
+    }
 
+<script>
+    window.onload = function(){
+        var ctx = $('#statChart');
+        Chart.defaults.global.defaultFontColor = '#e7eff6';
+        var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Total Issues', 'Opened Issues', 'Closed Issues', 'Total Bugs', 'Opened Bugs', 'Closed Bugs'],
+            datasets: [{
+                label: '# of Bugs/Issues',
+                data: [@Model.IssueCount, @Model.IssueOpened, @Model.IssueClosed, @Model.BugCount, @Model.BugOpened, @Model.BugClosed],
+                backgroundColor: [
+                    '#adcbe3'
+                ],
+                borderColor: [
+                    '#63ace5'
+                ],
+                borderWidth: 1,
+                pointHitRadius: 10,
+                pointRadius: 5,
+                pointBackgroundColor: '#63ace5'
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        max: (Math.max(@Model.BugCount, @Model.IssueCount) + 5),
+                        min: 0,
+                        stepSize: 2
+                    }
+                }]
+            },
+            responsive: true,
+            legend: {
+                labels: {
+                    // This more specific font property overrides the global property
+                    fontColor: '#e7eff6'
+                }
+            }
+        }
+        });
+
+    };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" crossorigin="anonymous"></script>
 
