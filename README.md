@@ -121,21 +121,28 @@ follow the Installation steps.
 ### Prerequisites
 
 * [.NET 5.0 SDK](https://dotnet.microsoft.com/download/dotnet/5.0)
+* [PostgreSQL database](https://www.postgresql.org/download/)
 
 You can follow the .NET 5.0 SDK installation instructions [here](https://docs.microsoft.com/en-us/dotnet/core/install/).
 
+For the PostgreSQL database, you can either follow the instructions from the download page or you can run a docker container from [here](https://hub.docker.com/_/postgres).
+
 ### Installation
 
-Once you have the .NET 5.0 SDK installed and access to the .NET CLI Tools, you 
+Once you have the .NET 5.0 SDK installed and access to the .NET CLI Tools, you will need to install the Entity Framework tools. In the terminal run `dotnet tool install --global dotnet-ef` to install the EF tools. You 
 can obtain a copy of the source code and navigate to the BissuesProject/Bissues/ 
-directory and execute `dotnet run`. `dotnet run` will `restore` and `build` the 
+directory and execute `dotnet-ef database update` and then `dotnet run`. `dotnet run` will `restore` and `build` the 
 project and then run the Bissues application.
+
+First you will want to open Startup.cs and uncomment the line `// DataInitializer.SeedData(userManager, roleManager);` to seed the database.
 
 Example:
 
 ```bash
+dotnet tool install --global dotnet-ef
 git clone git@github.com:rs401/Bissues.git
 cd Bissues/Bissues/
+dotnet-ef database update
 dotnet run
 ```
 
