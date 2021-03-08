@@ -69,6 +69,12 @@ namespace Bissues.Controllers
             var project = _context.Projects.Find(id);
             pdvModel.Project = project;
             var bissues = _context.Bissues.Where(b => b.ProjectId == id).OrderByDescending(b => b.IsOpen).ThenByDescending(b => b.ModifiedDate).ToList();
+            pdvModel.IssueCount = bissues.Where(b => b.Label == BissueLabel.Issue).Count();
+            pdvModel.BugCount = bissues.Where(b => b.Label == BissueLabel.Bug).Count();
+            pdvModel.BugOpened = bissues.Where(b => b.Label == BissueLabel.Bug && b.IsOpen == true).Count();
+            pdvModel.BugClosed = bissues.Where(b => b.Label == BissueLabel.Bug && b.IsOpen == false).Count();
+            pdvModel.IssueOpened = bissues.Where(b => b.Label == BissueLabel.Issue && b.IsOpen == true).Count();
+            pdvModel.IssueClosed = bissues.Where(b => b.Label == BissueLabel.Issue && b.IsOpen == false).Count();
             pdvModel.Bissues = bissues.Skip((index - 1) * maxRows).Take(maxRows).ToList();
             pdvModel.CurrentIndex = index;
             pdvModel.PageCount = (bissues.Count / maxRows) + 1;

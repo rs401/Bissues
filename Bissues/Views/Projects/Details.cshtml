@@ -8,20 +8,24 @@
     ViewData["Title"] = "Details";
 }
 
-<div>
-    <small class="text-stupid">Project</small>
-    <p class="display-4">@Model.Project.Name</p>
-    <small>Created: @Model.Project.CreatedDate.ToString("MMM dd, yyyy") - Last Modified: @Model.Project.ModifiedDate.ToString("MMM dd, yyyy")</small>
-    <hr />
-    <small class="text-stupid">Description</small>
-    <p>@Model.Project.Description</p>
-    
+        <small class="text-stupid">Project</small>
+        <p class="display-4">@Model.Project.Name</p>
+        <small>Created: @Model.Project.CreatedDate.ToString("MMM dd, yyyy") - Last Modified: @Model.Project.ModifiedDate.ToString("MMM dd, yyyy")</small>
+        <hr />
+<div class="row">
+    <div class="col-6">
+        <small class="text-stupid">Description</small>
+        <p>@Model.Project.Description</p>
+    </div>
+    <div class="col-6">
+        <canvas id="statChart" width="400" height="200"></canvas>
+    </div>
 </div>
 <hr />
 <div>
     @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
     {
-        <a asp-action="Edit" asp-route-id="@Model.Project.Id">Edit</a> <span>|</span>
+        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Project.Id">Edit</a>
     }
     <a class="btn btn-primary" asp-controller="Bissues" asp-route-pid="@Model.Project.Id" asp-action="Create">Create New Bissue</a>
     <a class="btn btn-primary" asp-action="Index">Back to List</a>
@@ -78,3 +82,50 @@
         }
     </tr>
 </table>
+
+<script>
+    window.onload = function(){
+        var ctx = $('#statChart');
+        Chart.defaults.global.defaultFontColor = '#e7eff6';
+        var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Total Issues', 'Opened Issues', 'Closed Issues', 'Total Bugs', 'Opened Bugs', 'Closed Bugs'],
+            datasets: [{
+                label: '# of Bugs/Issues',
+                data: [@Model.IssueCount, @Model.IssueOpened, @Model.IssueClosed, @Model.BugCount, @Model.BugOpened, @Model.BugClosed],
+                backgroundColor: [
+                    '#adcbe3'
+                ],
+                borderColor: [
+                    '#63ace5'
+                ],
+                borderWidth: 1,
+                pointHitRadius: 20,
+                pointRadius: 5,
+                pointBackgroundColor: '#63ace5'
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        max: (Math.max(@Model.BugCount, @Model.IssueCount) + 5),
+                        min: 0,
+                        stepSize: Math.ceil((Math.max(@Model.BugCount, @Model.IssueCount) + 5) / 10)
+                    }
+                }]
+            },
+            responsive: true,
+            legend: {
+                labels: {
+                    // This more specific font property overrides the global property
+                    fontColor: '#e7eff6'
+                }
+            }
+        }
+        });
+
+    };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" crossorigin="anonymous"></script>
