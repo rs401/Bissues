@@ -91,13 +91,13 @@ between developers to resolve the bug. A bug/issue tracker would allow all the
 developers and users to offer feedback on any bug/issue.
 
 Users and developers can create an account in the Bissues system. Developers are 
-be able to create new projects and bissues to be tracked. Users are able to 
-create new bissues for existing projects.
+able to create new projects and bissues to be tracked. Users are able to create 
+new bissues for existing projects.
 
 Each bissue has a details view that shows all communications about the bissue 
 and actions taken to resolve the bissue. The details view also shows all 
-timestamps related to the bissue: date created, date last modified, date 
-expected resolution, date actually resolved.
+timestamps related to the bissue: date created, date last modified, and 
+resolution date.
 
 
 
@@ -123,18 +123,31 @@ follow the Installation steps.
 * [.NET 5.0 SDK](https://dotnet.microsoft.com/download/dotnet/5.0)
 * [PostgreSQL database](https://www.postgresql.org/download/)
 
-You can follow the .NET 5.0 SDK installation instructions [here](https://docs.microsoft.com/en-us/dotnet/core/install/).
+You can follow the .NET 5.0 SDK installation instructions 
+[here](https://docs.microsoft.com/en-us/dotnet/core/install/).
 
-For the PostgreSQL database, you can either follow the instructions from the download page or you can run a docker container from [here](https://hub.docker.com/_/postgres).
+For the PostgreSQL database, you can either follow the instructions from the 
+download page or you can run a docker container from 
+[here](https://hub.docker.com/_/postgres).
 
 ### Installation
 
-Once you have the .NET 5.0 SDK installed and access to the .NET CLI Tools, you will need to install the Entity Framework tools. In the terminal run `dotnet tool install --global dotnet-ef` to install the EF tools. You 
-can obtain a copy of the source code and navigate to the BissuesProject/Bissues/ 
-directory and execute `dotnet-ef database update` and then `dotnet run`. `dotnet run` will `restore` and `build` the 
-project and then run the Bissues application.
+Once you have the .NET 5.0 SDK installed and access to the .NET CLI Tools, you 
+will need to install the Entity Framework tools. In the terminal run 
+`dotnet tool install --global dotnet-ef` to install the EF tools. You can obtain 
+a copy of the source code and navigate to the BissuesProject/Bissues/ 
+directory and execute `dotnet-ef database update` and then `dotnet run`. 
+`dotnet run` will `restore` and `build` the project and then run the Bissues 
+application.
 
-First you will want to open Startup.cs and uncomment the line `// DataInitializer.SeedData(userManager, roleManager);` to seed the database.
+The first run will seed the database with roles: Admin, Developer and User, as 
+well as a test user for each role. 
+
+|UserName|Password|Role|
+|---    |---      |--- |
+|admin@admin.com|Admin@123|Admin|
+|dev@dev.com|Admin@123|Developer|
+|user@user.com|Admin@123|User|
 
 Example:
 

@@ -64,8 +64,8 @@ namespace Bissues
             app.UseAuthentication();
             app.UseAuthorization();
 
-            /* Uncomment to seed the database. */
-            // DataInitializer.SeedData(userManager, roleManager);
+            /* Seed the database with roles and test users. */
+            DataInitializer.SeedData(userManager, roleManager);
 
             app.UseEndpoints(endpoints =>
             {
