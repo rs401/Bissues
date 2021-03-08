@@ -20,6 +20,8 @@ namespace BissuesTest.UnitTests
         [Theory]
         [InlineData("/")]
         [InlineData("/Home/Index")]
+        [InlineData("/Home/About")]
+        [InlineData("/Home/Error")]
         [InlineData("/Home/Privacy")]
         public async Task BaseTest(string url)
         {

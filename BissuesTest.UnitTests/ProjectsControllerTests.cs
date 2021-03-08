@@ -19,7 +19,10 @@ namespace BissuesTest.UnitTests
 
         [Theory]
         [InlineData("/Projects/Index")]
+        [InlineData("/Projects/Edit")]/* OK because it redirects to login. */
+        [InlineData("/Projects/Create")]/* OK because it redirects to login. */
         [InlineData("/Projects/Details/1")]
+        [InlineData("/Projects/Details/1?currentIndex=2")]
         public async Task BaseTest(string url)
         {
             // Arrange
@@ -36,6 +39,8 @@ namespace BissuesTest.UnitTests
 
         [Theory]
         [InlineData("/Projects/Fail")]
+        [InlineData("/Projects/Details")]
+        [InlineData("/Projects/Details/999999")]
         public async Task NotFoundErrorTest(string url)
         {
             // Arrange
