@@ -43,7 +43,7 @@ namespace Bissues
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -63,6 +63,9 @@ namespace Bissues
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            /* Uncomment to seed the database. */
+            // DataInitializer.SeedData(userManager, roleManager);
 
             app.UseEndpoints(endpoints =>
             {
