@@ -8,6 +8,7 @@ nupkg/
 notes.md
 app.db
 coveragereport/
+Bissues/Templates/
 
 # Visual Studio Code
 .vscode
