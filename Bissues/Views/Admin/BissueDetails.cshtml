@@ -42,6 +42,12 @@
                 </label>
             </div>
             <div class="form-group">
+                <label asp-for="AssignedDeveloperId"></label>
+                <select asp-for="AssignedDeveloperId" class="form-control" asp-items='@(new SelectList(users, "Id", "DisplayName"))'>
+                    <option disabled selected>--- SELECT IF BUG ---</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>

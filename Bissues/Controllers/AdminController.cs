@@ -58,7 +58,7 @@ namespace Bissues.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditBissue(int id, [Bind("Id,Title,Description,IsOpen,AppUserId,AppUser,ProjectId,CreatedDate,ModifiedDate,Label")] Bissue bissue)
+        public async Task<IActionResult> EditBissue(int id, [Bind("Id,Title,Description,IsOpen,AppUserId,AppUser,ProjectId,CreatedDate,ModifiedDate,Label,AssignedDeveloperId")] Bissue bissue)
         {
             if (id != bissue.Id)
             {
