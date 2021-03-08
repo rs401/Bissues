@@ -18,8 +18,8 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore Bissues
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build Bissues --no-restore
     - name: Test
       run: dotnet test ../BissuesTest.UnitTests --no-build --verbosity normal
