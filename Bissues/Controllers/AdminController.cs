@@ -64,7 +64,11 @@ namespace Bissues.Controllers
             {
                 return NotFound();
             }
-            
+            // If closed and null closed date, set closed date
+            if(bissue.IsOpen == false && bissue.ClosedDate == null)
+            {
+                bissue.ClosedDate = DateTime.UtcNow;
+            }
             if (ModelState.IsValid)
             {
                 try

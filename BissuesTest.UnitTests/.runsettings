@@ -4,8 +4,12 @@
     <DataCollectors>
       <DataCollector friendlyName="XPlat code coverage">
         <Configuration>
-          <ExcludeByFile>**/ViewModels/*.cs,**/Areas/Identity/**/*.cs,**/Areas/Identity/**/*.cshtml,**/Data/Migrations/**/*.cs,</ExcludeByFile> <!-- Globbing filter -->
-          <Format>lcov,cobertura</Format>
+          <ExcludeByFile>
+            **/ViewModels/*.cs,
+            **/Areas/Identity/**/*.cs,
+            **/Areas/Identity/**/*.cshtml,
+            **/Data/Migrations/**/*.cs,
+          </ExcludeByFile>
         </Configuration>
       </DataCollector>
     </DataCollectors>
