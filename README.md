@@ -130,6 +130,9 @@ For the PostgreSQL database, you can either follow the instructions from the
 download page or you can run a docker container from 
 [here](https://hub.docker.com/_/postgres).
 
+> You can use SQLite if you would like to, just follow the additional SQLite 
+installation steps below.
+
 ### Installation
 
 Once you have the .NET 5.0 SDK installed and access to the .NET CLI Tools, you 
@@ -155,6 +158,60 @@ Example:
 dotnet tool install --global dotnet-ef
 git clone git@github.com:rs401/Bissues.git
 cd Bissues/Bissues/
+# At this point if you are going to use SQLite, you will need to skip to the 
+# 'SQLite Additional steps' below.
+dotnet-ef database update
+dotnet run
+```
+
+SQLite Additional steps:
+
+1. Open the Bissues/Startup.cs file and uncomment the section in 
+`ConfigureServices` that sets the database connection for the DbContext to 
+SQLite and comment out the section below it that sets the PostgreSQL connection.
+
+Before:
+
+```
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddDbContext<ApplicationDbContext>(options =>
+        // options.UseSqlite(
+        //     Configuration.GetConnectionString("DefaultConnection")));
+        options.UseNpgsql(
+            Configuration.GetConnectionString("pgsql")));
+    services.AddDatabaseDeveloperPageExceptionFilter();
+
+    services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
+        .AddRoles<IdentityRole>()
+        .AddEntityFrameworkStores<ApplicationDbContext>();
+    services.AddControllersWithViews();
+}
+```
+
+After:
+
+```
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddDbContext<ApplicationDbContext>(options =>
+         options.UseSqlite(
+             Configuration.GetConnectionString("DefaultConnection")));
+        // options.UseNpgsql(
+        //     Configuration.GetConnectionString("pgsql")));
+    services.AddDatabaseDeveloperPageExceptionFilter();
+
+    services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
+        .AddRoles<IdentityRole>()
+        .AddEntityFrameworkStores<ApplicationDbContext>();
+    services.AddControllersWithViews();
+}
+```
+
+2. Delete the Bissues/Data/Migrations directory.
+3. Create a new migration with `dotnet-ef migrations add "Init"`.
+4. Now you can continue with
+```
 dotnet-ef database update
 dotnet run
 ```
