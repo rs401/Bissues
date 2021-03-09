@@ -1,4 +1,4 @@
-name: .NET
+name: Bissues Build
 
 on:
   push:
