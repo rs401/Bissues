@@ -1,0 +1,61 @@
+﻿@model Bissues.ViewModels.AppUserAreaViewModel
+@{
+    ViewData["Title"] = "User Content Page";
+}
+
+    <div class="col-md-10">
+        <h1 class="display-4">User Content</h1>
+        <p class="mt-3">
+            Bissues, Messages and notifications owned by @User.Identity.Name.
+        </p>
+    </div>
+    <hr/>
+
+    <h4>Your Bissues</h4>
+    <div class="container overflow-auto border mb-3 p-3" style="height: 200px;">
+        @if(Model.Bissues.Count < 1)
+        {
+            <h4 class="mt-3">You have posted no Bissues.</h4>
+        }
+        else 
+        {
+            <ul class="list-unstyled">
+            @foreach (var item in Model.Bissues)
+            {
+                <li><a asp-controller="Bissues" asp-action="Details" asp-route-id="@item.Id">@item.Title</a></li>
+            }
+            </ul>
+        }
+    </div>
+    <h4>Your Messages</h4>
+    <div class="container overflow-auto border mb-3 p-3" style="height: 200px;">
+        @if(Model.Messages.Count < 1)
+        {
+            <h4 class="mt-3">You have posted no Messages.</h4>
+        }
+        else 
+        {
+            <ul class="list-unstyled">
+            @foreach (var item in Model.Messages)
+            {
+                <li><a asp-controller="Bissues" asp-action="Details" asp-route-id="@item.BissueId">@item.Body</a></li>
+            }
+            </ul>
+        }
+    </div>
+    <h4>Your Notifications</h4>
+    <div class="container overflow-auto border mb-3 p-3" style="height: 200px;">
+        @if(Model.Notifications.Count < 1)
+        {
+            <h4 class="mt-3">You have no unread notifications.</h4>
+        }
+        else 
+        {
+            <ul class="list-unstyled">
+            @foreach (var item in Model.Notifications)
+            {
+                <li><a asp-controller="AppUser" asp-action="ReadNotification" asp-route-id="@item.Id">@item.Bissue.Title</a></li>
+            }
+            </ul>
+        }
+    </div>
