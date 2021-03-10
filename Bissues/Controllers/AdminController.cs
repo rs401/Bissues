@@ -39,6 +39,14 @@ namespace Bissues.Controllers
             var model = GetAdminAreaViewModel();
             return View(model);
         }
+        public IActionResult Bugs()
+        {
+            var model = new AdminBugsViewModel()
+            {
+                Bugs = _context.Bissues.Include(b => b.Project).Where(b => b.Label == BissueLabel.Bug).ToList()
+            };
+            return View(model);
+        }
         public async Task<IActionResult> BissueDetails(int? id)
         {
             if(id == null)

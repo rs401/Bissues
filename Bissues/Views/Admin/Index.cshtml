@@ -32,7 +32,7 @@
         <div class="row mt-5">
             <div class="col">
                 <div class="p-3 border">
-                    Total Bugs: @Model.Bissues.Where(b => b.Label == BissueLabel.Bug).ToList().Count
+                    <a asp-controller="Admin" asp-action="Bugs">Total Bugs: @Model.Bissues.Where(b => b.Label == BissueLabel.Bug).ToList().Count</a>
                 </div>
             </div>
             <div class="col">
