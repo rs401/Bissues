@@ -12,42 +12,34 @@
         </p>
     </div>
     <hr/>
-    <div class="container">
-        <div class="row mt-2">
-            <div class="col">
-                <div class="p-3 border">
+    <div class="container row">
+        <div class="col-6">
+            <div class="row mt-2">
+                <div class="col p-3 mr-2 border">
                     Total Issues: @Model.IssueCount
                 </div>
-            </div>
-            <div class="col">
-                <div class="p-3 border">
+                <div class="col p-3 mr-2 border">
                     Opened Issues: @Model.IssueOpened
                 </div>
-            </div>
-            <div class="col">
-                <div class="p-3 border">
+                <div class="col p-3 mr-2 border">
                     Closed Issues: @Model.IssueClosed
                 </div>
             </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col">
-                <div class="p-3 border">
+            <div class="row mt-2">
+                <div class="col p-3 mr-2 border">
                     Total Bugs: @Model.BugCount
                 </div>
-            </div>
-            <div class="col">
-                <div class="p-3 border">
+                <div class="col p-3 mr-2 border">
                     Opened Bugs: @Model.BugOpened
                 </div>
-            </div>
-            <div class="col">
-                <div class="p-3 border">
+                <div class="col p-3 mr-2 border">
                     Closed Bugs: @Model.BugClosed
                 </div>
             </div>
         </div>
-        <canvas id="statChart" width="800" height="400"></canvas>
+        <div class="col-6">
+            <canvas id="statChart" width="400" height="200"></canvas>
+        </div>
     </div>
     <hr/>
     <h4>Recent Bissues</h4>

@@ -1,4 +1,5 @@
 @using Microsoft.AspNetCore.Identity
+@using Westwind.AspNetCore.Markdown
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
 
@@ -15,7 +16,7 @@
 <div class="row">
     <div class="col-6">
         <small class="text-stupid">Description</small>
-        <p>@Model.Project.Description</p>
+        <p>@Markdown.ParseHtmlString(Model.Project.Description)</p>
     </div>
     <div class="col-6">
         <canvas id="statChart" width="400" height="200"></canvas>
