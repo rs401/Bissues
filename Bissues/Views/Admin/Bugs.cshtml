@@ -1,0 +1,47 @@
+﻿@model Bissues.ViewModels.AdminBugsViewModel
+@{
+    ViewData["Title"] = "Admin Page";
+}
+
+    <div class="col-md-10">
+        <h1 class="display-4">Welcome to Admin</h1>
+        <p class="mt-3">
+            Do the Admin thing.
+        </p>
+    </div>
+    <hr/>
+
+    <div class="container px-4">
+        @foreach (var item in Model.Bugs)
+        {
+            <div class = "card mb-2">
+                <a asp-controller="Admin" asp-action="BissueDetails" asp-route-id="@item.Id" class = "btn text-left text-decoration-none">
+                    <div class="card-body">
+                        <p class="card-title"><b>@item.Title</b> 
+                            @if(item.IsOpen)
+                            {
+                                <span class="text-success">Open</span>
+                            }
+                            else
+                            {
+                                <span class="text-danger">Closed</span>
+                            }
+                        </p>
+                        <p>
+                            @if(item.Label == BissueLabel.Issue)
+                            {
+                                <span class="text-success">Issue</span>
+                            }
+                            else
+                            {
+                                <span class="text-danger">Bug</span>
+                            }
+                        </p>
+                        <p class="card-text">@item.Description</p>
+                        <footer>Project: @item.Project.Name</footer>
+                    </div>
+                        
+                </a>
+            </div>
+        }
+    </div>
