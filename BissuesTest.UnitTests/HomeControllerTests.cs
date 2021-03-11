@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Bissues;
 using Bissues.Controllers;
 using Bissues.Data;
+using Bissues.Models;
 using Bissues.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -30,16 +31,50 @@ namespace BissuesTest.UnitTests
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: "Bissues")
                 .Options;
-            // Act
-            // Insert seed data into the database using one instance of the context
-            // using (var context = new ApplicationDbContext(options))
-            // {
-            //     context.Movies.Add(new Movie {Id = 1, Title = "Movie 1", YearOfRelease = 2018, Genre = "Action"});
-            //     context.Movies.Add(new Movie {Id = 2, Title = "Movie 2", YearOfRelease = 2018, Genre = "Action"});
-            //     context.Movies.Add(new Movie {Id = 3, Title = "Movie 3", YearOfRelease = 2019, Genre = "Action"});
-            //     context.SaveChanges();
-            // }
             
+            // Insert seed data into the database
+            using (var context = new ApplicationDbContext(options))
+            {
+                context.Bissues.Add(new Bissue 
+                {
+                    Id = 1, 
+                    Title = "Test Bissue 1", 
+                    Description = "Test Bissue 1 Description", 
+                    IsOpen = true, 
+                    ProjectId = 1, 
+                    Label = BissueLabel.Issue
+                });
+                context.Bissues.Add(new Bissue 
+                {
+                    Id = 2, 
+                    Title = "Test Bissue 2", 
+                    Description = "Test Bissue 2 Description", 
+                    IsOpen = false, 
+                    ProjectId = 1, 
+                    Label = BissueLabel.Issue
+                });
+                context.Bissues.Add(new Bissue 
+                {
+                    Id = 3, 
+                    Title = "Test Bug 1", 
+                    Description = "Test Bug 1 Description", 
+                    IsOpen = true, 
+                    ProjectId = 1, 
+                    Label = BissueLabel.Bug
+                });
+                context.Bissues.Add(new Bissue 
+                {
+                    Id = 4, 
+                    Title = "Test Bug 2", 
+                    Description = "Test Bug 2 Description", 
+                    IsOpen = false, 
+                    ProjectId = 1, 
+                    Label = BissueLabel.Bug
+                });
+                context.SaveChanges();
+            }
+            
+            // Act
             // Assert
             using (var context = new ApplicationDbContext(options))
             {
@@ -81,9 +116,27 @@ namespace BissuesTest.UnitTests
             using (var context = new ApplicationDbContext(options))
             {
                 _sut = new HomeController(new NullLogger<HomeController>(), context);
-                var result = _sut.About();
+                var result = _sut.Privacy();
 
                 Assert.IsType<ViewResult>(result);
+            }
+        }
+        [Fact]
+        public void Error_ReturnsAViewWithErrorViewModel()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "Bissues")
+                .Options;
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(options))
+            {
+                _sut = new HomeController(new NullLogger<HomeController>(), context);
+                var result = _sut.Error();
+
+                var viewResult = Assert.IsType<ViewResult>(result);
+                var model = Assert.IsAssignableFrom<ErrorViewModel>(viewResult.ViewData.Model);
             }
         }
 
