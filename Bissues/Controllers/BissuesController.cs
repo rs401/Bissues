@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Identity;
 using System.Dynamic;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using Westwind.AspNetCore.Markdown;
+using Ganss.XSS;
 
 namespace Bissues.Controllers
 {
@@ -138,6 +140,11 @@ namespace Bissues.Controllers
                 bissue.ModifiedDate = DateTime.UtcNow;
                 bissue.AppUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 
+                // Sanitize html if any
+                var sanitizer = new HtmlSanitizer();
+                var sanitizedDesc = sanitizer.Sanitize(bissue.Description);
+                bissue.Description = sanitizedDesc;
+
                 _context.Add(bissue);
                 var project = await _context.Projects.FindAsync(bissue.ProjectId);
                 project.ModifiedDate = DateTime.UtcNow;
@@ -205,6 +212,11 @@ namespace Bissues.Controllers
             {
                 bissue.ClosedDate = DateTime.UtcNow;
             }
+
+            // Sanitize html if any
+            var sanitizer = new HtmlSanitizer();
+            var sanitizedDesc = sanitizer.Sanitize(bissue.Description);
+            bissue.Description = sanitizedDesc;
 
             if (ModelState.IsValid)
             {

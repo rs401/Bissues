@@ -10,6 +10,7 @@ using Bissues.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using Ganss.XSS;
 
 namespace Bissues.Controllers
 {
@@ -101,6 +102,12 @@ namespace Bissues.Controllers
                 message.CreatedDate = DateTime.UtcNow;
                 message.ModifiedDate = DateTime.UtcNow;
                 message.AppUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+                // Sanitize html if any
+                var sanitizer = new HtmlSanitizer();
+                var sanitizedBody = sanitizer.Sanitize(message.Body);
+                message.Body = sanitizedBody;
+
                 _context.Add(message);
                 // Update Bissue modified date
                 var bissue = await _context.Bissues.FindAsync(message.BissueId);
@@ -181,6 +188,12 @@ namespace Bissues.Controllers
             {
                 return new ForbidResult();
             }
+
+            // Sanitize html if any
+            var sanitizer = new HtmlSanitizer();
+            var sanitizedBody = sanitizer.Sanitize(message.Body);
+            message.Body = sanitizedBody;
+
             if (ModelState.IsValid)
             {
                 try
