@@ -121,24 +121,24 @@ namespace BissuesTest.UnitTests
                 Assert.IsType<ViewResult>(result);
             }
         }
-        [Fact]
-        public void Error_ReturnsAViewWithErrorViewModel()
-        {
-            // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "Bissues")
-                .Options;
-            // Act
-            // Assert
-            using (var context = new ApplicationDbContext(options))
-            {
-                _sut = new HomeController(new NullLogger<HomeController>(), context);
-                var result = _sut.Error();
+        // [Fact]
+        // public void Error_ReturnsAViewWithErrorViewModel()
+        // {
+        //     // Arrange
+        //     var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+        //         .UseInMemoryDatabase(databaseName: "Bissues")
+        //         .Options;
+        //     // Act
+        //     // Assert
+        //     using (var context = new ApplicationDbContext(options))
+        //     {
+        //         _sut = new HomeController(new NullLogger<HomeController>(), context);
+        //         var result = _sut.Error();
 
-                var viewResult = Assert.IsType<ViewResult>(result);
-                var model = Assert.IsAssignableFrom<ErrorViewModel>(viewResult.ViewData.Model);
-            }
-        }
+        //         var viewResult = Assert.IsType<ViewResult>(result);
+        //         var model = Assert.IsAssignableFrom<ErrorViewModel>(viewResult.ViewData.Model);
+        //     }
+        // }
 
     }
 }
