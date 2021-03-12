@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Bissues;
 using Bissues.Controllers;
 using Bissues.Data;
 using Bissues.Models;
 using Bissues.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -79,46 +81,104 @@ namespace BissuesTest.UnitTests
             }
         }
 
-        // [Theory]
-        // [InlineData("/Projects/Index")]
-        // [InlineData("/Projects/Edit")]/* OK because it redirects to login. */
-        // [InlineData("/Projects/Create")]/* OK because it redirects to login. */
-        // [InlineData("/Projects/Details/1")]
-        // [InlineData("/Projects/Details/1?currentIndex=2")]
-        // public async Task BaseTest(string url)
-        // {
-        //     // Arrange
-        //     var client = _factory.CreateClient();
+        [Fact]
+        public async Task DetailsWithNullId_ReturnsNotFound()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "Bissues")
+                .Options;
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(options))
+            {
+                _sut = new ProjectsController(context);
+                int? id = null;
+                int? index = null;
+                var result = await _sut.Details(id,index);
+                var viewResult = Assert.IsType<NotFoundResult>(result);
 
-        //     // Act
-        //     var response = await client.GetAsync(url);
+                id = 2;
+                result = await _sut.Details(id,index);
+                viewResult = Assert.IsType<NotFoundResult>(result);
+            }
+        }
 
-        //     // Assert
-        //     response.EnsureSuccessStatusCode(); // Status Code 200-299
-        //     Assert.Equal("text/html; charset=utf-8",
-        //         response.Content.Headers.ContentType.ToString());
-        // }
+        [Fact]
+        public async Task DetailsWithNullProject_ReturnsNotFound()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "Bissues")
+                .Options;
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(options))
+            {
+                _sut = new ProjectsController(context);
+                int? id = 2;
+                int? index = null;
+                var result = await _sut.Details(id,index);
+                var viewResult = Assert.IsType<NotFoundResult>(result);
+            }
+        }
 
-        // [Theory]
-        // [InlineData("/Projects/Fail")]
-        // [InlineData("/Projects/Details")]
-        // [InlineData("/Projects/Details/999999")]
-        // public async Task NotFoundErrorTest(string url)
-        // {
-        //     // Arrange
-        //     var client = _factory.CreateClient();
+        [Fact]
+        public async Task DetailsWithNullIndex_ReturnsView__WithProjectsDetailViewModel()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "Bissues")
+                .Options;
+            // Act
+            // Insert seed data into the database context
+            using (var context = new ApplicationDbContext(options))
+            {
+                context.Projects.Add(new Project {Id = 3, Name = "Test Project 2", Description = "Test Project 2 Description"});
+                context.SaveChanges();
+            }
+            // Assert
+            using (var context = new ApplicationDbContext(options))
+            {
+                _sut = new ProjectsController(context);
+                int? id = 3;
+                int? index = null;
+                var result = await _sut.Details(id,index);
+                var viewResult = Assert.IsType<ViewResult>(result);
+                var model = Assert.IsAssignableFrom<ProjectsDetailViewModel>(viewResult.ViewData.Model);
 
-        //     // Act
-        //     var response = await client.GetAsync(url);
+            }
+        }
+        [Fact]
+        public void Create_ReturnsView()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "Bissues")
+                .Options;
+            // Act
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.Name, "UserName"),
+                new Claim(ClaimTypes.Role, "Admin")
+            }));
+            // Assert
+            using (var context = new ApplicationDbContext(options))
+            {
+                _sut = new ProjectsController(context);
+                _sut.ControllerContext = new ControllerContext()
+                {
+                    HttpContext = new DefaultHttpContext() { User = user }
+                };
+                /* I don't think this is working correctly, I think I'm being
+                 * redirected to login view */
+                var result = _sut.Create();
+                System.Console.WriteLine("Result: " + result);
+                var viewResult = Assert.IsType<ViewResult>(result);
+                System.Console.WriteLine("viewResult.TempData: " + viewResult.TempData);
+            }
+        }
 
-        //     // Assert
-        //     Assert.Equal(System.Net.HttpStatusCode.NotFound,response.StatusCode);
-        // }
-
-        // [Fact]
-        // public void Test1()
-        // {
-
-        // }
+        
     }//END class ProjectsControllerTests
 }
