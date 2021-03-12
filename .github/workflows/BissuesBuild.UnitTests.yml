@@ -22,4 +22,4 @@ jobs:
     - name: Build
       run: dotnet build Bissues --no-restore
     - name: Test
-      run: dotnet test BissuesTest.UnitTests --no-build --verbosity normal
+      run: dotnet test BissuesTest.UnitTests --verbosity normal
