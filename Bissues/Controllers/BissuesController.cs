@@ -176,16 +176,11 @@ namespace Bissues.Controllers
                 return NotFound();
             }
             // Verify user is owner or admin
-            var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            if(reqUser.Id != bissue.AppUserId && !User.IsInRole("Admin"))
+            if(User.FindFirst(ClaimTypes.NameIdentifier).Value != bissue.AppUserId && !User.IsInRole("Admin"))
             {
                 return new ForbidResult();
             }
             
-            //Passing the appuserid of the owner
-            ViewData["AppUserId"] = bissue.AppUserId;
-            ViewData["CreatedDate"] = bissue.CreatedDate;
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", bissue.ProjectId);
             return View(bissue);
         }
 
