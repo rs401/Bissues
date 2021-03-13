@@ -36,8 +36,8 @@ namespace Bissues.Controllers
         /// <returns></returns>
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Messages.Include(m => m.Bissue);
-            return View(await applicationDbContext.ToListAsync());
+            var messages = await _context.Messages.Include(m => m.Bissue).ToListAsync();
+            return View(messages);
         }
 
         // Haven't decided if keeping or not
