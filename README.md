@@ -283,6 +283,5 @@ Project Link: [https://github.com/rs401/Bissues](https://github.com/rs401/Bissue
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/richard-stadnick-3b4ab53b
 [product-screenshot]: images/screenshot.png
-<!-- [actions-build-badge]: https://github.com/rs401/Bissues/actions/workflows/BissuesBuild.UnitTests.yml/badge.svg -->
-[actions-build-badge]: https://img.shields.io/github/workflow/status/rs401/BissuesProject/BissuesBuild.UnitTests.yml
+[actions-build-badge]: https://github.com/rs401/Bissues/actions/workflows/BissuesBuild.UnitTests.yml/badge.svg
 [actions-build-url]: https://github.com/rs401/Bissues/actions/workflows/BissuesBuild.UnitTests.yml
