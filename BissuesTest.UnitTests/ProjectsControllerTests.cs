@@ -17,14 +17,12 @@ using Xunit;
 
 namespace BissuesTest.UnitTests
 {
-    public class ProjectsControllerTests : IClassFixture<WebApplicationFactory<Startup>>
+    public class ProjectsControllerTests
     {
-        private readonly WebApplicationFactory<Startup> _factory;
         private ProjectsController _sut;
 
-        public ProjectsControllerTests(WebApplicationFactory<Startup> factory)
+        public ProjectsControllerTests()
         {
-            _factory = factory;
         }
 
         [Fact]
@@ -35,15 +33,6 @@ namespace BissuesTest.UnitTests
                 .UseInMemoryDatabase(databaseName: "Bissues")
                 .Options;
             // Act
-            // Insert seed data into the database using one instance of the context
-            // using (var context = new ApplicationDbContext(options))
-            // {
-            //     context.Movies.Add(new Movie {Id = 1, Title = "Movie 1", YearOfRelease = 2018, Genre = "Action"});
-            //     context.Movies.Add(new Movie {Id = 2, Title = "Movie 2", YearOfRelease = 2018, Genre = "Action"});
-            //     context.Movies.Add(new Movie {Id = 3, Title = "Movie 3", YearOfRelease = 2019, Genre = "Action"});
-            //     context.SaveChanges();
-            // }
-            
             // Assert
             using (var context = new ApplicationDbContext(options))
             {
@@ -157,28 +146,132 @@ namespace BissuesTest.UnitTests
                 .UseInMemoryDatabase(databaseName: "Bissues")
                 .Options;
             // Act
-            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
-            {
-                new Claim(ClaimTypes.Name, "UserName"),
-                new Claim(ClaimTypes.Role, "Admin")
-            }));
             // Assert
             using (var context = new ApplicationDbContext(options))
             {
                 _sut = new ProjectsController(context);
-                _sut.ControllerContext = new ControllerContext()
-                {
-                    HttpContext = new DefaultHttpContext() { User = user }
-                };
-                /* I don't think this is working correctly, I think I'm being
-                 * redirected to login view */
                 var result = _sut.Create();
-                System.Console.WriteLine("Result: " + result);
                 var viewResult = Assert.IsType<ViewResult>(result);
-                System.Console.WriteLine("viewResult.TempData: " + viewResult.TempData);
             }
         }
 
+        [Fact]
+        public async Task Edit_ReturnsAView_WithAProjectModel()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "Bissues")
+                .Options;
+            // Insert seed data into the database context
+            using (var context = new ApplicationDbContext(options))
+            {
+                context.Projects.Add(new Project {Id = 4, Name = "Test Project 3", Description = "Test Project 3 Description"});
+                context.SaveChanges();
+            }
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(options))
+            {
+                _sut = new ProjectsController(context);
+                var result = await _sut.Edit(4);
+                var viewResult = Assert.IsType<ViewResult>(result);
+                var model = Assert.IsAssignableFrom<Project>(viewResult.ViewData.Model);
+            }
+        }
+
+        [Fact]
+        public async Task EditWithNullId_ReturnsNotFound()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "Bissues")
+                .Options;
+            int? id = null;
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(options))
+            {
+                _sut = new ProjectsController(context);
+                var result = await _sut.Edit(id);
+                var viewResult = Assert.IsType<NotFoundResult>(result);
+            }
+        }
+
+        [Fact]
+        public async Task EditWithNullProject_ReturnsNotFound()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "Bissues")
+                .Options;
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(options))
+            {
+                _sut = new ProjectsController(context);
+                var result = await _sut.Edit(2);
+                var viewResult = Assert.IsType<NotFoundResult>(result);
+            }
+        }
+
+        [Fact]
+        public async Task DeleteWithNullId_ReturnsNotFound()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "Bissues")
+                .Options;
+            int? id = null;
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(options))
+            {
+                _sut = new ProjectsController(context);
+                var result = await _sut.Delete(id);
+                var viewResult = Assert.IsType<NotFoundResult>(result);
+            }
+        }
+
+        [Fact]
+        public async Task DeleteWithNullProject_ReturnsNotFound()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "Bissues")
+                .Options;
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(options))
+            {
+                _sut = new ProjectsController(context);
+                var result = await _sut.Delete(2);
+                var viewResult = Assert.IsType<NotFoundResult>(result);
+            }
+        }
+
+        [Fact]
+        public async Task Delete_ReturnsAView_WithAProject()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "Bissues")
+                .Options;
+            // Insert seed data into the database context
+            using (var context = new ApplicationDbContext(options))
+            {
+                context.Projects.Add(new Project {Id = 5, Name = "Test Project 4", Description = "Test Project 4 Description"});
+                context.SaveChanges();
+            }
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(options))
+            {
+                _sut = new ProjectsController(context);
+                var result = await _sut.Delete(5);
+                var viewResult = Assert.IsType<ViewResult>(result);
+                var model = Assert.IsAssignableFrom<Project>(viewResult.ViewData.Model);
+            }
+        }
         
     }//END class ProjectsControllerTests
 }

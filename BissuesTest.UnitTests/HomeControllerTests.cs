@@ -15,13 +15,11 @@ using Xunit;
 
 namespace BissuesTest.UnitTests
 {
-    public class HomeControllerTests : IClassFixture<WebApplicationFactory<Startup>>
+    public class HomeControllerTests
     {
-        private readonly WebApplicationFactory<Startup> _factory;
         private HomeController _sut;
-        public HomeControllerTests(WebApplicationFactory<Startup> factory)
+        public HomeControllerTests()
         {
-            _factory = factory;
         }
 
         [Fact]
@@ -121,24 +119,5 @@ namespace BissuesTest.UnitTests
                 Assert.IsType<ViewResult>(result);
             }
         }
-        // [Fact]
-        // public void Error_ReturnsAViewWithErrorViewModel()
-        // {
-        //     // Arrange
-        //     var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-        //         .UseInMemoryDatabase(databaseName: "Bissues")
-        //         .Options;
-        //     // Act
-        //     // Assert
-        //     using (var context = new ApplicationDbContext(options))
-        //     {
-        //         _sut = new HomeController(new NullLogger<HomeController>(), context);
-        //         var result = _sut.Error();
-
-        //         var viewResult = Assert.IsType<ViewResult>(result);
-        //         var model = Assert.IsAssignableFrom<ErrorViewModel>(viewResult.ViewData.Model);
-        //     }
-        // }
-
     }
 }
