@@ -20,21 +20,22 @@ namespace BissuesTest.UnitTests
     public class ProjectsControllerTests
     {
         private ProjectsController _sut;
-
+        private DbContextOptions<ApplicationDbContext> _options;
         public ProjectsControllerTests()
         {
+            _options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "Bissues")
+                .Options;
         }
 
         [Fact]
         public async Task Index_ReturnsAView_WithListOfProjects()
         {
             // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "Bissues")
-                .Options;
+            
             // Act
             // Assert
-            using (var context = new ApplicationDbContext(options))
+            using (var context = new ApplicationDbContext(_options))
             {
                 _sut = new ProjectsController(context);
                 var result = await _sut.Index();
@@ -48,19 +49,17 @@ namespace BissuesTest.UnitTests
         public async Task Details_ReturnsAView_WithProjectsDetailViewModel()
         {
             // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "Bissues")
-                .Options;
+            
             // Act
             // Insert seed data into the database context
-            using (var context = new ApplicationDbContext(options))
+            using (var context = new ApplicationDbContext(_options))
             {
                 context.Projects.Add(new Project {Id = 1, Name = "Test Project 1", Description = "Test Project 1 Description"});
                 context.SaveChanges();
             }
             
             // Assert
-            using (var context = new ApplicationDbContext(options))
+            using (var context = new ApplicationDbContext(_options))
             {
                 _sut = new ProjectsController(context);
                 var result = await _sut.Details(1,1);
@@ -74,22 +73,16 @@ namespace BissuesTest.UnitTests
         public async Task DetailsWithNullId_ReturnsNotFound()
         {
             // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "Bissues")
-                .Options;
+            
             // Act
             // Assert
-            using (var context = new ApplicationDbContext(options))
+            using (var context = new ApplicationDbContext(_options))
             {
                 _sut = new ProjectsController(context);
                 int? id = null;
-                int? index = null;
+                int? index = 1;
                 var result = await _sut.Details(id,index);
                 var viewResult = Assert.IsType<NotFoundResult>(result);
-
-                id = 2;
-                result = await _sut.Details(id,index);
-                viewResult = Assert.IsType<NotFoundResult>(result);
             }
         }
 
@@ -97,15 +90,13 @@ namespace BissuesTest.UnitTests
         public async Task DetailsWithNullProject_ReturnsNotFound()
         {
             // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "Bissues")
-                .Options;
+            
             // Act
             // Assert
-            using (var context = new ApplicationDbContext(options))
+            using (var context = new ApplicationDbContext(_options))
             {
                 _sut = new ProjectsController(context);
-                int? id = 2;
+                int? id = 9999;
                 int? index = null;
                 var result = await _sut.Details(id,index);
                 var viewResult = Assert.IsType<NotFoundResult>(result);
@@ -116,18 +107,20 @@ namespace BissuesTest.UnitTests
         public async Task DetailsWithNullIndex_ReturnsView__WithProjectsDetailViewModel()
         {
             // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "Bissues")
-                .Options;
+            
             // Act
             // Insert seed data into the database context
-            using (var context = new ApplicationDbContext(options))
+            using (var context = new ApplicationDbContext(_options))
             {
-                context.Projects.Add(new Project {Id = 3, Name = "Test Project 2", Description = "Test Project 2 Description"});
+                context.Projects.Add(new Project {
+                    Id = 3, 
+                    Name = "Test Project 2", 
+                    Description = "Test Project 2 Description"
+                });
                 context.SaveChanges();
             }
             // Assert
-            using (var context = new ApplicationDbContext(options))
+            using (var context = new ApplicationDbContext(_options))
             {
                 _sut = new ProjectsController(context);
                 int? id = 3;
@@ -142,12 +135,10 @@ namespace BissuesTest.UnitTests
         public void Create_ReturnsView()
         {
             // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "Bissues")
-                .Options;
+            
             // Act
             // Assert
-            using (var context = new ApplicationDbContext(options))
+            using (var context = new ApplicationDbContext(_options))
             {
                 _sut = new ProjectsController(context);
                 var result = _sut.Create();
@@ -159,18 +150,16 @@ namespace BissuesTest.UnitTests
         public async Task Edit_ReturnsAView_WithAProjectModel()
         {
             // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "Bissues")
-                .Options;
+            
             // Insert seed data into the database context
-            using (var context = new ApplicationDbContext(options))
+            using (var context = new ApplicationDbContext(_options))
             {
                 context.Projects.Add(new Project {Id = 4, Name = "Test Project 3", Description = "Test Project 3 Description"});
                 context.SaveChanges();
             }
             // Act
             // Assert
-            using (var context = new ApplicationDbContext(options))
+            using (var context = new ApplicationDbContext(_options))
             {
                 _sut = new ProjectsController(context);
                 var result = await _sut.Edit(4);
@@ -183,13 +172,11 @@ namespace BissuesTest.UnitTests
         public async Task EditWithNullId_ReturnsNotFound()
         {
             // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "Bissues")
-                .Options;
+            
             int? id = null;
             // Act
             // Assert
-            using (var context = new ApplicationDbContext(options))
+            using (var context = new ApplicationDbContext(_options))
             {
                 _sut = new ProjectsController(context);
                 var result = await _sut.Edit(id);
@@ -201,15 +188,13 @@ namespace BissuesTest.UnitTests
         public async Task EditWithNullProject_ReturnsNotFound()
         {
             // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "Bissues")
-                .Options;
+            
             // Act
             // Assert
-            using (var context = new ApplicationDbContext(options))
+            using (var context = new ApplicationDbContext(_options))
             {
                 _sut = new ProjectsController(context);
-                var result = await _sut.Edit(2);
+                var result = await _sut.Edit(9999);
                 var viewResult = Assert.IsType<NotFoundResult>(result);
             }
         }
@@ -218,13 +203,11 @@ namespace BissuesTest.UnitTests
         public async Task DeleteWithNullId_ReturnsNotFound()
         {
             // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "Bissues")
-                .Options;
+            
             int? id = null;
             // Act
             // Assert
-            using (var context = new ApplicationDbContext(options))
+            using (var context = new ApplicationDbContext(_options))
             {
                 _sut = new ProjectsController(context);
                 var result = await _sut.Delete(id);
@@ -236,12 +219,10 @@ namespace BissuesTest.UnitTests
         public async Task DeleteWithNullProject_ReturnsNotFound()
         {
             // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "Bissues")
-                .Options;
+            
             // Act
             // Assert
-            using (var context = new ApplicationDbContext(options))
+            using (var context = new ApplicationDbContext(_options))
             {
                 _sut = new ProjectsController(context);
                 var result = await _sut.Delete(2);
@@ -253,18 +234,16 @@ namespace BissuesTest.UnitTests
         public async Task Delete_ReturnsAView_WithAProject()
         {
             // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "Bissues")
-                .Options;
+            
             // Insert seed data into the database context
-            using (var context = new ApplicationDbContext(options))
+            using (var context = new ApplicationDbContext(_options))
             {
                 context.Projects.Add(new Project {Id = 5, Name = "Test Project 4", Description = "Test Project 4 Description"});
                 context.SaveChanges();
             }
             // Act
             // Assert
-            using (var context = new ApplicationDbContext(options))
+            using (var context = new ApplicationDbContext(_options))
             {
                 _sut = new ProjectsController(context);
                 var result = await _sut.Delete(5);

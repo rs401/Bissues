@@ -18,20 +18,22 @@ namespace BissuesTest.UnitTests
     public class HomeControllerTests
     {
         private HomeController _sut;
+        private DbContextOptions<ApplicationDbContext> _options;
         public HomeControllerTests()
         {
+            _options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "Bissues")
+                .Options;
         }
 
         [Fact]
         public async Task Index_ReturnsAView_WithIndexViewModel()
         {
             // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "Bissues")
-                .Options;
+            
             
             // Insert seed data into the database
-            using (var context = new ApplicationDbContext(options))
+            using (var context = new ApplicationDbContext(_options))
             {
                 context.Bissues.Add(new Bissue 
                 {
@@ -74,7 +76,7 @@ namespace BissuesTest.UnitTests
             
             // Act
             // Assert
-            using (var context = new ApplicationDbContext(options))
+            using (var context = new ApplicationDbContext(_options))
             {
                 _sut = new HomeController(new NullLogger<HomeController>(), context);
                 var result = await _sut.Index();
@@ -88,12 +90,10 @@ namespace BissuesTest.UnitTests
         public void About_ReturnsAView()
         {
             // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "Bissues")
-                .Options;
+            
             // Act
             // Assert
-            using (var context = new ApplicationDbContext(options))
+            using (var context = new ApplicationDbContext(_options))
             {
                 _sut = new HomeController(new NullLogger<HomeController>(), context);
                 var result = _sut.About();
@@ -106,12 +106,10 @@ namespace BissuesTest.UnitTests
         public void Privacy_ReturnsAView()
         {
             // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "Bissues")
-                .Options;
+            
             // Act
             // Assert
-            using (var context = new ApplicationDbContext(options))
+            using (var context = new ApplicationDbContext(_options))
             {
                 _sut = new HomeController(new NullLogger<HomeController>(), context);
                 var result = _sut.Privacy();
