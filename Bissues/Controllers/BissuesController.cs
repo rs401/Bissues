@@ -73,9 +73,7 @@ namespace Bissues.Controllers
                 return NotFound();
             }
 
-            var bissue = await _context.Bissues
-                .Include(b => b.Project)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var bissue = await _context.Bissues.FirstOrDefaultAsync(b => b.Id == id);
             if (bissue == null)
             {
                 return NotFound();
@@ -91,7 +89,10 @@ namespace Bissues.Controllers
         {
             int maxRows = 10;
             BissuesDetailsViewModel bdvModel = new BissuesDetailsViewModel();
-            var bissue = _context.Bissues.Include(b => b.AppUser).FirstOrDefault(b => b.Id == id);
+            var bissue = _context.Bissues
+                .Include(b => b.Project)
+                .Include(b => b.AppUser)
+                .FirstOrDefault(b => b.Id == id);
             bdvModel.Bissue = bissue;
             var messages = _context.Messages.Where(m => m.BissueId == id).Include(m => m.AppUser).OrderBy(m => m.CreatedDate).ToList();
             bdvModel.Messages = messages.Skip((index - 1) * maxRows).Take(maxRows).ToList();
