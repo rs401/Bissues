@@ -219,13 +219,13 @@ namespace BissuesTest.UnitTests
         public async Task DeleteWithNullProject_ReturnsNotFound()
         {
             // Arrange
-            
+            int? id = 999;
             // Act
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
                 _sut = new ProjectsController(context);
-                var result = await _sut.Delete(2);
+                var result = await _sut.Delete(id);
                 var viewResult = Assert.IsType<NotFoundResult>(result);
             }
         }
