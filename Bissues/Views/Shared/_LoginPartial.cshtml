@@ -5,6 +5,12 @@
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
+    @if(User.IsInRole("Admin"))
+    {
+        <li class="nav-item">
+            <a  class="nav-link text-dark" asp-controller="Admin" asp-action="Index" title="Admin Dashboard">Admin Dashboard</a>
+        </li>
+    }
     <li class="nav-item">
         <a asp-action="Index" asp-controller="AppUser">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
