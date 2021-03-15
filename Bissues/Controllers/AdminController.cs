@@ -85,16 +85,23 @@ namespace Bissues.Controllers
                     _context.Update(bissue);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException dbe)
                 {
+                    // If Bissue has been deleted
                     if (!BissueExists(bissue.Id))
                     {
                         return NotFound();
                     }
                     else
                     {
+                        _logger.LogError(dbe, "Admin Edit POST DbUpdateConcurrencyException");
                         throw;
                     }
+                }
+                catch(Exception ex)
+                {
+                    _logger.LogError(AppLogEvents.Update, ex, "Admin Edit POST DbUpdateConcurrencyException");
+                    throw;
                 }
                 return RedirectToAction(nameof(Bissues));
             }
