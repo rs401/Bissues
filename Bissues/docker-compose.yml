@@ -1,0 +1,44 @@
+version: '3.9'
+
+networks:
+  bissues-dev:
+    driver: bridge
+
+services:
+  bissues:
+    image: bissues:latest
+    container_name: dev
+    depends_on:
+      - "postgres_image"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:80"
+      - "8001:443"
+    restart: unless-stopped
+    environment:
+      DB_CONNECTION_STRING: "Server=postgres_image;Port=5432;Database=BissuesDB;Username=postgres;Password=Admin@123;"
+    networks:
+      - bissues-dev
+
+  postgres_image:
+    image: postgres:latest
+    container_name: dev_db
+    ports:
+      - "5432"
+    restart: always
+    volumes:
+      - db_volume:/var/lib/postgresql/data
+      # - ./dbscripts/seed.sql :/docker-entrypoint-initdb.d/seed.sql
+    environment:
+      POSTGRES_DB: BissuesDB
+      # POSTGRES_USE: Bpostgres
+      POSTGRES_PASSWORD: Admin@123
+    networks:
+      - bissues-dev
+volumes:
+  db_volume:
+
+
+
