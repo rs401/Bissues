@@ -29,11 +29,12 @@ namespace Bissues
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
             services.AddDbContext<ApplicationDbContext>(options =>
                 // options.UseSqlite(
                 //     Configuration.GetConnectionString("DefaultConnection")));
-                options.UseNpgsql(
-                    Configuration.GetConnectionString("pgsql")));
+                options.UseNpgsql(connectionString));
+                    // Configuration.GetConnectionString("pgsql")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
