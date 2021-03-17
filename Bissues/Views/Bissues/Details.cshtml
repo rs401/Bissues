@@ -59,7 +59,7 @@
             <div class="card mb-2 text-dark">
                 <div class="card-body">
                     <p class="card-title"><u>@msg.AppUser.DisplayName</u> - <small class="text-muted">@msg.CreatedDate.ToString("ddd MMM dd, yyyy h:mm tt")</small></p>
-                    <p class="card-text description">@Markdown.ParseHtmlString(msg.Body)</p>
+                    <p class="card-text">@Markdown.ParseHtmlString(msg.Body)</p>
                 </div>
                 <div class="card-footer">
                     <small>Last edited: <span class="text-muted">@msg.ModifiedDate.ToString("ddd MMM dd, yyyy h:mm tt")</span></small>

@@ -1,3 +1,4 @@
+@using Westwind.AspNetCore.Markdown
 @model Bissues.ViewModels.BissuesIndexViewModel
 
 @{
@@ -10,23 +11,47 @@
     <a class="btn btn-primary" asp-action="Create">Create Bissue</a>
 </p>
 
-@foreach (var item in Model.Bissues)
+@foreach (var bissue in Model.Bissues)
 {
     <div class = "card mb-2">
-        <a asp-controller="Bissues" asp-action="Details" asp-route-id="@item.Id" class = "btn text-left text-decoration-none">
+        <a asp-controller="Bissues" asp-action="Details" asp-route-id="@bissue.Id" class = "btn text-left text-decoration-none">
             <div class="card-body">
-                <p class="card-title"><b>@item.Title</b> 
-                    @if(item.IsOpen)
+                <div class="row">
+                    <p class="card-title col"><b>@bissue.Title</b> 
+                        @if(bissue.IsOpen)
+                        {
+                            <span class="text-success">Open</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">Closed</span>
+                        }
+                    </p>
+                    <p class="col text-right">
+                        &nbsp;Label: 
+                        @if(@bissue.Label == 0)
+                        {
+                            <span class="text-success">Issue</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">Bug</span>
+                        }
+
+                    </p>
+                </div>
+                <p class="card-text">
+                    @if(bissue.Description.Length > 130)
                     {
-                        <span class="text-success">Open</span>
+                        @Markdown.ParseHtmlString(bissue.Description
+                            .Substring(0, 130))
                     }
                     else
                     {
-                        <span class="text-danger">Closed</span>
+                        @Markdown.ParseHtmlString(bissue.Description)
                     }
                 </p>
-                @* <p class="card-text">@item.Description</p> *@
-                <footer>Project: @item.Project.Name</footer>
+                <footer>Project: @bissue.Project.Name</footer>
             </div>
                 
         </a>

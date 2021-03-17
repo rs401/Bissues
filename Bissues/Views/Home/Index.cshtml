@@ -1,4 +1,5 @@
-﻿@model Bissues.ViewModels.IndexViewModel
+﻿@using Westwind.AspNetCore.Markdown
+@model Bissues.ViewModels.IndexViewModel
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -46,19 +47,45 @@
     @foreach (var bissue in Model.Bissues)
     {
         <div class = "card mb-2">
-            <a asp-controller="Bissues" asp-action="Details" asp-route-id="@bissue.Id" class = "btn text-left text-decoration-none">
+            <a asp-controller="Bissues" asp-action="Details" 
+                asp-route-id="@bissue.Id" 
+                class = "btn text-left text-decoration-none">
                 <div class="card-body">
-                    <p class="card-title"><b>@bissue.Title</b> 
-                        @if(bissue.IsOpen)
+                    <div class="row">
+                        <p class="card-title col"><b>@bissue.Title</b> 
+                            @if(bissue.IsOpen)
+                            {
+                                <span class="text-success">Open</span>
+                            }
+                            else
+                            {
+                                <span class="text-danger">Closed</span>
+                            }
+                        </p>
+                        <p class="col text-right">
+                            &nbsp;Label: 
+                            @if(@bissue.Label == 0)
+                            {
+                                <span class="text-success">Issue</span>
+                            }
+                            else
+                            {
+                                <span class="text-danger">Bug</span>
+                            }
+
+                        </p>
+                    </div>
+                    <p class="card-text">
+                        @if(bissue.Description.Length > 130)
                         {
-                            <span class="text-success">Open</span>
+                            @Markdown.ParseHtmlString(bissue.Description
+                                .Substring(0, 130))
                         }
                         else
                         {
-                            <span class="text-danger">Closed</span>
+                            @Markdown.ParseHtmlString(bissue.Description)
                         }
                     </p>
-                    <p class="card-text">@bissue.Description</p>
                     <footer>Project: @bissue.Project.Name</footer>
                 </div>
             </a>
@@ -72,10 +99,12 @@
         var myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ['Total Issues', 'Opened Issues', 'Closed Issues', 'Total Bugs', 'Opened Bugs', 'Closed Bugs'],
+            labels: ['Total Issues', 'Opened Issues', 'Closed Issues', 
+                'Total Bugs', 'Opened Bugs', 'Closed Bugs'],
             datasets: [{
                 label: '# of Bugs/Issues',
-                data: [@Model.IssueCount, @Model.IssueOpened, @Model.IssueClosed, @Model.BugCount, @Model.BugOpened, @Model.BugClosed],
+                data: [@Model.IssueCount, @Model.IssueOpened,@Model.IssueClosed, 
+                    @Model.BugCount, @Model.BugOpened, @Model.BugClosed],
                 backgroundColor: [
                     '#adcbe3'
                 ],
@@ -101,7 +130,7 @@
             responsive: true,
             legend: {
                 labels: {
-                    // This more specific font property overrides the global property
+                    // This more specific font property overrides the global 
                     fontColor: '#e7eff6'
                 }
             }
@@ -110,5 +139,7 @@
 
     };
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" 
+    integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" 
+    crossorigin="anonymous"></script>
 

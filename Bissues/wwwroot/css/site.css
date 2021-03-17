@@ -92,8 +92,10 @@ body {
 }
 
 /* New line, carriage return, line feed, for descriptions. */
-.description {
-  white-space: pre-line;
+pre {
+  background-color: #414141;
+  color: #e7eff6;
+  padding: 1em;
 }
 
 hr { 
