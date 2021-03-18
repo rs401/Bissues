@@ -1,4 +1,5 @@
-﻿@model Bissues.ViewModels.AdminAreaViewModel
+﻿@using Westwind.AspNetCore.Markdown
+@model Bissues.ViewModels.AdminAreaViewModel
 @{
     ViewData["Title"] = "Admin Page";
 }
@@ -6,7 +7,7 @@
     <div class="col-md-10">
         <h1 class="display-4">Welcome to Admin</h1>
         <p class="mt-3">
-            Do the Admin thing.
+            <a class="btn btn-primary" asp-controller="AppRoles" asp-action="Index">Users/Roles</a>
         </p>
     </div>
     <hr/>
@@ -45,6 +46,106 @@
                     Total Closed Bugs: @Model.Bissues.Where(b => b.Label == BissueLabel.Bug  && b.IsOpen == false).ToList().Count
                 </div>
             </div>
+        </div>
+        <h4 class="pt-4">Recent Bissues</h4>
+        <hr/>
+        <div class="overflow-auto p-3" style="max-height: 400px;">
+            @foreach (var bissue in Model.Bissues.Where(b => b.Label == BissueLabel.Issue).OrderByDescending(b => b.CreatedDate).Take(10))
+            {
+                <div class = "card mb-2">
+                    <a asp-controller="Bissues" asp-action="Details" asp-route-id="@bissue.Id" class = "btn text-left text-decoration-none">
+                        <div class="card-body">
+                            <div class="row">
+                                <p class="card-title col"><b>@bissue.Title</b> 
+                                    @if(bissue.IsOpen)
+                                    {
+                                        <span class="text-success">Open</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-danger">Closed</span>
+                                    }
+                                </p>
+                                <p class="col text-right">
+                                    &nbsp;Label: 
+                                    @if(@bissue.Label == 0)
+                                    {
+                                        <span class="text-success">Issue</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-danger">Bug</span>
+                                    }
+
+                                </p>
+                            </div>
+                            <p class="card-text">
+                                @if(bissue.Description.Length > 130)
+                                {
+                                    @Markdown.ParseHtmlString(bissue.Description
+                                        .Substring(0, 130))
+                                }
+                                else
+                                {
+                                    @Markdown.ParseHtmlString(bissue.Description)
+                                }
+                            </p>
+                            <footer>Project: @bissue.Project.Name</footer>
+                        </div>
+                            
+                    </a>
+                </div>
+            }
+        </div>
+        <h4 class="pt-4">Recent Bugs</h4>
+        <hr/>
+        <div class="overflow-auto p-3" style="max-height: 400px;">
+            @foreach (var bissue in Model.Bissues.Where(b => b.Label == BissueLabel.Bug).OrderByDescending(b => b.CreatedDate).Take(10))
+            {
+                <div class = "card mb-2">
+                    <a asp-controller="Bissues" asp-action="Details" asp-route-id="@bissue.Id" class = "btn text-left text-decoration-none">
+                        <div class="card-body">
+                            <div class="row">
+                                <p class="card-title col"><b>@bissue.Title</b> 
+                                    @if(bissue.IsOpen)
+                                    {
+                                        <span class="text-success">Open</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-danger">Closed</span>
+                                    }
+                                </p>
+                                <p class="col text-right">
+                                    &nbsp;Label: 
+                                    @if(@bissue.Label == 0)
+                                    {
+                                        <span class="text-success">Issue</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-danger">Bug</span>
+                                    }
+
+                                </p>
+                            </div>
+                            <p class="card-text">
+                                @if(bissue.Description.Length > 130)
+                                {
+                                    @Markdown.ParseHtmlString(bissue.Description
+                                        .Substring(0, 130))
+                                }
+                                else
+                                {
+                                    @Markdown.ParseHtmlString(bissue.Description)
+                                }
+                            </p>
+                            <footer>Project: @bissue.Project.Name</footer>
+                        </div>
+                            
+                    </a>
+                </div>
+            }
         </div>
     </div>
 
