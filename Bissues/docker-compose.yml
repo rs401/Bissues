@@ -1,8 +1,11 @@
 version: '3.9'
 
+# Add your existing docker network name OR delete the networks block and 
+# docker-compose will create one for the containers.
 networks:
-  bissues-dev:
-    driver: bridge
+  default:
+    external:
+      name: <Your-Docker-Network>
 
 services:
   bissues:
@@ -13,14 +16,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "8000:80"
-      - "8001:443"
     restart: unless-stopped
     environment:
       DB_CONNECTION_STRING: "Server=postgres_image;Port=5432;Database=BissuesDB;Username=postgres;Password=Admin@123;"
-    networks:
-      - bissues-dev
 
   postgres_image:
     image: postgres:latest
@@ -33,10 +31,9 @@ services:
       # - ./dbscripts/seed.sql :/docker-entrypoint-initdb.d/seed.sql
     environment:
       POSTGRES_DB: BissuesDB
-      # POSTGRES_USE: Bpostgres
       POSTGRES_PASSWORD: Admin@123
-    networks:
-      - bissues-dev
+    # networks:
+    #   - bissues-dev
 volumes:
   db_volume:
 
