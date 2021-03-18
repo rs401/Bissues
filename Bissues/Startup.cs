@@ -14,6 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using Bissues.Models;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Bissues.Services;
 
 namespace Bissues
 {
@@ -40,6 +42,8 @@ namespace Bissues
             services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.Configure<AuthMessageSenderOptions>(Configuration);
             services.AddControllersWithViews();
         }
 

@@ -19,6 +19,9 @@ services:
     restart: unless-stopped
     environment:
       DB_CONNECTION_STRING: "Server=postgres_image;Port=5432;Database=BissuesDB;Username=postgres;Password=Admin@123;"
+      SEND_GRID_USER: <Your SendGrid User>
+      SEND_GRID_EMAIL: <Your SendGrid Email>
+      SEND_GRID_KEY: <Your SendGrid API Key>
 
   postgres_image:
     image: postgres:latest
