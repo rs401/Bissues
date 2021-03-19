@@ -45,6 +45,19 @@
         <h5>Description:</h5>
         @Markdown.ParseHtmlString(Model.Bissue.Description)
     </div>
+    @* Share permalink *@
+    <a class="btn btn-primary" data-toggle="collapse" href="#ShareThis" role="button" aria-expanded="false" aria-controls="ShareThis">ShareThis</a>
+    <div class="collapse" id="ShareThis">
+        <label>Share This: </label>
+        <input type="text" value="@Url.Action("Details", "Bissues", Model.Bissue.Id, "https")" id="PermaLink">
+        <button class="btn btn-primary" onclick="shareThis()">Copy Link</button>
+    </div>
+    <div class="alert alert-success alert-dismissible fade" role="alert" id="CopySuccess">
+        <strong>Success!</strong> Link copied to your clipboard.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
     <hr/>
     
 </div>
@@ -102,3 +115,4 @@
         }
     </tr>
 </table>
+ <script src="~/js/site.js"></script> 
