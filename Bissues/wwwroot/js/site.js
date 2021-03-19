@@ -10,11 +10,11 @@ function goBack()
 function shareThis() 
 {
     /* Get the text field */
-    var copyText = document.getElementById("PermaLink");
+    var permaLink = document.getElementById("PermaLink");
 
     /* Select the text field */
-    copyText.select();
-    copyText.setSelectionRange(0, 99999); /* For mobile devices */
+    permaLink.select();
+    permaLink.setSelectionRange(0, 99999); /* For mobile devices */
 
     /* Copy the text inside the text field */
     document.execCommand("copy");
@@ -26,8 +26,14 @@ function shareThis()
 
 function copySuccess()
 {
-    var success = document.getElementById("CopySuccess");
     var share = document.getElementById("ShareThis");
-    success.classList.add("show");
+    var success = document.getElementById("CopySuccess");
+    var html = `
+        <strong>Success!</strong> Link copied to your clipboard.
+        <a type="button" class="close" data-toggle="collapse" href="#CopySuccess" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </a>`;
+    success.innerHTML = html;
     share.classList.remove("show");
+    success.classList.add("show");
 }
