@@ -14,7 +14,7 @@ a.navbar-brand {
 
 /* Provide sufficient contrast against white background */
 a {
-  color: var(--secondary-fg-color);
+  color: var(--secondary-bg-color);
 }
 
 .text-stupid {
