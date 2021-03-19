@@ -35,8 +35,7 @@ services:
     environment:
       POSTGRES_DB: BissuesDB
       POSTGRES_PASSWORD: Admin@123
-    # networks:
-    #   - bissues-dev
+      
 volumes:
   db_volume:
 
