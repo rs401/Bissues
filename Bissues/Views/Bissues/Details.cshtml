@@ -13,7 +13,9 @@
 
 <div>
     <h2>Bissue: @Model.Bissue.Title</h2>
+    ID: @Model.Bissue.Id <br />
     User: @Model.Bissue.AppUser.DisplayName <br />
+    <span class="pr-2">
     Status: 
     @if(@Model.Bissue.IsOpen)
     {
@@ -23,7 +25,8 @@
     {
         <span class="text-danger">Closed</span>
     }
-    &nbsp;Label: 
+    </span>
+    <span class="pl-2">Label: 
     @if(@Model.Bissue.Label == 0)
     {
         <span class="text-success">Issue</span>
@@ -32,8 +35,11 @@
     {
         <span class="text-danger">Bug</span>
     }
-    <small>Created: @Model.Bissue.CreatedDate.ToString("MMM dd, yyyy hh:mm tt") | Last Modified: @Model.Bissue.ModifiedDate.ToString("MMM dd, yyyy hh:mm tt")</small>
-    <hr/>
+    </span>
+    <span class="float-right">
+    <small>Created: @Model.Bissue.CreatedDate.ToString("MMM dd, yy") | Last Modified: @Model.Bissue.ModifiedDate.ToString("MMM dd, yy")</small>
+    </span>
+    <hr class="mt-0" />
     
     <div class="description pl-md-4 pr-md-4 pb-md-3 mb-md-2">
         <h5>Description:</h5>
