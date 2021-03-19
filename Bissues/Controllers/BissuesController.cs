@@ -46,7 +46,41 @@ namespace Bissues.Controllers
             }
             return View(GetBissues((int)index));
         }
-        
+        public IActionResult Search(int? index, string query)
+        {
+            // var bissues = await _context.Bissues.Include(b => b.Project).OrderByDescending(b => b.IsOpen).ThenByDescending(b => b.ModifiedDate).ToListAsync();
+            if(index == null)
+            {
+                if(query == null)
+                {
+                    return View(GetBissues(1));
+                }
+                else
+                {
+                    ViewBag.query = query;
+                    return View(GetSearchBissues(query, 1));
+                }
+            }
+            if(query == null)
+            {
+                return View(GetBissues((int)index));
+            }
+            return View(GetSearchBissues(query, (int)index));
+        }
+
+        private BissuesIndexViewModel GetSearchBissues(string query, int index)
+        {
+            int maxRows = 10;
+            BissuesIndexViewModel bivModel = new BissuesIndexViewModel();
+            var bissues = _context.Bissues.Include(b => b.Project)
+                .Where(b => b.Description.ToLower().Contains(query.ToLower()))
+                .OrderByDescending(b => b.IsOpen).ThenByDescending(b => b.ModifiedDate).ToList();
+            bivModel.Bissues = bissues.Skip((index - 1) * maxRows).Take(maxRows).ToList();
+            bivModel.CurrentIndex = index;
+            bivModel.PageCount = (bissues.Count / maxRows) + 1;
+            return bivModel;
+        }
+
         private BissuesIndexViewModel GetBissues(int index)
         {
             int maxRows = 10;

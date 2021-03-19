@@ -17,6 +17,10 @@ a {
   color: var(--primary-bg-color);
 }
 
+.card-body a {
+  color: #1a69ff;
+}
+
 .text-stupid {
   color: var(--secondary-fg-color);
 }

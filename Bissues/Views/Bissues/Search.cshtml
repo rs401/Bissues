@@ -1,0 +1,76 @@
+@using Westwind.AspNetCore.Markdown
+@model Bissues.ViewModels.BissuesIndexViewModel
+
+@{
+    ViewData["Title"] = "Search";
+}
+
+<div class="p-2">
+<h2>Search Bissues</h2>
+Query: @ViewBag.query
+</div>
+
+@foreach (var bissue in Model.Bissues)
+{
+    <div class = "card mb-2">
+        <a asp-controller="Bissues" asp-action="Details" asp-route-id="@bissue.Id" class = "btn text-left text-decoration-none">
+            <div class="card-body">
+                <div class="row">
+                    <p class="card-title col"><b>@bissue.Title</b> 
+                        @if(bissue.IsOpen)
+                        {
+                            <span class="text-success">Open</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">Closed</span>
+                        }
+                    </p>
+                    <p class="col text-right">
+                        &nbsp;Label: 
+                        @if(@bissue.Label == 0)
+                        {
+                            <span class="text-success">Issue</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">Bug</span>
+                        }
+
+                    </p>
+                </div>
+                <p class="card-text">
+                    @if(bissue.Description.Length > 130)
+                    {
+                        @Markdown.ParseHtmlString(bissue.Description
+                            .Substring(0, 130))
+                    }
+                    else
+                    {
+                        @Markdown.ParseHtmlString(bissue.Description)
+                    }
+                </p>
+                <footer>Project: @bissue.Project.Name</footer>
+            </div>
+                
+        </a>
+    </div>
+}
+
+<table cellpadding="0" cellspacing="0">
+    <tr>
+        @for (int i = 1; i <= Model.PageCount; i++)
+        {
+            <td>
+                @if (i != Model.CurrentIndex)
+                {
+                    <a class="btn btn-outline-primary m-1" asp-action="Search" asp-route-index="@i" >@i</a>
+                }
+                else
+                {
+                    <span class="btn btn-outline-secondary">@i</span>
+                }
+            </td>
+        }
+    </tr>
+</table>
