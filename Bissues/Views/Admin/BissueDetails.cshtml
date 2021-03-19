@@ -2,7 +2,6 @@
 @inject UserManager<AppUser> UserManager
 
 @model Bissues.Models.Bissue
-@* @model Bissues.ViewModels.AdminBissueViewModel *@
 @{
     ViewData["Title"] = "Edit";
     var users = await UserManager.GetUsersInRoleAsync("Developer");

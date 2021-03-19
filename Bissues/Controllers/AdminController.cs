@@ -58,9 +58,6 @@ namespace Bissues.Controllers
             {
                 return NotFound();
             }
-            AdminBissueViewModel model = new AdminBissueViewModel();
-            model.Bissue = bissue;
-            model.Users = await _context.AppUsers.ToListAsync();
             return View(bissue);
         }
 
