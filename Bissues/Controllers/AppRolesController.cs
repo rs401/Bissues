@@ -105,6 +105,10 @@ namespace Bissues.Controllers
             List<AppUser> allUsers = userManager.Users.ToList();
             foreach (AppUser user in allUsers)
             {
+                if(user.UserName == "admin@admin.com")
+                {
+                    continue;
+                }
                 var list = await userManager.IsInRoleAsync(user, role.Name) ? members : nonMembers;
                 list.Add(user);
             }
