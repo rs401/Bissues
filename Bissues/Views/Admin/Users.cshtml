@@ -1,0 +1,75 @@
+﻿@model System.Collections.Generic.List<Bissues.Models.AppUser>
+@{
+    ViewData["Title"] = "Admin Page";
+}
+
+    <div class="col-md-10">
+        <h1 class="display-4">Welcome to Admin</h1>
+        <p class="mt-3">
+            Do the Admin thing.
+        </p>
+    </div>
+    <hr/>
+
+    <div class="container px-4">
+        @foreach (var user in Model)
+        {
+            @if(user.UserName == "admin@admin.com"){continue;}
+            <div class = "card mb-2">
+                    <div class="card-body text-dark">
+                        <p class="card-text">
+                            <dl class="row">
+                                <dt class="col-sm-3">Account:</dt>
+                                <dd class="col-sm-9">@user.UserName</dd>
+
+                                <dt class="col-sm-3">First Name:</dt>
+                                <dd class="col-sm-9">@user.FirstName</dd>
+
+                                <dt class="col-sm-3">Last Name:</dt>
+                                <dd class="col-sm-9">@user.LastName</dd>
+
+                                <dt class="col-sm-3">Display Name:</dt>
+                                <dd class="col-sm-9">@user.DisplayName</dd>
+                            </dl>
+                            @if(user.LockoutEnabled == true)
+                            {
+                                <a class="btn btn-warning text-dark" asp-controller="Admin" asp-action="UnLockUser" asp-route-sid="@user.Id">Un-Lock?</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-danger text-light" asp-controller="Admin" asp-action="LockUser" asp-route-sid="@user.Id">Lock?</a>
+
+                            }
+                        </p>
+                        <footer>Id: @user.Id</footer>
+                    </div>
+                        
+            </div>
+        }
+    </div>
+
+
+    @* <h4>Recent Bissues</h4>
+    @foreach (var bissue in Model.Bissues)
+    {
+        <div class = "card mb-2">
+            <a asp-controller="Bissues" asp-action="Details" asp-route-id="@bissue.Id" class = "btn text-left text-decoration-none">
+                <div class="card-body">
+                    <p class="card-title"><b>@bissue.Title</b> 
+                        @if(bissue.IsOpen)
+                        {
+                            <span class="text-success">Open</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">Closed</span>
+                        }
+                    </p>
+                    <p class="card-text">@bissue.Description</p>
+                    <footer>Project: @bissue.Project.Name</footer>
+                </div>
+            </a>
+        </div>
+    } *@
+
+

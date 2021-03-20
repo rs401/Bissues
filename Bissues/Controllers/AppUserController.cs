@@ -47,22 +47,6 @@ namespace Bissues.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Details", "Bissues", new {id = bissue.Id});
         }
-        public async Task<IActionResult> BissueDetails(int? id)
-        {
-            if(id == null)
-            {
-                return NotFound();
-            }
-            var bissue = await _context.Bissues.FindAsync(id);
-            if (bissue == null)
-            {
-                return NotFound();
-            }
-            AdminBissueViewModel model = new AdminBissueViewModel();
-            model.Bissue = bissue;
-            model.Users = await _context.AppUsers.ToListAsync();
-            return View(bissue);
-        }
 
         private AppUserAreaViewModel GetAppUserAreaViewModel(string id)
         {

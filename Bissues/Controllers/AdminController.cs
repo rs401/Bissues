@@ -37,15 +37,58 @@ namespace Bissues.Controllers
         public IActionResult Bissues()
         {
             var model = GetAdminAreaViewModel();
+            model.Bissues = model.Bissues
+                .Where(b => b.Label == BissueLabel.Issue)
+                .OrderByDescending(b => b.CreatedDate)
+                .ThenBy(b => b.IsOpen).ToList();
             return View(model);
         }
         public IActionResult Bugs()
         {
             var model = new AdminBugsViewModel()
             {
-                Bugs = _context.Bissues.Include(b => b.Project).Where(b => b.Label == BissueLabel.Bug).ToList()
+                Bugs = _context.Bissues
+                    .Include(b => b.Project)
+                    .Where(b => b.Label == BissueLabel.Bug).ToList()
             };
             return View(model);
+        }
+        public IActionResult Users()
+        {
+            var model = _context.AppUsers.ToList();
+            return View(model);
+        }
+        public async Task<IActionResult> LockUser(string sid)
+        {
+            if(string.IsNullOrEmpty(sid))
+            {
+                return NotFound();
+            }
+            var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == sid);
+            if(user == null)
+            {
+                return NotFound();
+            }
+            user.LockoutEnabled = true;
+            user.LockoutEnd = DateTime.Now.AddYears(2);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Users");
+        }
+        public async Task<IActionResult> UnLockUser(string sid)
+        {
+            if(string.IsNullOrEmpty(sid))
+            {
+                return NotFound();
+            }
+            var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == sid);
+            if(user == null)
+            {
+                return NotFound();
+            }
+            user.LockoutEnabled = false;
+            user.LockoutEnd = null;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Users");
         }
         public async Task<IActionResult> BissueDetails(int? id)
         {
