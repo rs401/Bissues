@@ -46,6 +46,13 @@ namespace Bissues.Controllers
             }
             return View(GetBissues((int)index));
         }
+        /// <summary>
+        /// Search takes an index for pagination and a query and returns a view 
+        /// with the Bissues who's Title or Description contain the query.
+        /// </summary>
+        /// <param name="index">index for pagination</param>
+        /// <param name="query">Query string to search for</param>
+        /// <returns>ViewResult</returns>
         public IActionResult Search(int? index, string query)
         {
             // var bissues = await _context.Bissues.Include(b => b.Project).OrderByDescending(b => b.IsOpen).ThenByDescending(b => b.ModifiedDate).ToListAsync();
@@ -67,20 +74,30 @@ namespace Bissues.Controllers
             }
             return View(GetSearchBissues(query, (int)index));
         }
-
+        /// <summary>
+        /// Returns a BissuesIndexViewModel with a list of Bissues that contain 
+        /// the query.
+        /// </summary>
+        /// <param name="query">Query string we are looking for</param>
+        /// <param name="index">index for pagination</param>
+        /// <returns>BissuesIndexViewModel</returns>
         private BissuesIndexViewModel GetSearchBissues(string query, int index)
         {
             int maxRows = 10;
             BissuesIndexViewModel bivModel = new BissuesIndexViewModel();
             var bissues = _context.Bissues.Include(b => b.Project)
-                .Where(b => b.Description.ToLower().Contains(query.ToLower()))
+                .Where(b => b.Description.ToLower().Contains(query.ToLower()) || b.Title.ToLower().Contains(query.ToLower()))
                 .OrderByDescending(b => b.IsOpen).ThenByDescending(b => b.ModifiedDate).ToList();
             bivModel.Bissues = bissues.Skip((index - 1) * maxRows).Take(maxRows).ToList();
             bivModel.CurrentIndex = index;
             bivModel.PageCount = (bissues.Count / maxRows) + 1;
             return bivModel;
         }
-
+        /// <summary>
+        /// Constructs and returns a BissuesIndexViewModel
+        /// </summary>
+        /// <param name="index">index for pagination</param>
+        /// <returns>BissuesIndexViewModel</returns>
         private BissuesIndexViewModel GetBissues(int index)
         {
             int maxRows = 10;
@@ -119,6 +136,12 @@ namespace Bissues.Controllers
             }
             return View(GetDetailsViewModel((int)id,(int)currentIndex));
         }
+        /// <summary>
+        /// Constructs and returns a BissuesDetailsViewModel
+        /// </summary>
+        /// <param name="id">Bissue Id</param>
+        /// <param name="index">index for pagination</param>
+        /// <returns>BissuesDetailsViewModel</returns>
         private BissuesDetailsViewModel GetDetailsViewModel(int id, int index)
         {
             int maxRows = 10;
@@ -193,6 +216,11 @@ namespace Bissues.Controllers
         }
 
         // GET: Bissues/Edit/5
+        /// <summary>
+        /// Edit takes a Bissue Id and returns a view with the specified Bissue
+        /// </summary>
+        /// <param name="id">Id of the Bissue to edit</param>
+        /// <returns>ViewResult</returns>
         [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -221,6 +249,12 @@ namespace Bissues.Controllers
         // POST: Bissues/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Edit POST takes a Bissue Id and a Bissue model and updates the record
+        /// </summary>
+        /// <param name="id">Bissue Id</param>
+        /// <param name="bissue">Bissue model</param>
+        /// <returns>Redirect to Index</returns>
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -274,6 +308,11 @@ namespace Bissues.Controllers
         }
 
         // GET: Bissues/Delete/5
+        /// <summary>
+        /// Deletes a Bissue
+        /// </summary>
+        /// <param name="id">Id to delete</param>
+        /// <returns></returns>
         [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {

@@ -27,7 +27,10 @@ namespace Bissues.Controllers
             _logger = logger;
             _context = context;
         }
-
+        /// <summary>
+        /// Index returns a view with an IndexViewModel
+        /// </summary>
+        /// <returns>ViewResult</returns>
         public async Task<IActionResult> Index()
         {
             // var bissues = await _context.Bissues.Where(b => b.IsOpen == true).OrderByDescending(bm => bm.ModifiedDate).Take(5);
@@ -46,14 +49,18 @@ namespace Bissues.Controllers
             };
             return View(model);
         }
-
-        
-
+        /// <summary>
+        /// Returns About view with static content
+        /// </summary>
+        /// <returns>ViewResult</returns>
         public IActionResult About()
         {
             return View();
         }
-
+        /// <summary>
+        /// Returns Privacy view with static content
+        /// </summary>
+        /// <returns>ViewResult</returns>
         public IActionResult Privacy()
         {
             return View();

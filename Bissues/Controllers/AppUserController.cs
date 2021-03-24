@@ -44,6 +44,12 @@ namespace Bissues.Controllers
             var model = GetAppUserAreaViewModel(reqUser.Id);
             return View(model);
         }
+        /// <summary>
+        /// Developer returns a view with a list of Bissues that have been 
+        /// assigned to the developer.
+        /// </summary>
+        /// <returns>ViewResult</returns>
+        [Authorize(Roles = "Admin,Developer")]
         public async Task<IActionResult> Developer()
         {
             var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
