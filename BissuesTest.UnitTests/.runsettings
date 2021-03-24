@@ -9,6 +9,7 @@
             **/Areas/Identity/**/*.cs,
             **/Areas/Identity/**/*.cshtml,
             **/Data/Migrations/**/*.cs,
+            **/Templates/**/*.cshtml,
           </ExcludeByFile>
         </Configuration>
       </DataCollector>

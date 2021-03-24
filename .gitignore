@@ -7,7 +7,7 @@ nupkg/
 *.BAK
 notes.md
 app.db
-coveragereport/
+# coveragereport/
 Bissues/Templates/
 
 # Visual Studio Code
