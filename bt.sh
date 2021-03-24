@@ -3,6 +3,6 @@
 FILE=$(dotnet test BissuesTest.UnitTests  --collect:"XPlat Code Coverage" \
 --settings BissuesTest.UnitTests/.runsettings | grep "cobertura.xml" | xargs)
 
-reportgenerator "-reports:$FILE" "-targetdir:coveragereport" -reporttypes:Html
+reportgenerator "-reports:$FILE" "-targetdir:coveragereport" "-reporttypes:Html"
 
 # firefox coveragereport/index.html
