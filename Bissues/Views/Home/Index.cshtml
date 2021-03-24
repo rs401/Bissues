@@ -55,22 +55,22 @@
                         <p class="card-title col"><b>@bissue.Title</b> 
                             @if(bissue.IsOpen)
                             {
-                                <span class="text-success">Open</span>
+                                <span class="badge badge-success">Open</span>
                             }
                             else
                             {
-                                <span class="text-danger">Closed</span>
+                                <span class="badge badge-danger">Closed</span>
                             }
                         </p>
                         <p class="col text-right">
                             &nbsp;Label: 
                             @if(@bissue.Label == 0)
                             {
-                                <span class="text-success">Issue</span>
+                                <span class="badge badge-success">Issue</span>
                             }
                             else
                             {
-                                <span class="text-danger">Bug</span>
+                                <span class="badge badge-danger">Bug</span>
                             }
 
                         </p>

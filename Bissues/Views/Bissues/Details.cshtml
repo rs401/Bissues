@@ -19,21 +19,21 @@
     Status: 
     @if(@Model.Bissue.IsOpen)
     {
-        <span class="text-success">Open</span>
+        <span class="badge badge-success">Open</span>
     }
     else
     {
-        <span class="text-danger">Closed</span>
+        <span class="badge badge-danger">Closed</span>
     }
     </span>
     <span class="pl-2">Label: 
     @if(@Model.Bissue.Label == 0)
     {
-        <span class="text-success">Issue</span>
+        <span class="badge badge-success">Issue</span>
     }
     else
     {
-        <span class="text-danger">Bug</span>
+        <span class="badge badge-danger">Bug</span>
     }
     </span>
     <span class="float-right">
