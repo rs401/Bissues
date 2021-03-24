@@ -16,7 +16,7 @@ namespace Bissues.Controllers
 {
     [Authorize(Roles = "Admin")]
     /// <summary>
-    /// Home controller handles Home requests
+    /// Admin controller handles Admin requests
     /// </summary>
     public class AdminController : Controller
     {
@@ -28,12 +28,21 @@ namespace Bissues.Controllers
             _logger = logger;
             _context = context;
         }
-
+        /// <summary>
+        /// Index action returns the main admin dashboard view with an 
+        /// AdminAreaViewModel.
+        /// </summary>
+        /// <returns>ViewResult</returns>
         public IActionResult Index()
         {
             var model = GetAdminAreaViewModel();
             return View(model);
         }
+        /// <summary>
+        /// Bissues returns a view with an AdminAreaViewModel. A list of all 
+        /// Bissues linking to an Admin level edit page for each.
+        /// </summary>
+        /// <returns>ViewResult</returns>
         public IActionResult Bissues()
         {
             var model = GetAdminAreaViewModel();
@@ -43,6 +52,12 @@ namespace Bissues.Controllers
                 .ThenBy(b => b.IsOpen).ToList();
             return View(model);
         }
+        /// <summary>
+        /// Bugs returns a view with an AdminBugsViewModel. A list of all 
+        /// Bissues that have been labeled as Bug, linking to an Admin level 
+        /// edit page for each.
+        /// </summary>
+        /// <returns>ViewResult</returns>
         public IActionResult Bugs()
         {
             var model = new AdminBugsViewModel()
@@ -53,11 +68,21 @@ namespace Bissues.Controllers
             };
             return View(model);
         }
+        /// <summary>
+        /// Users returns a view with a list of all users, with the ability to 
+        /// lock and unlock an account.
+        /// </summary>
+        /// <returns>ViewResult</returns>
         public IActionResult Users()
         {
             var model = _context.AppUsers.ToList();
             return View(model);
         }
+        /// <summary>
+        /// LockUser takes a user id string and locks the account.
+        /// </summary>
+        /// <param name="sid">user id</param>
+        /// <returns>Redirect to Users</returns>
         public async Task<IActionResult> LockUser(string sid)
         {
             if(string.IsNullOrEmpty(sid))
@@ -74,6 +99,11 @@ namespace Bissues.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Users");
         }
+        /// <summary>
+        /// UnLockUser takes a user id string and unlocks the account.
+        /// </summary>
+        /// <param name="sid">user id</param>
+        /// <returns>Redirect to Users</returns>
         public async Task<IActionResult> UnLockUser(string sid)
         {
             if(string.IsNullOrEmpty(sid))
@@ -90,6 +120,11 @@ namespace Bissues.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Users");
         }
+        /// <summary>
+        /// BissueDetails is the Admin level edit view.
+        /// </summary>
+        /// <param name="id">Bissue Id</param>
+        /// <returns>ViewResult</returns>
         public async Task<IActionResult> BissueDetails(int? id)
         {
             if(id == null)
@@ -103,7 +138,12 @@ namespace Bissues.Controllers
             }
             return View(bissue);
         }
-
+        /// <summary>
+        /// EditBissue POST takes an id and a Bissue model, and edits the Bissue
+        /// </summary>
+        /// <param name="id">Bissue Id</param>
+        /// <param name="bissue">Bissue Model</param>
+        /// <returns>Redirect to Bissues</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditBissue(int id, [Bind("Id,Title,Description,IsOpen,AppUserId,AppUser,ProjectId,CreatedDate,ModifiedDate,Label,AssignedDeveloperId")] Bissue bissue)
@@ -148,7 +188,10 @@ namespace Bissues.Controllers
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", bissue.ProjectId);
             return View(bissue);
         }
-
+        /// <summary>
+        /// GetAdminAreaViewModel constructs and returns a AdminAreaViewModel.
+        /// </summary>
+        /// <returns>AdminAreaViewModel</returns>
         private AdminAreaViewModel GetAdminAreaViewModel()
         {
             return new AdminAreaViewModel()

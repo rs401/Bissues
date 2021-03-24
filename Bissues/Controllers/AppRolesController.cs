@@ -43,24 +43,6 @@ namespace Bissues.Controllers
             return View(roleManager.Roles);
         }
 
-        // GET: AppRoles/Details/5
-        // public async Task<IActionResult> Details(int? id)
-        // {
-        //     if (id == null)
-        //     {
-        //         return NotFound();
-        //     }
-
-        //     var appRole = await _context.AppRole
-        //         .FirstOrDefaultAsync(m => m.Id == id);
-        //     if (appRole == null)
-        //     {
-        //         return NotFound();
-        //     }
-
-        //     return View(appRole);
-        // }
-
         // GET: AppRoles/Create
         /// <summary>
         /// Create AppRole's
@@ -162,39 +144,5 @@ namespace Bissues.Controllers
             else
                 return await Edit(model.RoleId);
         }
-
-        // // GET: AppRoles/Delete/5
-        // public async Task<IActionResult> Delete(int? id)
-        // {
-        //     if (id == null)
-        //     {
-        //         return NotFound();
-        //     }
-
-        //     var appRole = await _context.AppRole
-        //         .FirstOrDefaultAsync(m => m.Id == id);
-        //     if (appRole == null)
-        //     {
-        //         return NotFound();
-        //     }
-
-        //     return View(appRole);
-        // }
-
-        // // POST: AppRoles/Delete/5
-        // [HttpPost, ActionName("Delete")]
-        // [ValidateAntiForgeryToken]
-        // public async Task<IActionResult> DeleteConfirmed(int id)
-        // {
-        //     var appRole = await _context.AppRole.FindAsync(id);
-        //     _context.AppRole.Remove(appRole);
-        //     await _context.SaveChangesAsync();
-        //     return RedirectToAction(nameof(Index));
-        // }
-
-        // private bool AppRoleExists(int id)
-        // {
-        //     return _context.AppRole.Any(e => e.Id == id);
-        // }
     }
 }

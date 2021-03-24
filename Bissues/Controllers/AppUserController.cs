@@ -18,7 +18,9 @@ namespace Bissues.Controllers
 {
     [Authorize]
     /// <summary>
-    /// Home controller handles Home requests
+    /// AppUser controller handles AppUser requests, which returns a view 
+    /// showing the user all of the Bissues and Messsages they have created, 
+    /// along with any unread notifications they may have.
     /// </summary>
     public class AppUserController : Controller
     {
@@ -32,13 +34,22 @@ namespace Bissues.Controllers
             _context = context;
             _userManager = userManager;
         }
-
+        /// <summary>
+        /// Index returns a view with the users created content.
+        /// </summary>
+        /// <returns>ViewResult</returns>
         public async Task<IActionResult> Index()
         {
             var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var model = GetAppUserAreaViewModel(reqUser.Id);
             return View(model);
         }
+        /// <summary>
+        /// ReadNotification marks the notification as read and redirects to the 
+        /// related Bissue's Details view.
+        /// </summary>
+        /// <param name="id">Notification Id</param>
+        /// <returns>Redirect to related Bissue</returns>
         public async Task<IActionResult> ReadNotification(int id)
         {
             var notification = await _context.Notifications.Where(n => n.Id == id).FirstOrDefaultAsync();
@@ -47,7 +58,11 @@ namespace Bissues.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Details", "Bissues", new {id = bissue.Id});
         }
-
+        /// <summary>
+        /// Constructs and returns an AppUserAreaViewModel
+        /// </summary>
+        /// <param name="id">AppUserId</param>
+        /// <returns>AppUserAreaViewModel</returns>
         private AppUserAreaViewModel GetAppUserAreaViewModel(string id)
         {
             return new AppUserAreaViewModel()
