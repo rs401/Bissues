@@ -44,6 +44,12 @@ namespace Bissues.Controllers
             var model = GetAppUserAreaViewModel(reqUser.Id);
             return View(model);
         }
+        public async Task<IActionResult> Developer()
+        {
+            var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var model = _context.Bissues.Where(b => b.AssignedDeveloperId == reqUser.Id).ToList();
+            return View(model);
+        }
         /// <summary>
         /// ReadNotification marks the notification as read and redirects to the 
         /// related Bissue's Details view.

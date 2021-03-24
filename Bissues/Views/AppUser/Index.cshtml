@@ -7,6 +7,10 @@
         <h1 class="display-4">User Content</h1>
         <p class="mt-3">
             Bissues, Messages and notifications owned by @User.Identity.Name.
+            @if(User.IsInRole("Developer"))
+            {
+                <a class="btn btn-primary" asp-action="Developer">Developer Jobs</a>
+            }
         </p>
     </div>
     <hr/>
