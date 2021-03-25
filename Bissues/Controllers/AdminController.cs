@@ -152,15 +152,15 @@ namespace Bissues.Controllers
             {
                 return NotFound();
             }
-            // If closed and null closed date, set closed date
-            if(bissue.IsOpen == false && bissue.ClosedDate == null)
-            {
-                bissue.ClosedDate = DateTime.UtcNow;
-            }
             if (ModelState.IsValid)
             {
                 try
                 {
+                    // If closed and null closed date, set closed date
+                    if(bissue.IsOpen == false && bissue.ClosedDate == null)
+                    {
+                        bissue.ClosedDate = DateTime.UtcNow;
+                    }
                     bissue.ModifiedDate = DateTime.UtcNow;
                     _context.Update(bissue);
                     await _context.SaveChangesAsync();

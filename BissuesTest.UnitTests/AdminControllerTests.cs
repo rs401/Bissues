@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bissues;
@@ -155,15 +156,13 @@ namespace BissuesTest.UnitTests
             }
         }
         [Fact]
-        public async Task EditBissue_Returnssomething()
+        public async Task EditBissue_DbConcurrencyException_ReturnsNotFound()
         {
             // Arrange
-            int id = 10;
+            int id = 11;
             Bissue bissue = new Bissue
             {
-                Id = 10,
-                IsOpen = false,
-                ClosedDate = null
+                Id = id,
             };
             // Act
             // Assert
@@ -173,6 +172,168 @@ namespace BissuesTest.UnitTests
                 var result = await _sut.EditBissue(id, bissue);
 
                 var viewResult = Assert.IsType<NotFoundResult>(result);
+            }
+        }
+        [Fact]
+        public async Task EditBissue_ClosedWithNullClosedDate_SetsClosedDate_AndReturnsRedirect()
+        {
+            // Arrange
+            int id = 12;
+            Bissue bissue = new Bissue
+            {
+                Id = id,
+                IsOpen = false,
+                ClosedDate = null
+            };
+            using (var context = new ApplicationDbContext(_options))
+            {
+                context.Bissues.Add(bissue);
+                await context.SaveChangesAsync();
+            }
+            // Act
+            // Assert
+            Assert.Null(bissue.ClosedDate);
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new AdminController(new NullLogger<AdminController>(), context);
+                var result = await _sut.EditBissue(id, bissue);
+
+                Assert.IsType<RedirectToActionResult>(result);
+                var retBissue = await context.Bissues.FirstOrDefaultAsync(b => b.Id == id);
+                Assert.NotNull(retBissue.ClosedDate);
+            }
+        }
+        [Fact]
+        public void Users_ReturnsAView_WithAModel()
+        {
+            // Arrange
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new AdminController(new NullLogger<AdminController>(), context);
+                var result = _sut.Users();
+
+                var viewResult = Assert.IsType<ViewResult>(result);
+                var model = Assert.IsAssignableFrom<List<AppUser>>(viewResult.ViewData.Model);
+            }
+        }
+        [Fact]
+        public async Task LockUser_WithNullString_ReturnsNotFound()
+        {
+            // Arrange
+            string sid = null;
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new AdminController(new NullLogger<AdminController>(), context);
+                var result = await _sut.LockUser(sid);
+
+                var viewResult = Assert.IsType<NotFoundResult>(result);
+            }
+        }
+        [Fact]
+        public async Task LockUser_WithNullUser_ReturnsNotFound()
+        {
+            // Arrange
+            string sid = "string";
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new AdminController(new NullLogger<AdminController>(), context);
+                var result = await _sut.LockUser(sid);
+
+                var viewResult = Assert.IsType<NotFoundResult>(result);
+            }
+        }
+        [Fact]
+        public async Task LockUser_LocksTheUser()
+        {
+            // Arrange
+            string sid = "userIDstring";
+            AppUser unlockedUser = new AppUser
+            {
+                Id = sid,
+                LockoutEnabled = false
+            };
+            using (var context = new ApplicationDbContext(_options))
+            {
+                context.AppUsers.Add(unlockedUser);
+                context.SaveChanges();
+            }
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new AdminController(new NullLogger<AdminController>(), context);
+                var result = await _sut.LockUser(sid);
+
+                var viewResult = Assert.IsType<RedirectToActionResult>(result);
+                var user = await context.AppUsers.FirstOrDefaultAsync(u => u.Id == sid);
+                Assert.True(user.LockoutEnabled);
+            }
+        }
+
+
+
+
+        [Fact]
+        public async Task UnLockUser_WithNullString_ReturnsNotFound()
+        {
+            // Arrange
+            string sid = null;
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new AdminController(new NullLogger<AdminController>(), context);
+                var result = await _sut.UnLockUser(sid);
+
+                var viewResult = Assert.IsType<NotFoundResult>(result);
+            }
+        }
+        [Fact]
+        public async Task UnLockUser_WithNullUser_ReturnsNotFound()
+        {
+            // Arrange
+            string sid = "stringUnlockUser";
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new AdminController(new NullLogger<AdminController>(), context);
+                var result = await _sut.UnLockUser(sid);
+
+                var viewResult = Assert.IsType<NotFoundResult>(result);
+            }
+        }
+        [Fact]
+        public async Task UnLockUser_UnLocksTheUser()
+        {
+            // Arrange
+            string sid = "UnLockuserIDstring";
+            AppUser lockedUser = new AppUser
+            {
+                Id = sid,
+                LockoutEnabled = true
+            };
+            using (var context = new ApplicationDbContext(_options))
+            {
+                context.AppUsers.Add(lockedUser);
+                context.SaveChanges();
+            }
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new AdminController(new NullLogger<AdminController>(), context);
+                var result = await _sut.UnLockUser(sid);
+
+                var viewResult = Assert.IsType<RedirectToActionResult>(result);
+                var user = await context.AppUsers.FirstOrDefaultAsync(u => u.Id == sid);
+                Assert.False(user.LockoutEnabled);
             }
         }
 
