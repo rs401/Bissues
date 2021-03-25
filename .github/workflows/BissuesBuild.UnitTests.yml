@@ -10,7 +10,10 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    env:
+      SEND_GRID_USER: string
+      SEND_GRID_EMAIL: string
+      SEND_GRID_KEY: string
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
