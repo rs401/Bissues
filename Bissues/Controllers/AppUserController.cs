@@ -24,11 +24,11 @@ namespace Bissues.Controllers
     /// </summary>
     public class AppUserController : Controller
     {
-        private readonly ILogger<AdminController> _logger;
+        private readonly ILogger<AppUserController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<AppUser> _userManager;
 
-        public AppUserController(ILogger<AdminController> logger, ApplicationDbContext context, UserManager<AppUser> userManager)
+        public AppUserController(ILogger<AppUserController> logger, ApplicationDbContext context, UserManager<AppUser> userManager)
         {
             _logger = logger;
             _context = context;
@@ -41,6 +41,11 @@ namespace Bissues.Controllers
         public async Task<IActionResult> Index()
         {
             var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            // Shouldn't be null if they got past Authorize on the class
+            if(reqUser == null)
+            {
+                return NotFound();
+            }
             var model = GetAppUserAreaViewModel(reqUser.Id);
             return View(model);
         }
