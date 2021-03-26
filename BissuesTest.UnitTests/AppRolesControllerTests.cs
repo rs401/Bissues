@@ -72,22 +72,53 @@ namespace BissuesTest.UnitTests
                 var viewResult = Assert.IsType<ViewResult>(result);
             }
         }
-        [Fact(Skip="Problems with mock usermanager")]
-        public async Task Edit_ReturnsAView()
+        [Fact]
+        public async Task CreatePOST_ReturnsAView()
         {
             // Arrange
-            var userStore = new Mock<IUserStore<AppUser>>();
-
-            var userManager = new Mock<UserManager<AppUser>>(userStore.Object);
-            userManager.Setup(_ => _.Users).Returns(_users.AsQueryable);
+            string tmpName = "Test";
+            AppRole appRole = new AppRole{RoleName = tmpName};
             // Act
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new AppRolesController(_roleManager, userManager.Object);
+                _sut = new AppRolesController(_roleManager, _userManager);
+                var result = await _sut.Create(appRole);
+
+                var viewResult = Assert.IsType<ViewResult>(result);
+            }
+        }
+        [Fact]//(Skip="Problems with mock usermanager")]
+        public async Task Edit_ReturnsAView()
+        {
+            // Arrange
+            // var userStore = new Mock<IUserStore<AppUser>>();
+
+            // var userManager = new Mock<UserManager<AppUser>>(userStore.Object);
+            // userManager.Setup(_ => _.Users).Returns(_users.AsQueryable);
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new AppRolesController(_roleManager, _userManager);
                 var result = await _sut.Edit("");
 
                 var viewResult = Assert.IsType<ViewResult>(result);
+            }
+        }
+        [Fact]
+        public async Task EditPOST_ReturnsARedirect()
+        {
+            // Arrange
+            RoleModification roleMod = new RoleModification();
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new AppRolesController(_roleManager, _userManager);
+                var result = await _sut.Edit(roleMod);
+
+                var viewResult = Assert.IsType<RedirectToActionResult>(result);
             }
         }
 
