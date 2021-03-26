@@ -20,7 +20,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/rs401/Bissues">
+  <a href="https://github.com/rs401/BissuesProject">
     <img src="img/logo2.svg" alt="Logo">
   </a>
 
@@ -29,14 +29,14 @@
   <p align="center">
     A Bug and Issue tracker project.
     <br />
-    <a href="https://github.com/rs401/Bissues"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/rs401/BissuesProject"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/rs401/Bissues">View Demo</a>
+    <a href="https://bissues.hupden.com/">View Demo</a>
     ·
-    <a href="https://github.com/rs401/Bissues/issues">Report Bug</a>
+    <a href="https://github.com/rs401/BissuesProject/issues">Report Bug</a>
     ·
-    <a href="https://github.com/rs401/Bissues/issues">Request Feature</a>
+    <a href="https://github.com/rs401/BissuesProject/issues">Request Feature</a>
   </p>
 </p>
 
@@ -267,7 +267,7 @@ developers and community will see your Bissue and try to help.
 <!-- ROADMAP -->
 ## Roadmap
 
-See the [open issues](https://github.com/rs401/Bissues/issues) for a list of 
+See the [open issues](https://github.com/rs401/BissuesProject/issues) for a list of 
 proposed features (and known issues).
 
 Future plans I have for this project are to bundle the project in a Docker 
@@ -303,7 +303,7 @@ Distributed under the Apache License 2.0. See `LICENSE` for more information.
 
 Rich Stadnick - @[Res401](https://twitter.com/Res401) - rich.stadnick&gt;AT&lt;gmail.com
 
-Project Link: [https://github.com/rs401/Bissues](https://github.com/rs401/Bissues)
+Project Link: [https://github.com/rs401/BissuesProject](https://github.com/rs401/BissuesProject)
 
 ---
 
@@ -316,18 +316,18 @@ Project Link: [https://github.com/rs401/Bissues](https://github.com/rs401/Bissue
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/rs401/Bissues.svg?style=for-the-badge
-[contributors-url]: https://github.com/rs401/Bissues/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/rs401/Bissues.svg?style=for-the-badge
-[forks-url]: https://github.com/rs401/Bissues/network/members
-[stars-shield]: https://img.shields.io/github/stars/rs401/Bissues.svg?style=for-the-badge
-[stars-url]: https://github.com/rs401/Bissues/stargazers
-[issues-shield]: https://img.shields.io/github/issues/rs401/Bissues.svg?style=for-the-badge
-[issues-url]: https://github.com/rs401/Bissues/issues
-[license-shield]: https://img.shields.io/github/license/rs401/Bissues.svg?style=for-the-badge
-[license-url]: https://github.com/rs401/Bissues/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/rs401/BissuesProject.svg?style=for-the-badge
+[contributors-url]: https://github.com/rs401/BissuesProject/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/rs401/BissuesProject.svg?style=for-the-badge
+[forks-url]: https://github.com/rs401/BissuesProject/network/members
+[stars-shield]: https://img.shields.io/github/stars/rs401/BissuesProject.svg?style=for-the-badge
+[stars-url]: https://github.com/rs401/BissuesProject/stargazers
+[issues-shield]: https://img.shields.io/github/issues/rs401/BissuesProject.svg?style=for-the-badge
+[issues-url]: https://github.com/rs401/BissuesProject/issues
+[license-shield]: https://img.shields.io/github/license/rs401/BissuesProject.svg?style=for-the-badge
+[license-url]: https://github.com/rs401/BissuesProject/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/richard-stadnick-3b4ab53b
 [product-screenshot]: images/screenshot.png
-[actions-build-badge]: https://github.com/rs401/Bissues/actions/workflows/BissuesBuild.UnitTests.yml/badge.svg
-[actions-build-url]: https://github.com/rs401/Bissues/actions/workflows/BissuesBuild.UnitTests.yml
+[actions-build-badge]: https://github.com/rs401/BissuesProject/actions/workflows/BissuesBuild.UnitTests.yml/badge.svg
+[actions-build-url]: https://github.com/rs401/BissuesProject/actions/workflows/BissuesBuild.UnitTests.yml
