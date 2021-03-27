@@ -124,10 +124,16 @@ namespace Bissues.Controllers
                 return NotFound();
             }
 
-            var bissue = await _context.Bissues.FirstOrDefaultAsync(b => b.Id == id);
+            var bissue = await _context.Bissues.Include(b => b.MeToos).FirstOrDefaultAsync(b => b.Id == id);
             if (bissue == null)
             {
                 return NotFound();
+            }
+            if(bissue.MeToos == null)
+            {
+                bissue.MeToos = new List<MeToo>();
+                _context.Update(bissue);
+                _context.SaveChanges();
             }
 
             if(currentIndex == null)
@@ -135,6 +141,47 @@ namespace Bissues.Controllers
                 return View(GetDetailsViewModel((int)id,1));
             }
             return View(GetDetailsViewModel((int)id,(int)currentIndex));
+        }
+        /// <summary>
+        /// AddMeToo increments the Bissues MeToo if the IP is unique
+        /// </summary>
+        /// <param name="id">Bissue Id</param>
+        /// <returns>Redirect to Bissue Details</returns>
+        public async Task<IActionResult> AddMeToo(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var bissue = await _context.Bissues.Include(b => b.MeToos).FirstOrDefaultAsync(b => b.Id == id);
+            if (bissue == null)
+            {
+                return NotFound();
+            }
+            var theIp = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            var unique = _context.MeToos.Where(mt => mt.Ip == theIp && mt.Bissue == bissue).ToList();
+            if(unique.Count != 0)
+            {
+                return RedirectToAction(nameof(Details), new {id});
+            }
+            var meToo = new MeToo
+            {
+                Ip = theIp,
+                Bissue = bissue
+            };
+            try
+            {
+                _context.MeToos.Add(meToo);
+                await _context.SaveChangesAsync();
+                _context.Update(bissue);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return NotFound();
+            }
+            return RedirectToAction(nameof(Details), new {id});
         }
         /// <summary>
         /// Constructs and returns a BissuesDetailsViewModel

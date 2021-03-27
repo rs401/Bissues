@@ -27,6 +27,7 @@ namespace Bissues.Data
         public DbSet<Bissues.Models.AppRole> AppRole { get; set; }
         public DbSet<Bissues.Models.Notification> Notifications { get; set; }
         public DbSet<Bissues.Models.AppUser> AppUsers { get; set; }
+        public DbSet<Bissues.Models.MeToo> MeToos { get; set; }
 
         // public override int SaveChanges()
         // {

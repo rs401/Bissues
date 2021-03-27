@@ -57,6 +57,7 @@ namespace Bissues.Models
         /// </summary>
         /// <value>The datetime the Bissue was marked closed</value>
         public DateTime? ClosedDate { get; set; }
+        public ICollection<MeToo> MeToos { get; set; }
 
     }
 }

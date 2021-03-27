@@ -3,15 +3,17 @@ using System;
 using Bissues.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Bissues.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210327180910_Index")]
+    partial class Index
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -166,14 +168,42 @@ namespace Bissues.Migrations
                     b.Property<int>("BissueId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Ip")
-                        .HasColumnType("text");
+                    b.Property<int>("Count")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BissueId");
 
-                    b.ToTable("MeToos");
+                    b.ToTable("MeToo");
+                });
+
+            modelBuilder.Entity("Bissues.Models.MeTooIp", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .UseIdentityByDefaultColumn();
+
+                    b.Property<int>("BissueId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Ip")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("MeTooId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BissueId");
+
+                    b.HasIndex("MeTooId");
+
+                    b.HasIndex("Ip", "BissueId")
+                        .IsUnique();
+
+                    b.ToTable("MeTooIp");
                 });
 
             modelBuilder.Entity("Bissues.Models.Message", b =>
@@ -425,10 +455,25 @@ namespace Bissues.Migrations
             modelBuilder.Entity("Bissues.Models.MeToo", b =>
                 {
                     b.HasOne("Bissues.Models.Bissue", "Bissue")
-                        .WithMany("MeToos")
+                        .WithMany()
                         .HasForeignKey("BissueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Bissue");
+                });
+
+            modelBuilder.Entity("Bissues.Models.MeTooIp", b =>
+                {
+                    b.HasOne("Bissues.Models.Bissue", "Bissue")
+                        .WithMany()
+                        .HasForeignKey("BissueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Bissues.Models.MeToo", null)
+                        .WithMany("UniqueIps")
+                        .HasForeignKey("MeTooId");
 
                     b.Navigation("Bissue");
                 });
@@ -539,8 +584,11 @@ namespace Bissues.Migrations
             modelBuilder.Entity("Bissues.Models.Bissue", b =>
                 {
                     b.Navigation("Messages");
+                });
 
-                    b.Navigation("MeToos");
+            modelBuilder.Entity("Bissues.Models.MeToo", b =>
+                {
+                    b.Navigation("UniqueIps");
                 });
 
             modelBuilder.Entity("Bissues.Models.Project", b =>

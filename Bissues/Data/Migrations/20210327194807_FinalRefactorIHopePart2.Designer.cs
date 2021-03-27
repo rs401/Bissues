@@ -3,15 +3,17 @@ using System;
 using Bissues.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Bissues.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210327194807_FinalRefactorIHopePart2")]
+    partial class FinalRefactorIHopePart2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -163,7 +165,7 @@ namespace Bissues.Migrations
                         .HasColumnType("integer")
                         .UseIdentityByDefaultColumn();
 
-                    b.Property<int>("BissueId")
+                    b.Property<int?>("BissueId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Ip")
@@ -424,13 +426,9 @@ namespace Bissues.Migrations
 
             modelBuilder.Entity("Bissues.Models.MeToo", b =>
                 {
-                    b.HasOne("Bissues.Models.Bissue", "Bissue")
+                    b.HasOne("Bissues.Models.Bissue", null)
                         .WithMany("MeToos")
-                        .HasForeignKey("BissueId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Bissue");
+                        .HasForeignKey("BissueId");
                 });
 
             modelBuilder.Entity("Bissues.Models.Message", b =>

@@ -48,7 +48,11 @@
         <h5>Description:</h5>
         @Markdown.ParseHtmlString(Model.Bissue.Description)
     </div>
-    <a class="btn btn-primary" data-toggle="collapse" href="#ShareThis" role="button" aria-expanded="false" aria-controls="ShareThis">ShareThis</a>
+    <div class="list-inline">
+        <a class="list-item mr-md-4 btn btn-primary" data-toggle="collapse" href="#ShareThis" role="button" aria-expanded="false" aria-controls="ShareThis">ShareThis</a>
+        <span class="list-item mr-1">Reports of similar experience: @Model.Bissue.MeToos.Count</span>
+        <a class="list-item btn btn-primary" asp-action="AddMeToo" asp-route-id="@Model.Bissue.Id">Me Too!</a>
+    </div>
     <div class="collapse" id="ShareThis">
         <label>Share This: </label>
         <input type="text" value="@Url.Action("Details", "Bissues", Model.Bissue.Id, "https")" id="PermaLink">
