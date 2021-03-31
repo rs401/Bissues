@@ -88,22 +88,28 @@ namespace Bissues.Controllers
                 var bissue = await _context.Bissues.FindAsync(message.BissueId);
                 bissue.ModifiedDate = DateTime.UtcNow;
                 _context.Update(bissue);
-                // Construct notification
-                Notification notification = new Notification();
-                notification.AppUser = bissue.AppUser;
-                notification.AppUserId = bissue.AppUserId;
-                notification.Bissue = bissue;
-                notification.BissueId = bissue.Id;
-                notification.CreatedDate = DateTime.UtcNow;
-                notification.ModifiedDate = DateTime.UtcNow;
-                _context.Add(notification);
                 await _context.SaveChangesAsync();
+                // Construct notification
+                await CreateNotification(bissue);
                 // return RedirectToAction(nameof(Index));
                 //public virtual RedirectToActionResult RedirectToActionPermanent(string actionName, string controllerName, object routeValues);
-                return RedirectToAction("Details", "Bissues", new { id = message.BissueId});
+                return RedirectToAction("Details", "Bissues", new { id = message.BissueId });
             }
             ViewData["BissueId"] = new SelectList(_context.Bissues, "Id", "Description", message.BissueId);
             return View(message);
+        }
+
+        private async Task CreateNotification(Bissue bissue)
+        {
+            Notification notification = new Notification();
+            notification.AppUser = bissue.AppUser;
+            notification.AppUserId = bissue.AppUserId;
+            notification.Bissue = bissue;
+            notification.BissueId = bissue.Id;
+            notification.CreatedDate = DateTime.UtcNow;
+            notification.ModifiedDate = DateTime.UtcNow;
+            _context.Add(notification);
+            await _context.SaveChangesAsync();
         }
 
         // GET: Messages/Edit/5
@@ -120,11 +126,11 @@ namespace Bissues.Controllers
                 return NotFound();
             }
 
-            var message = await _context.Messages.FindAsync(id);
-            if (message == null)
+            if (!MessageExists((int)id))
             {
                 return NotFound();
             }
+            var message = await _context.Messages.FindAsync(id);
 
             // Authorization
             var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -179,16 +185,9 @@ namespace Bissues.Controllers
                     var bissue = await _context.Bissues.FindAsync(message.BissueId);
                     bissue.ModifiedDate = DateTime.UtcNow;
                     _context.Update(bissue);
-                    // Construct notification
-                    Notification notification = new Notification();
-                    notification.AppUser = bissue.AppUser;
-                    notification.AppUserId = bissue.AppUserId;
-                    notification.Bissue = bissue;
-                    notification.BissueId = bissue.Id;
-                    notification.CreatedDate = DateTime.UtcNow;
-                    notification.ModifiedDate = DateTime.UtcNow;
-                    _context.Add(notification);
                     await _context.SaveChangesAsync();
+                    // Construct notification
+                    await CreateNotification(bissue);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -222,13 +221,13 @@ namespace Bissues.Controllers
                 return NotFound();
             }
 
-            var message = await _context.Messages
-                .Include(m => m.Bissue)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (message == null)
+            if (!MessageExists((int)id))
             {
                 return NotFound();
             }
+            var message = await _context.Messages
+                .Include(m => m.Bissue)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             // Authorization
             var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);

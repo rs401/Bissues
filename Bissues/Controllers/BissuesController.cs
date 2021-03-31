@@ -244,10 +244,9 @@ namespace Bissues.Controllers
                 bissue.CreatedDate = DateTime.UtcNow;
                 bissue.ModifiedDate = DateTime.UtcNow;
                 bissue.AppUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                
+
                 // Sanitize html if any
-                var sanitizer = new HtmlSanitizer();
-                var sanitizedDesc = sanitizer.Sanitize(bissue.Description);
+                string sanitizedDesc = SanitizeString(bissue.Description);
                 bissue.Description = sanitizedDesc;
 
                 _context.Add(bissue);
@@ -260,6 +259,12 @@ namespace Bissues.Controllers
             }
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", bissue.ProjectId);
             return View(bissue);
+        }
+
+        private static string SanitizeString(string str)
+        {
+            var sanitizer = new HtmlSanitizer();
+            return sanitizer.Sanitize(str);
         }
 
         // GET: Bissues/Edit/5
@@ -325,8 +330,7 @@ namespace Bissues.Controllers
             }
 
             // Sanitize html if any
-            var sanitizer = new HtmlSanitizer();
-            var sanitizedDesc = sanitizer.Sanitize(bissue.Description);
+            string sanitizedDesc = SanitizeString(bissue.Description);
             bissue.Description = sanitizedDesc;
 
             if (ModelState.IsValid)
