@@ -83,7 +83,7 @@ namespace Bissues.Controllers
         /// </summary>
         /// <param name="sid">user id</param>
         /// <returns>Redirect to Users</returns>
-        public async Task<IActionResult> LockUser(string sid)
+        public async Task<IActionResult> ToggleLockUser(string sid)
         {
             if(string.IsNullOrEmpty(sid))
             {
@@ -94,8 +94,17 @@ namespace Bissues.Controllers
             {
                 return NotFound();
             }
-            user.LockoutEnabled = true;
-            user.LockoutEnd = DateTime.Now.AddYears(2);
+            
+            if(user.LockoutEnabled == true)
+            {
+                user.LockoutEnabled = false;
+                user.LockoutEnd = null;
+            }
+            else
+            {
+                user.LockoutEnabled = true;
+                user.LockoutEnd = DateTime.Now.AddYears(2);
+            }
             await _context.SaveChangesAsync();
             return RedirectToAction("Users");
         }
