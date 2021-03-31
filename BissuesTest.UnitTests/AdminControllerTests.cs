@@ -219,7 +219,7 @@ namespace BissuesTest.UnitTests
             }
         }
         [Fact]
-        public async Task LockUser_WithNullString_ReturnsNotFound()
+        public async Task ToggleLockUser_WithNullString_ReturnsNotFound()
         {
             // Arrange
             string sid = null;
@@ -228,7 +228,7 @@ namespace BissuesTest.UnitTests
             using (var context = new ApplicationDbContext(_options))
             {
                 _sut = new AdminController(new NullLogger<AdminController>(), context);
-                var result = await _sut.LockUser(sid);
+                var result = await _sut.ToggleLockUser(sid);
 
                 var viewResult = Assert.IsType<NotFoundResult>(result);
             }
@@ -243,13 +243,13 @@ namespace BissuesTest.UnitTests
             using (var context = new ApplicationDbContext(_options))
             {
                 _sut = new AdminController(new NullLogger<AdminController>(), context);
-                var result = await _sut.LockUser(sid);
+                var result = await _sut.ToggleLockUser(sid);
 
                 var viewResult = Assert.IsType<NotFoundResult>(result);
             }
         }
         [Fact]
-        public async Task LockUser_LocksTheUser()
+        public async Task ToggleLockUser_LocksTheUser()
         {
             // Arrange
             string sid = "userIDstring";
@@ -268,7 +268,7 @@ namespace BissuesTest.UnitTests
             using (var context = new ApplicationDbContext(_options))
             {
                 _sut = new AdminController(new NullLogger<AdminController>(), context);
-                var result = await _sut.LockUser(sid);
+                var result = await _sut.ToggleLockUser(sid);
 
                 var viewResult = Assert.IsType<RedirectToActionResult>(result);
                 var user = await context.AppUsers.FirstOrDefaultAsync(u => u.Id == sid);
@@ -276,41 +276,8 @@ namespace BissuesTest.UnitTests
             }
         }
 
-
-
-
         [Fact]
-        public async Task UnLockUser_WithNullString_ReturnsNotFound()
-        {
-            // Arrange
-            string sid = null;
-            // Act
-            // Assert
-            using (var context = new ApplicationDbContext(_options))
-            {
-                _sut = new AdminController(new NullLogger<AdminController>(), context);
-                var result = await _sut.UnLockUser(sid);
-
-                var viewResult = Assert.IsType<NotFoundResult>(result);
-            }
-        }
-        [Fact]
-        public async Task UnLockUser_WithNullUser_ReturnsNotFound()
-        {
-            // Arrange
-            string sid = "stringUnlockUser";
-            // Act
-            // Assert
-            using (var context = new ApplicationDbContext(_options))
-            {
-                _sut = new AdminController(new NullLogger<AdminController>(), context);
-                var result = await _sut.UnLockUser(sid);
-
-                var viewResult = Assert.IsType<NotFoundResult>(result);
-            }
-        }
-        [Fact]
-        public async Task UnLockUser_UnLocksTheUser()
+        public async Task ToggleLockUser_UnLocksTheUser()
         {
             // Arrange
             string sid = "UnLockuserIDstring";
@@ -329,7 +296,7 @@ namespace BissuesTest.UnitTests
             using (var context = new ApplicationDbContext(_options))
             {
                 _sut = new AdminController(new NullLogger<AdminController>(), context);
-                var result = await _sut.UnLockUser(sid);
+                var result = await _sut.ToggleLockUser(sid);
 
                 var viewResult = Assert.IsType<RedirectToActionResult>(result);
                 var user = await context.AppUsers.FirstOrDefaultAsync(u => u.Id == sid);
