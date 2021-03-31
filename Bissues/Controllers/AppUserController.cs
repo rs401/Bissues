@@ -96,9 +96,5 @@ namespace Bissues.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private bool BissueExists(int id)
-        {
-            return _context.Bissues.Any(e => e.Id == id);
-        }
     }
 }

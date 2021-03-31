@@ -40,31 +40,6 @@ namespace Bissues.Controllers
             return View(messages);
         }
 
-        // Haven't decided if keeping or not
-        // // GET: Messages/Details/5
-        // /// <summary>
-        // /// Details view I think I should also remove this
-        // /// </summary>
-        // /// <param name="id"></param>
-        // /// <returns></returns>
-        // public async Task<IActionResult> Details(int? id)
-        // {
-        //     if (id == null)
-        //     {
-        //         return NotFound();
-        //     }
-
-        //     var message = await _context.Messages
-        //         .Include(m => m.Bissue)
-        //         .FirstOrDefaultAsync(m => m.Id == id);
-        //     if (message == null)
-        //     {
-        //         return NotFound();
-        //     }
-
-        //     return View(message);
-        // }
-
         // GET: Messages/Create
         [Authorize]
         /// <summary>

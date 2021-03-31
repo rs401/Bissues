@@ -196,12 +196,8 @@ namespace Bissues.Controllers
         {
             return new AdminAreaViewModel()
             {
-                Roles = _context.AppRole.ToList(),
-                Users = _context.AppUsers.ToList(),
                 Bissues = _context.Bissues.ToList(),
-                Projects = _context.Projects.ToList(),
-                Messages = _context.Messages.ToList(),
-                Notifications = _context.Notifications.ToList()
+                Projects = _context.Projects.ToList()
             };
         }
 
