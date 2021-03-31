@@ -79,7 +79,7 @@ namespace Bissues.Controllers
             return View(model);
         }
         /// <summary>
-        /// LockUser takes a user id string and locks the account.
+        /// Toggle Locked state for a User. Takes a user id string.
         /// </summary>
         /// <param name="sid">user id</param>
         /// <returns>Redirect to Users</returns>
@@ -94,7 +94,7 @@ namespace Bissues.Controllers
             {
                 return NotFound();
             }
-            
+
             if(user.LockoutEnabled == true)
             {
                 user.LockoutEnabled = false;
@@ -105,27 +105,6 @@ namespace Bissues.Controllers
                 user.LockoutEnabled = true;
                 user.LockoutEnd = DateTime.Now.AddYears(2);
             }
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Users");
-        }
-        /// <summary>
-        /// UnLockUser takes a user id string and unlocks the account.
-        /// </summary>
-        /// <param name="sid">user id</param>
-        /// <returns>Redirect to Users</returns>
-        public async Task<IActionResult> UnLockUser(string sid)
-        {
-            if(string.IsNullOrEmpty(sid))
-            {
-                return NotFound();
-            }
-            var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == sid);
-            if(user == null)
-            {
-                return NotFound();
-            }
-            user.LockoutEnabled = false;
-            user.LockoutEnd = null;
             await _context.SaveChangesAsync();
             return RedirectToAction("Users");
         }
