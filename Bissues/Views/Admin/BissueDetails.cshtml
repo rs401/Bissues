@@ -3,20 +3,17 @@
 
 @model Bissues.Models.Bissue
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Admin Page - Edit Bissue";
     var users = await UserManager.GetUsersInRoleAsync("Developer");
-    
 }
 
-<h1>Edit</h1>
-
-<h4>Bissue</h4>
+<h4>Edit Bissue</h4>
 <hr />
 <div class="row justify-content-md-center">
     <div class="col-md-10">
         <form asp-controller="Admin" asp-action="EditBissue" >
             @Html.AntiForgeryToken()
-            @* <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="ProjectId" />
             <input type="hidden" asp-for="AppUserId" />

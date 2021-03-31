@@ -1,13 +1,10 @@
 ﻿@model Bissues.ViewModels.AdminAreaViewModel
 @{
-    ViewData["Title"] = "Admin Page";
+    ViewData["Title"] = "Admin Page - Manage Issues";
 }
 
     <div class="col-md-10">
-        <h1 class="display-4">Welcome to Admin</h1>
-        <p class="mt-3">
-            Do the Admin thing.
-        </p>
+        <h1 class="display-4">Manage Issues</h1>
     </div>
     <hr/>
 
@@ -45,29 +42,3 @@
             </div>
         }
     </div>
-
-
-    @* <h4>Recent Bissues</h4>
-    @foreach (var bissue in Model.Bissues)
-    {
-        <div class = "card mb-2">
-            <a asp-controller="Bissues" asp-action="Details" asp-route-id="@bissue.Id" class = "btn text-left text-decoration-none">
-                <div class="card-body">
-                    <p class="card-title"><b>@bissue.Title</b> 
-                        @if(bissue.IsOpen)
-                        {
-                            <span class="text-success">Open</span>
-                        }
-                        else
-                        {
-                            <span class="text-danger">Closed</span>
-                        }
-                    </p>
-                    <p class="card-text">@bissue.Description</p>
-                    <footer>Project: @bissue.Project.Name</footer>
-                </div>
-            </a>
-        </div>
-    } *@
-
-
