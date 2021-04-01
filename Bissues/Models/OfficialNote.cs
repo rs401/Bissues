@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bissues.Models
 {
@@ -12,6 +13,7 @@ namespace Bissues.Models
         public Bissue Bissue { get; set; }
         public string CommitId { get; set; }
         public string CommitURL { get; set; }
+        [Required]
         public string Note { get; set; }
     }
 }

@@ -26,6 +26,7 @@ namespace Bissues.Data
         public DbSet<Bissues.Models.Notification> Notifications { get; set; }
         public DbSet<Bissues.Models.AppUser> AppUsers { get; set; }
         public DbSet<Bissues.Models.MeToo> MeToos { get; set; }
+        public DbSet<Bissues.Models.OfficialNote> OfficialNotes { get; set; }
 
     }//END class ApplicationDbContext
 }
