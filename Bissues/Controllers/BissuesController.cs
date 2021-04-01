@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Westwind.AspNetCore.Markdown;
 using Ganss.XSS;
+using Microsoft.Extensions.Logging;
 
 namespace Bissues.Controllers
 {
@@ -25,11 +26,13 @@ namespace Bissues.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<AppUser> _userManager;
+        private readonly ILogger<BissuesController> _logger;
 
-        public BissuesController(ApplicationDbContext context, UserManager<AppUser> userManager)
+        public BissuesController(ApplicationDbContext context, UserManager<AppUser> userManager, ILogger<BissuesController> logger)
         {
             _context = context;
             _userManager = userManager;
+            _logger = logger;
         }
 
         // GET: Bissues
@@ -261,10 +264,18 @@ namespace Bissues.Controllers
             return View(bissue);
         }
 
-        private static string SanitizeString(string str)
+        private string SanitizeString(string str)
         {
             var sanitizer = new HtmlSanitizer();
-            return sanitizer.Sanitize(str);
+            var original = str.ToString();
+            var sanitized = sanitizer.Sanitize(str);
+            if(original != sanitized)
+            {
+                _logger.LogWarning(AppLogEvents.Error, 
+                    $"Sanitizer Detection, Original:\n{original}\n"
+                    + $"Sanitized:\n{sanitized}");
+            }
+            return sanitized;
         }
 
         // GET: Bissues/Edit/5
@@ -276,9 +287,6 @@ namespace Bissues.Controllers
         [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
-            /* Still need to verify user is owner
-             * await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-             * */
             if (id == null)
             {
                 return NotFound();

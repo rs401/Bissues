@@ -23,6 +23,7 @@ namespace BissuesTest.UnitTests
         private MessagesController _sut;
         private UserManager<AppUser> _userManager;
         private DbContextOptions<ApplicationDbContext> _options;
+        private NullLogger<MessagesController> _logger = new NullLogger<MessagesController>();
         public MessagesControllerTests()
         {
             var store = new Mock<IUserStore<AppUser>>();
@@ -53,7 +54,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, _userManager);
+                _sut = new MessagesController(context, _userManager, _logger);
                 var result = await _sut.Index();
 
                 var viewResult = Assert.IsType<ViewResult>(result);
@@ -87,7 +88,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, _userManager);
+                _sut = new MessagesController(context, _userManager, _logger);
                 var result = _sut.Create(id);
 
                 var viewResult = Assert.IsType<ViewResult>(result);
@@ -103,7 +104,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, _userManager);
+                _sut = new MessagesController(context, _userManager, _logger);
                 var result = _sut.Create(id);
 
                 var viewResult = Assert.IsType<ViewResult>(result);
@@ -119,7 +120,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, _userManager);
+                _sut = new MessagesController(context, _userManager, _logger);
                 var result = await _sut.Edit(id);
 
                 var viewResult = Assert.IsType<NotFoundResult>(result);
@@ -135,7 +136,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, _userManager);
+                _sut = new MessagesController(context, _userManager, _logger);
                 var result = await _sut.Edit(id);
 
                 var viewResult = Assert.IsType<NotFoundResult>(result);
@@ -151,7 +152,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, _userManager);
+                _sut = new MessagesController(context, _userManager, _logger);
                 var result = await _sut.Delete(id);
 
                 var viewResult = Assert.IsType<NotFoundResult>(result);
@@ -167,7 +168,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, _userManager);
+                _sut = new MessagesController(context, _userManager, _logger);
                 var result = await _sut.Delete(id);
 
                 var viewResult = Assert.IsType<NotFoundResult>(result);

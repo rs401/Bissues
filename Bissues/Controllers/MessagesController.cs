@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Ganss.XSS;
+using Microsoft.Extensions.Logging;
 
 namespace Bissues.Controllers
 {
@@ -21,11 +22,13 @@ namespace Bissues.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<AppUser> _userManager;
+        private readonly ILogger<MessagesController> _logger;
 
-        public MessagesController(ApplicationDbContext context, UserManager<AppUser> userManager)
+        public MessagesController(ApplicationDbContext context, UserManager<AppUser> userManager, ILogger<MessagesController> logger)
         {
             _context = context;
             _userManager = userManager;
+            _logger = logger;
         }
 
         // GET: Messages
@@ -79,8 +82,7 @@ namespace Bissues.Controllers
                 message.AppUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
                 // Sanitize html if any
-                var sanitizer = new HtmlSanitizer();
-                var sanitizedBody = sanitizer.Sanitize(message.Body);
+                var sanitizedBody = SanitizeString(message.Body);
                 message.Body = sanitizedBody;
 
                 _context.Add(message);
@@ -98,7 +100,19 @@ namespace Bissues.Controllers
             ViewData["BissueId"] = new SelectList(_context.Bissues, "Id", "Description", message.BissueId);
             return View(message);
         }
-
+        private string SanitizeString(string str)
+        {
+            var sanitizer = new HtmlSanitizer();
+            var original = str.ToString();
+            var sanitized = sanitizer.Sanitize(str);
+            if(original != sanitized)
+            {
+                _logger.LogWarning(AppLogEvents.Error, 
+                    $"Sanitizer Detection, Original:\n{original}\n"
+                    + $"Sanitized:\n{sanitized}");
+            }
+            return sanitized;
+        }
         private async Task CreateNotification(Bissue bissue)
         {
             Notification notification = new Notification();
@@ -171,8 +185,7 @@ namespace Bissues.Controllers
             }
 
             // Sanitize html if any
-            var sanitizer = new HtmlSanitizer();
-            var sanitizedBody = sanitizer.Sanitize(message.Body);
+            var sanitizedBody = SanitizeString(message.Body);
             message.Body = sanitizedBody;
 
             if (ModelState.IsValid)
