@@ -11,7 +11,7 @@
 
 <a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.Bissue.Project.Id">Project: @Model.Bissue.Project.Name</a>
 
-<div>
+<div class="description p-2 rounded">
     <h2>Bissue: @Model.Bissue.Title</h2>
     ID: @Model.Bissue.Id <br />
     User: @Model.Bissue.AppUser.DisplayName <br />
@@ -44,14 +44,18 @@
     {
         <a class = "btn btn-primary btn-sm mb-2" asp-controller="Bissues" asp-action="Edit" asp-route-id="@Model.Bissue.Id">Edit This Bissue</a>
     }
-    <div class="description pl-md-4 pr-md-4 pb-md-3 mb-md-2">
+    <div class="pl-md-4 pr-md-4 pb-md-3 mb-md-2">
         <h5>Description:</h5>
         @Markdown.ParseHtmlString(Model.Bissue.Description)
     </div>
-    <div class="list-inline">
-        <a class="list-item mr-md-4 btn btn-primary" data-toggle="collapse" href="#ShareThis" role="button" aria-expanded="false" aria-controls="ShareThis">ShareThis</a>
-        <span class="list-item mr-1">Reports of similar experience: @Model.Bissue.MeToos.Count</span>
-        <a class="list-item btn btn-primary" asp-action="AddMeToo" asp-route-id="@Model.Bissue.Id">Me Too!</a>
+    <div class="row">
+        <div class="col">
+            <a class="mr-md-4 btn btn-primary" data-toggle="collapse" href="#ShareThis" role="button" aria-expanded="false" aria-controls="ShareThis">ShareThis</a>
+        </div>
+        <div class="col text-sm-right">
+            <span class="list-item mr-1">Reports of similar experience: @Model.Bissue.MeToos.Count</span>
+            <a class="btn btn-primary" asp-action="AddMeToo" asp-route-id="@Model.Bissue.Id">Me Too!</a>
+        </div>
     </div>
     <div class="collapse" id="ShareThis">
         <label>Share This: </label>
@@ -62,7 +66,7 @@
     <hr/>
     
 </div>
-<div>
+<div class="mt-2">
     <a asp-controller="Messages" asp-route-bid="@Model.Bissue.Id" asp-action="Create" class="btn btn-primary">New Message</a>
     <a class = "btn btn-primary" href="javascript:goBack();">Back</a>
 </div>

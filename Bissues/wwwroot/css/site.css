@@ -107,3 +107,7 @@ hr {
   height: 1px;
   border: 0;
 }
+
+.description {
+  background-color: #203e57;
+}
