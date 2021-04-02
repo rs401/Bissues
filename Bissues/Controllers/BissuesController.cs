@@ -138,6 +138,7 @@ namespace Bissues.Controllers
                 _context.Update(bissue);
                 _context.SaveChanges();
             }
+            ViewBag.Notes = _context.OfficialNotes.Include(n => n.AppUser).Where(n => n.BissueId == id).OrderBy(n => n.CreatedDate).ToList();
 
             if(currentIndex == null)
             {

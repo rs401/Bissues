@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using Bissues.Data;
 using Bissues.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using Ganss.XSS;
+using Microsoft.Extensions.Logging;
 
 namespace Bissues.Controllers
 {
@@ -15,10 +19,13 @@ namespace Bissues.Controllers
     public class NoteController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public NoteController(ApplicationDbContext context)
+        private readonly UserManager<AppUser> _userManager;
+        private readonly ILogger<NoteController> _logger;
+        public NoteController(ApplicationDbContext context, UserManager<AppUser> userManager, ILogger<NoteController> logger)
         {
             _context = context;
+            _userManager = userManager;
+            _logger = logger;
         }
 
         // GET: Note
@@ -49,10 +56,16 @@ namespace Bissues.Controllers
         }
 
         // GET: Note/Create
-        public IActionResult Create()
+        public IActionResult Create(int? bid)
         {
-            ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "Id");
-            ViewData["BissueId"] = new SelectList(_context.Bissues, "Id", "Description");
+            if(bid != null)
+            {
+                ViewData["BissueId"] = new SelectList(_context.Bissues.Where(b => b.Id == bid).ToList(), "Id", "Description");
+            }
+            else
+            {
+                ViewData["BissueId"] = new SelectList(_context.Bissues, "Id", "Description");
+            }
             return View();
         }
 
@@ -65,6 +78,14 @@ namespace Bissues.Controllers
         {
             if (ModelState.IsValid)
             {
+                officialNote.CreatedDate = DateTime.UtcNow;
+                officialNote.ModifiedDate = DateTime.UtcNow;
+                officialNote.AppUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+                // Sanitize html if any
+                string sanitizedNote = SanitizeString(officialNote.Note);
+                officialNote.Note = sanitizedNote;
+
                 _context.Add(officialNote);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -72,6 +93,20 @@ namespace Bissues.Controllers
             ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "Id", officialNote.AppUserId);
             ViewData["BissueId"] = new SelectList(_context.Bissues, "Id", "Description", officialNote.BissueId);
             return View(officialNote);
+        }
+
+        private string SanitizeString(string str)
+        {
+            var sanitizer = new HtmlSanitizer();
+            var original = str.ToString();
+            var sanitized = sanitizer.Sanitize(str);
+            if(original != sanitized)
+            {
+                _logger.LogWarning(AppLogEvents.Error, 
+                    $"Sanitizer Detection, Original:\n{original}\n"
+                    + $"Sanitized:\n{sanitized}");
+            }
+            return sanitized;
         }
 
         // GET: Note/Edit/5
@@ -108,6 +143,12 @@ namespace Bissues.Controllers
             {
                 try
                 {
+                    officialNote.ModifiedDate = DateTime.UtcNow;
+
+                    // Sanitize html if any
+                    string sanitizedNote = SanitizeString(officialNote.Note);
+                    officialNote.Note = sanitizedNote;
+
                     _context.Update(officialNote);
                     await _context.SaveChangesAsync();
                 }
