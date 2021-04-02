@@ -88,7 +88,7 @@ namespace Bissues.Controllers
 
                 _context.Add(officialNote);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Bissues", new { id = officialNote.BissueId});
             }
             ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "Id", officialNote.AppUserId);
             ViewData["BissueId"] = new SelectList(_context.Bissues, "Id", "Description", officialNote.BissueId);
@@ -163,7 +163,7 @@ namespace Bissues.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Bissues", new { id = officialNote.BissueId});
             }
             ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "Id", officialNote.AppUserId);
             ViewData["BissueId"] = new SelectList(_context.Bissues, "Id", "Description", officialNote.BissueId);
