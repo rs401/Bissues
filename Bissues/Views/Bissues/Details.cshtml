@@ -74,7 +74,7 @@
         </svg>
         Official Notes
     </a>
-    <div class="card-body description collapse rounded" id="officialNotes">
+    <div class="description collapse rounded" id="officialNotes">
         @if(SignInManager.IsSignedIn(User) && User.IsInRole("Admin") || User.IsInRole("Developer"))
         {
             <a class="btn btn-primary" asp-controller="Note" asp-action="Create" asp-route-bid="@Model.Bissue.Id">Add Note</a>
@@ -102,6 +102,7 @@
                         @Markdown.ParseHtmlString(note.Note)
                     </div>
                 </div>
+                <hr/>
             }
         }
     </div>
