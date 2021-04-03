@@ -28,6 +28,7 @@ namespace BissuesTest.UnitTests
         private AppUserController _sut;
         private DbContextOptions<ApplicationDbContext> _options;
         private UserManager<AppUser> _userManager;
+        private NullLogger<AppUserController> _logger = new NullLogger<AppUserController>();
         public AppUserControllerTests()
         {
             var store = new Mock<IUserStore<AppUser>>();
@@ -36,6 +37,56 @@ namespace BissuesTest.UnitTests
             _options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: "Bissues")
                 .Options;
+        }
+        [Fact]
+        public async Task Index_WithNullUser_ReturnsNotFound()
+        {
+            // Arrange
+            var name = "some name";
+            var httpContext = new Mock<HttpContext>();
+            httpContext.Setup(m => m.User.FindFirst(ClaimTypes.NameIdentifier))
+                .Returns(new Claim(ClaimTypes.NameIdentifier,name));
+
+            var concontext = new ControllerContext(
+                new ActionContext(
+                    httpContext.Object, 
+                    new Microsoft.AspNetCore.Routing.RouteData(), 
+                    new ControllerActionDescriptor()
+                    ));
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new AppUserController(_logger, context, _userManager){ControllerContext = concontext};
+                var result = await _sut.Index();
+
+                Assert.IsType<NotFoundResult>(result);
+            }
+        }
+        [Fact]
+        public async Task Developer_WithNullUser_ReturnsNotFound()
+        {
+            // Arrange
+            var name = "some name";
+            var httpContext = new Mock<HttpContext>();
+            httpContext.Setup(m => m.User.FindFirst(ClaimTypes.NameIdentifier))
+                .Returns(new Claim(ClaimTypes.NameIdentifier,name));
+
+            var concontext = new ControllerContext(
+                new ActionContext(
+                    httpContext.Object, 
+                    new Microsoft.AspNetCore.Routing.RouteData(), 
+                    new ControllerActionDescriptor()
+                    ));
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new AppUserController(_logger, context, _userManager){ControllerContext = concontext};
+                var result = await _sut.Developer();
+
+                Assert.IsType<NotFoundResult>(result);
+            }
         }
 
         [Fact(Skip = "Can't properly mock UserManager.")]
@@ -69,12 +120,30 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new AppUserController(new NullLogger<AppUserController>(), context, mockUser){ControllerContext = concontext};
+                _sut = new AppUserController(_logger, context, mockUser){ControllerContext = concontext};
                 var result = await _sut.Index();
 
                 var viewResult = Assert.IsType<ViewResult>(result);
             }
         }
+
+        [Fact]
+        public async Task ReadNotification_WithNullNotification_RedirectsToIndex()
+        {
+            // Arrange
+            int id = 9999;
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new AppUserController(_logger, context, _userManager);
+                var result = await _sut.ReadNotification(id);
+
+                var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+                Assert.Equal("Index", redirectResult.ActionName);
+            }
+        }
+
 
     }
 }
