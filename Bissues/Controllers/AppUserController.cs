@@ -58,6 +58,10 @@ namespace Bissues.Controllers
         public async Task<IActionResult> Developer()
         {
             var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if(reqUser == null)
+            {
+                return NotFound();
+            }
             var model = _context.Bissues.Where(b => b.AssignedDeveloperId == reqUser.Id).ToList();
             return View(model);
         }
@@ -70,9 +74,24 @@ namespace Bissues.Controllers
         public async Task<IActionResult> ReadNotification(int id)
         {
             var notification = await _context.Notifications.Where(n => n.Id == id).FirstOrDefaultAsync();
+            if(notification == null)
+            {
+                return RedirectToAction("Index");
+            }
             var bissue = await _context.Bissues.Where(b => b.Id == notification.BissueId).FirstOrDefaultAsync();
-            _context.Remove(notification);
-            await _context.SaveChangesAsync();
+            if(bissue == null)
+            {
+                return RedirectToAction("Index");
+            }
+            try
+            {
+                _context.Remove(notification);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return NotFound();
+            }
             return RedirectToAction("Details", "Bissues", new {id = bissue.Id});
         }
         /// <summary>
