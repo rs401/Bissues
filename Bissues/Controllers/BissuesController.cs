@@ -247,7 +247,7 @@ namespace Bissues.Controllers
             {
                 bissue.CreatedDate = DateTime.UtcNow;
                 bissue.ModifiedDate = DateTime.UtcNow;
-                bissue.AppUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                bissue.AppUser = await _userManager.FindByNameAsync(User.Identity.Name);
 
                 // Sanitize html if any
                 string sanitizedDesc = SanitizeString(bissue.Description);
@@ -327,7 +327,7 @@ namespace Bissues.Controllers
             }
 
             // Verify user is owner or admin
-            var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var reqUser = await _userManager.FindByNameAsync(User.Identity.Name);
             if(reqUser.Id != bissue.AppUserId && !User.IsInRole("Admin"))
             {
                 return new ForbidResult();
@@ -390,7 +390,7 @@ namespace Bissues.Controllers
             }
 
             // Verify user is owner or admin
-            var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var reqUser = await _userManager.FindByNameAsync(User.Identity.Name);
             if(reqUser.Id != bissue.AppUserId && !User.IsInRole("Admin"))
             {
                 return new ForbidResult();
@@ -407,7 +407,7 @@ namespace Bissues.Controllers
         {
             var bissue = await _context.Bissues.FindAsync(id);
             // Verify user is owner or admin
-            var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var reqUser = await _userManager.FindByNameAsync(User.Identity.Name);
             if(reqUser.Id != bissue.AppUserId && !User.IsInRole("Admin"))
             {
                 return new ForbidResult();

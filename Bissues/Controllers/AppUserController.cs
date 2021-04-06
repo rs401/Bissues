@@ -40,7 +40,7 @@ namespace Bissues.Controllers
         /// <returns>ViewResult</returns>
         public async Task<IActionResult> Index()
         {
-            var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var reqUser = await _userManager.FindByNameAsync(User.Identity.Name);
             // Shouldn't be null if they got past Authorize on the class
             if(reqUser == null)
             {
@@ -57,7 +57,7 @@ namespace Bissues.Controllers
         [Authorize(Roles = "Admin,Developer")]
         public async Task<IActionResult> Developer()
         {
-            var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var reqUser = await _userManager.FindByNameAsync(User.Identity.Name);
             if(reqUser == null)
             {
                 return NotFound();
@@ -114,6 +114,5 @@ namespace Bissues.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
     }
 }

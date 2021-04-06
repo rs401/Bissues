@@ -44,8 +44,8 @@ namespace BissuesTest.UnitTests
             // Arrange
             var name = "some name";
             var httpContext = new Mock<HttpContext>();
-            httpContext.Setup(m => m.User.FindFirst(ClaimTypes.NameIdentifier))
-                .Returns(new Claim(ClaimTypes.NameIdentifier,name));
+            httpContext.Setup(m => m.User.Identity.Name)
+                .Returns(name);
 
             var concontext = new ControllerContext(
                 new ActionContext(
@@ -69,8 +69,8 @@ namespace BissuesTest.UnitTests
             // Arrange
             var name = "some name";
             var httpContext = new Mock<HttpContext>();
-            httpContext.Setup(m => m.User.FindFirst(ClaimTypes.NameIdentifier))
-                .Returns(new Claim(ClaimTypes.NameIdentifier,name));
+            httpContext.Setup(m => m.User.Identity.Name)
+                .Returns(name);
 
             var concontext = new ControllerContext(
                 new ActionContext(
@@ -93,11 +93,19 @@ namespace BissuesTest.UnitTests
         public async Task Index_ReturnsAView()
         {
             // Arrange
-            var name = "some name";
+            var name = "admin@admin.com";
+            var user = new AppUser{
+                Email = "admin@admin.com",
+                UserName = "admin@admin.com",
+                FirstName = "Admin",
+                LastName = "Istrator",
+                DisplayName = "Admin",
+                EmailConfirmed = true
+            };
 
             var httpContext = new Mock<HttpContext>();
-            httpContext.Setup(m => m.User.FindFirst(ClaimTypes.NameIdentifier))
-                .Returns(new Claim(ClaimTypes.NameIdentifier,name));
+            httpContext.Setup(m => m.User.Identity.Name)
+                .Returns(name);
 
             var concontext = new ControllerContext(
                 new ActionContext(
@@ -107,20 +115,17 @@ namespace BissuesTest.UnitTests
                     ));
             
             var store = new Mock<IUserStore<AppUser>>();
-            store.Setup(x => x.FindByIdAsync(name, CancellationToken.None))
-                .ReturnsAsync(new AppUser()
-                {
-                    Id = name
-                });
+            store.Setup(x => x.FindByNameAsync(name, CancellationToken.None))
+                .ReturnsAsync(user);
             var mockUser = new Mock<UserManager<AppUser>>(store.Object, null, 
-                null, null, null, null, null, null, null).Object;
-            // mockUser.Setup( userManager => userManager.FindByIdAsync(It.IsAny<string>()))
-            //     .ReturnsAsync(new AppUser { Id = name });
+                null, null, null, null, null, null, null);//.Object;
+            mockUser.Setup( userManager => userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(new AppUser { Id = name });
             // Act
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new AppUserController(_logger, context, mockUser){ControllerContext = concontext};
+                _sut = new AppUserController(_logger, context, mockUser.Object){ControllerContext = concontext};
                 var result = await _sut.Index();
 
                 var viewResult = Assert.IsType<ViewResult>(result);
