@@ -160,6 +160,70 @@ namespace BissuesTest.UnitTests
         public async Task EditPOST_ReturnsARedirect()
         {
             // Arrange
+            // Users
+            string role = "User";
+            string roleId = "1";
+            var users = new List<AppUser>();
+            var user1 = new AppUser{
+                Id = "1",
+                Email = "user1@user1.com",
+                UserName = "user1@user1.com",
+                FirstName = "user1",
+                LastName = "asdf",
+                DisplayName = "user1",
+                EmailConfirmed = true
+            };
+            var user2 = new AppUser{
+                Id = "2",
+                Email = "user@user.com",
+                UserName = "user@user.com",
+                FirstName = "user",
+                LastName = "asdf",
+                DisplayName = "user",
+                EmailConfirmed = true
+            };
+            users.Add(user1);
+            users.Add(user2);
+            // Role
+            var mRole = new IdentityRole(role);
+            mRole.Id = roleId;
+            // Mock UserManager
+            var store = new Mock<IUserStore<AppUser>>();
+            // store.Setup(x => x.FindByNameAsync(name, CancellationToken.None))
+            //     .ReturnsAsync(user);
+            var mockUser = new Mock<UserManager<AppUser>>(store.Object, null, 
+                null, null, null, null, null, null, null);
+            mockUser.Setup(userManager =>  userManager.FindByIdAsync("1")).ReturnsAsync(user1);
+            mockUser.Setup(userManager =>  userManager.FindByIdAsync("2")).ReturnsAsync(user2);
+            mockUser.Setup(userManager =>  userManager.AddToRoleAsync(user1, It.IsAny<string>())).ReturnsAsync(IdentityResult.Success);
+            mockUser.Setup(userManager =>  userManager.RemoveFromRoleAsync(user2, It.IsAny<string>())).ReturnsAsync(IdentityResult.Success);
+            // Mock RoleManager
+            var mRoleStore = new Mock<IRoleStore<IdentityRole>>();
+            var mRoleManager = new Mock<RoleManager<IdentityRole>>(mRoleStore.Object,null,null,null,null);
+            mRoleManager.Setup(rm => rm.FindByIdAsync(roleId))
+                .ReturnsAsync(mRole);
+            // RoleModification
+            RoleModification roleMod = new RoleModification()
+            {
+                RoleName = role,
+                RoleId = roleId,
+                AddIds = new string[]{"1"},
+                DeleteIds = new string[]{"2"}
+            };
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new AppRolesController(mRoleManager.Object, mockUser.Object);
+                var result = await _sut.Edit(roleMod);
+
+                var viewResult = Assert.IsType<RedirectToActionResult>(result);
+            }
+        }
+        [Fact]
+        public async Task EditPOST_AddsId_ReturnsARedirect()
+        {
+            // Arrange
             RoleModification roleMod = new RoleModification();
             // Act
             // Assert
