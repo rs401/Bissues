@@ -299,7 +299,9 @@ namespace Bissues.Controllers
                 return NotFound();
             }
             // Verify user is owner or admin
-            if(User.FindFirst(ClaimTypes.NameIdentifier).Value != bissue.AppUserId && !User.IsInRole("Admin"))
+            var reqUser = await _userManager.FindByNameAsync(User.Identity.Name);
+            // if(User.FindFirst(ClaimTypes.NameIdentifier).Value != bissue.AppUserId && !User.IsInRole("Admin"))
+            if(reqUser.Id != bissue.AppUserId && !User.IsInRole("Admin"))
             {
                 return new ForbidResult();
             }
