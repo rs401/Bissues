@@ -1,6 +1,8 @@
 using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Security.Principal;
+using System.Threading;
 using System.Threading.Tasks;
 using Bissues;
 using Bissues.Controllers;
@@ -10,6 +12,7 @@ using Bissues.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -168,6 +171,35 @@ namespace BissuesTest.UnitTests
             }
         }
         [Fact]
+        public async Task DetailsWithNullMeToos_ReturnsAView()
+        {
+            // Arrange
+            using(var context = new ApplicationDbContext(_options))
+            {
+                context.Bissues.Add(new Bissue{
+                    Id = 15,
+                    Title = "BissuesControllerTests Bissue",
+                    Description = "BissuesControllerTests Bissue Description",
+                    IsOpen = true, 
+                    ProjectId = 3, 
+                    Label = BissueLabel.Issue,
+                    MeToos = null
+                });
+                context.SaveChanges();
+            }
+            int? id = 15;
+            int? currentIndex = null;
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new BissuesController(context, _userManager, _logger);
+                var result = await _sut.Details(id,currentIndex);
+
+                var viewResult = Assert.IsType<ViewResult>(result);
+            }
+        }
+        [Fact]
         public void CreateWithProjectId_ReturnsAView()
         {
             // Arrange
@@ -223,42 +255,120 @@ namespace BissuesTest.UnitTests
                 var viewResult = Assert.IsType<NotFoundResult>(result);
             }
         }
-        // [Fact]
-        // public async Task EditWith_MockUser()
-        // {
-        //     // Arrange
-        //     using(var context = new ApplicationDbContext(_options))
-        //     {
-        //         context.Bissues.Add(new Bissue{
-        //             Id = 8,
-        //             Title = "BissuesControllerTests Bissue",
-        //             Description = "BissuesControllerTests Bissue Description",
-        //             IsOpen = true, 
-        //             ProjectId = 3, 
-        //             Label = BissueLabel.Issue
-        //         });
-        //         context.SaveChanges();
-        //     }
-        //     int? id = 8;
-        //     // Thanks SO
-        //     var controllerContextMock = new ControllerContext();
-        //     var httpContextMock = new Mock<HttpContext>();
-        //     var identityMock = new GenericIdentity("User");
-        //     var principal = new GenericPrincipal(identityMock, null);
-        //     // httpContextMock.Setup(x => x.User.IsInRole(It.Is<string>(s => s.Equals("Admin")))).Returns(true);
-        //     httpContextMock.Setup(x => x.User).Returns(principal);
-        //     controllerContextMock.HttpContext = httpContextMock.Object;
+        [Fact]
+        public async Task EditWith_MockUser_ReturnsAView()
+        {
+            // while(!Debugger.IsAttached) Thread.Sleep(500);
+            // Arrange
+            using(var context = new ApplicationDbContext(_options))
+            {
+                context.Bissues.Add(new Bissue{
+                    Id = 13,
+                    Title = "BissuesControllerTests Bissue",
+                    Description = "BissuesControllerTests Bissue Description",
+                    IsOpen = true, 
+                    ProjectId = 3, 
+                    Label = BissueLabel.Issue,
+                    AppUserId = "1"
+                });
+                context.SaveChanges();
+            }
+            int? id = 13;
+            var name = "user1@user1.com";
+            var httpContext = new Mock<HttpContext>();
+            httpContext.Setup(m => m.User.Identity.Name)
+                .Returns(name);
 
-        //     // Act
-        //     // Assert
-        //     using (var context = new ApplicationDbContext(_options))
-        //     {
-        //         _sut = new BissuesController(context, _userManager);
-        //         _sut.ControllerContext = controllerContextMock;
-        //         var result = await _sut.Edit(id);
-        //         var viewResult = Assert.IsType<NotFoundResult>(result);
-        //     }
-        // }
+            var concontext = new ControllerContext(
+                new ActionContext(
+                    httpContext.Object, 
+                    new Microsoft.AspNetCore.Routing.RouteData(), 
+                    new ControllerActionDescriptor()
+                    ));
+            var user1 = new AppUser{
+                Id = "1",
+                Email = "user1@user1.com",
+                UserName = "user1@user1.com",
+                FirstName = "user1",
+                LastName = "asdf",
+                DisplayName = "user1",
+                EmailConfirmed = true
+            };
+            // Mock UserManager
+            var store = new Mock<IUserStore<AppUser>>();
+            // store.Setup(x => x.FindByNameAsync(name, CancellationToken.None))
+            //     .ReturnsAsync(user);
+            var mockUser = new Mock<UserManager<AppUser>>(store.Object, null, 
+                null, null, null, null, null, null, null);
+            mockUser.Setup(userManager =>  userManager.FindByNameAsync(name)).ReturnsAsync(user1);
+            
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new BissuesController(context, mockUser.Object, _logger);
+                _sut.ControllerContext = concontext;
+                var result = await _sut.Edit(id);
+                var viewResult = Assert.IsType<ViewResult>(result);
+            }
+        }
+        [Fact]
+        public async Task EditWith_WrongUser_ReturnsForbid()
+        {
+            // while(!Debugger.IsAttached) Thread.Sleep(500);
+            // Arrange
+            using(var context = new ApplicationDbContext(_options))
+            {
+                context.Bissues.Add(new Bissue{
+                    Id = 14,
+                    Title = "BissuesControllerTests Bissue",
+                    Description = "BissuesControllerTests Bissue Description",
+                    IsOpen = true, 
+                    ProjectId = 3, 
+                    Label = BissueLabel.Issue,
+                    AppUserId = "2"
+                });
+                context.SaveChanges();
+            }
+            int? id = 14;
+            var name = "user1@user1.com";
+            var httpContext = new Mock<HttpContext>();
+            httpContext.Setup(m => m.User.Identity.Name)
+                .Returns(name);
+
+            var concontext = new ControllerContext(
+                new ActionContext(
+                    httpContext.Object, 
+                    new Microsoft.AspNetCore.Routing.RouteData(), 
+                    new ControllerActionDescriptor()
+                    ));
+            var user1 = new AppUser{
+                Id = "1",
+                Email = "user1@user1.com",
+                UserName = "user1@user1.com",
+                FirstName = "user1",
+                LastName = "asdf",
+                DisplayName = "user1",
+                EmailConfirmed = true
+            };
+            // Mock UserManager
+            var store = new Mock<IUserStore<AppUser>>();
+            // store.Setup(x => x.FindByNameAsync(name, CancellationToken.None))
+            //     .ReturnsAsync(user);
+            var mockUser = new Mock<UserManager<AppUser>>(store.Object, null, 
+                null, null, null, null, null, null, null);
+            mockUser.Setup(userManager =>  userManager.FindByNameAsync(name)).ReturnsAsync(user1);
+            
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new BissuesController(context, mockUser.Object, _logger);
+                _sut.ControllerContext = concontext;
+                var result = await _sut.Edit(id);
+                var viewResult = Assert.IsType<ForbidResult>(result);
+            }
+        }
         [Fact]
         public async Task DeleteWithNullId_ReturnsNotFound()
         {
@@ -285,6 +395,65 @@ namespace BissuesTest.UnitTests
                 _sut = new BissuesController(context, _userManager, _logger);
                 var result = await _sut.Delete(id);
                 var viewResult = Assert.IsType<NotFoundResult>(result);
+            }
+        }
+        [Fact]
+        public void Search_WithNulls_ReturnsAView()
+        {
+            // Arrange
+            int? index = null;
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new BissuesController(context, _userManager, _logger);
+                var result = _sut.Search(index,null);
+                var viewResult = Assert.IsType<ViewResult>(result);
+            }
+        }
+        [Fact]
+        public void Search_WithValues_ReturnsAView()
+        {
+            // Arrange
+            int? index = 123;
+            string query = "query";
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new BissuesController(context, _userManager, _logger);
+                var result = _sut.Search(index,query);
+                var viewResult = Assert.IsType<ViewResult>(result);
+            }
+        }
+        [Fact]
+        public void Search_WithNullIndex_ReturnsAView()
+        {
+            // Arrange
+            int? index = null;
+            string query = "query";
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new BissuesController(context, _userManager, _logger);
+                var result = _sut.Search(index,query);
+                var viewResult = Assert.IsType<ViewResult>(result);
+            }
+        }
+        [Fact]
+        public void Search_WithNullQuery_ReturnsAView()
+        {
+            // Arrange
+            int? index = 123;
+            string query = null;
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new BissuesController(context, _userManager, _logger);
+                var result = _sut.Search(index,query);
+                var viewResult = Assert.IsType<ViewResult>(result);
             }
         }
     }
