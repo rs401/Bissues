@@ -1,15 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Bissues;
 using Bissues.Controllers;
 using Bissues.Data;
 using Bissues.Models;
 using Bissues.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -25,15 +29,8 @@ namespace BissuesTest.UnitTests
         private DbContextOptions<ApplicationDbContext> _options;
         private UserManager<AppUser> _userManager;
         private RoleManager<IdentityRole> _roleManager;
-        private AppUser admin = new AppUser{UserName = "admin@admin.com"};
-        private AppUser user1 = new AppUser();
-        private AppUser user2 = new AppUser();
-        private List<AppUser> _users = new List<AppUser>();
         public AppRolesControllerTests()
         {
-            _users.Add(admin);
-            _users.Add(user1);
-            _users.Add(user2);
             var roleStore = new Mock<IRoleStore<IdentityRole>>();
             _roleManager = new Mock<RoleManager<IdentityRole>>(roleStore.Object,null,null,null,null).Object;
             var store = new Mock<IUserStore<AppUser>>();
@@ -88,7 +85,7 @@ namespace BissuesTest.UnitTests
                 var viewResult = Assert.IsType<ViewResult>(result);
             }
         }
-        [Fact]//(Skip="Problems with mock usermanager")]
+        [Fact]
         public async Task Edit_ReturnsAView()
         {
             // Arrange
@@ -102,6 +99,59 @@ namespace BissuesTest.UnitTests
             {
                 _sut = new AppRolesController(_roleManager, _userManager);
                 var result = await _sut.Edit("");
+
+                var viewResult = Assert.IsType<ViewResult>(result);
+            }
+        }
+        [Fact]
+        public async Task Edit_WithUsers_ReturnsAView()
+        {
+            // while(!Debugger.IsAttached) Thread.Sleep(500);
+            // Arrange
+            string role = "User";
+            string roleId = "1";
+            var users = new List<AppUser>();
+            var user1 = new AppUser{
+                Email = "admin@admin.com",
+                UserName = "admin@admin.com",
+                FirstName = "Admin",
+                LastName = "Istrator",
+                DisplayName = "Admin",
+                EmailConfirmed = true
+            };
+            var user2 = new AppUser{
+                Email = "user@user.com",
+                UserName = "user@user.com",
+                FirstName = "user",
+                LastName = "asdf",
+                DisplayName = "user",
+                EmailConfirmed = true
+            };
+            users.Add(user1);
+            users.Add(user2);
+
+            var mRole = new IdentityRole(role);
+            mRole.Id = roleId;
+            var store = new Mock<IUserStore<AppUser>>();
+            // store.Setup(x => x.FindByNameAsync(name, CancellationToken.None))
+            //     .ReturnsAsync(user);
+            var mockUser = new Mock<UserManager<AppUser>>(store.Object, null, 
+                null, null, null, null, null, null, null);
+            mockUser.Setup( userManager => userManager.Users)
+                .Returns(users.AsQueryable());
+            mockUser.Setup(userManager =>  userManager.IsInRoleAsync(user2,role))
+                .ReturnsAsync(true);
+            
+            var mRoleStore = new Mock<IRoleStore<IdentityRole>>();
+            var mRoleManager = new Mock<RoleManager<IdentityRole>>(mRoleStore.Object,null,null,null,null);
+            mRoleManager.Setup(rm => rm.FindByIdAsync(roleId))
+                .ReturnsAsync(mRole);
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new AppRolesController(mRoleManager.Object, mockUser.Object);
+                var result = await _sut.Edit(roleId);
 
                 var viewResult = Assert.IsType<ViewResult>(result);
             }
