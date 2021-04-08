@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Security.Principal;
 using System.Threading;
@@ -225,6 +228,65 @@ namespace BissuesTest.UnitTests
                 _sut = new BissuesController(context, _userManager, _logger);
                 var result = _sut.Create(pid);
                 var viewResult = Assert.IsType<ViewResult>(result);
+            }
+        }
+        [Fact]
+        public async Task CreatePOST_ReturnsARedirect()
+        {
+            // while(!Debugger.IsAttached) Thread.Sleep(500);
+            // Arrange
+            int id = 222;
+            int pid = 333;
+            Project proj = new Project
+            {
+                Id = pid
+            };
+            Bissue bissue = new Bissue
+            {
+                Id = id,
+                ProjectId = pid,
+                Description = "asdf"
+            };
+            using (var context = new ApplicationDbContext(_options))
+            {
+                context.Projects.Add(proj);
+                context.SaveChanges();
+            }
+            var name = "user1@user1.com";
+            var httpContext = new Mock<HttpContext>();
+            httpContext.Setup(m => m.User.Identity.Name)
+                .Returns(name);
+
+            var concontext = new ControllerContext(
+                new ActionContext(
+                    httpContext.Object, 
+                    new Microsoft.AspNetCore.Routing.RouteData(), 
+                    new ControllerActionDescriptor()
+                    ));
+            var user1 = new AppUser{
+                Id = "1",
+                Email = "user1@user1.com",
+                UserName = "user1@user1.com",
+                FirstName = "user1",
+                LastName = "asdf",
+                DisplayName = "user1",
+                EmailConfirmed = true
+            };
+            // Mock UserManager
+            var store = new Mock<IUserStore<AppUser>>();
+            // store.Setup(x => x.FindByNameAsync(name, CancellationToken.None))
+            //     .ReturnsAsync(user);
+            var mockUser = new Mock<UserManager<AppUser>>(store.Object, null, 
+                null, null, null, null, null, null, null);
+            mockUser.Setup(userManager =>  userManager.FindByNameAsync(name)).ReturnsAsync(user1);
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new BissuesController(context, mockUser.Object, _logger);
+                _sut.ControllerContext = concontext;
+                var result = await _sut.Create(bissue);
+                var viewResult = Assert.IsType<RedirectToActionResult>(result);
             }
         }
         [Fact]
@@ -454,6 +516,117 @@ namespace BissuesTest.UnitTests
                 _sut = new BissuesController(context, _userManager, _logger);
                 var result = _sut.Search(index,query);
                 var viewResult = Assert.IsType<ViewResult>(result);
+            }
+        }
+        [Fact]
+        public async Task AddMeToo_WithNullId_ReturnsNotFound()
+        {
+            // Arrange
+            int? id = null;
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new BissuesController(context, _userManager, _logger);
+                var result = await _sut.AddMeToo(id);
+                var viewResult = Assert.IsType<NotFoundResult>(result);
+            }
+        }
+        [Fact]
+        public async Task AddMeToo_WithNullBissue_ReturnsNotFound()
+        {
+            // Arrange
+            int? id = 111;
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new BissuesController(context, _userManager, _logger);
+                var result = await _sut.AddMeToo(id);
+                var viewResult = Assert.IsType<NotFoundResult>(result);
+            }
+        }
+        [Fact]
+        public async Task AddMeToo_AddsMeToo()
+        {
+            // while(!Debugger.IsAttached) Thread.Sleep(500);
+            // Arrange
+            int? id = 18;
+            using (var context = new ApplicationDbContext(_options))
+            {
+                var bissue = new Bissue
+                {
+                    Id = (int)id,
+                    MeToos = null
+                };
+                context.Bissues.Add(bissue);
+                context.SaveChanges();
+            }
+            var httpContext = new Mock<HttpContext>();
+            var ipa = new Mock<IPAddress>();
+            httpContext.Setup(hc => hc.Connection.RemoteIpAddress)
+                .Returns(IPAddress.Parse("1.2.3.4"));
+            var concontext = new ControllerContext(
+                new ActionContext(
+                    httpContext.Object, 
+                    new Microsoft.AspNetCore.Routing.RouteData(), 
+                    new ControllerActionDescriptor()
+                    ));
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new BissuesController(context, _userManager, _logger);
+                _sut.ControllerContext = concontext;
+                var result = await _sut.AddMeToo(id);
+                var viewResult = Assert.IsType<RedirectToActionResult>(result);
+                // Add check that metoo was added
+                var metoos = context.MeToos.Where(mt => mt.Ip == "1.2.3.4").ToList();
+                Assert.Equal("1.2.3.4", metoos[0].Ip);
+            }
+        }
+        [Fact]
+        public async Task AddMeToo_NotUnique_ReturnsRedirect()
+        {
+            // while(!Debugger.IsAttached) Thread.Sleep(500);
+            // Arrange
+            int? id = 19;
+            var bissue = new Bissue{Id = (int)id};
+            var me2 = new MeToo
+            {
+                Id = (int)id,
+                Ip = "1.1.1.1",
+                Bissue = bissue,
+                BissueId = (int)id
+            };
+            var bMeToos = new List<MeToo>();
+            bMeToos.Add(me2);
+            bissue.MeToos = bMeToos;
+            using (var context = new ApplicationDbContext(_options))
+            {
+                context.Bissues.Add(bissue);
+                context.MeToos.Add(me2);
+                context.SaveChanges();
+            }
+            var httpContext = new Mock<HttpContext>();
+            // var ipa = new Mock<IPAddress>();
+            httpContext.Setup(hc => hc.Connection.RemoteIpAddress)
+                .Returns(IPAddress.Parse("1.1.1.1"));
+            var concontext = new ControllerContext(
+                new ActionContext(
+                    httpContext.Object, 
+                    new Microsoft.AspNetCore.Routing.RouteData(), 
+                    new ControllerActionDescriptor()
+                    ));
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new BissuesController(context, _userManager, _logger);
+                _sut.ControllerContext = concontext;
+                var result = await _sut.AddMeToo(id);
+                var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+                Assert.Equal("Details", redirectResult.ActionName);
             }
         }
     }

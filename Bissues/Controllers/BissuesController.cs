@@ -163,7 +163,7 @@ namespace Bissues.Controllers
             {
                 return NotFound();
             }
-            var theIp = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            var theIp = HttpContext.Connection.RemoteIpAddress.ToString();
             var unique = _context.MeToos.Where(mt => mt.Ip == theIp && mt.Bissue == bissue).ToList();
             if(unique.Count != 0)
             {
