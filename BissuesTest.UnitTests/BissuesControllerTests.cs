@@ -460,6 +460,256 @@ namespace BissuesTest.UnitTests
             }
         }
         [Fact]
+        public async Task DeleteWithWrongUser_ReturnsForbid()
+        {
+            // Arrange
+            int id = 115;
+            int pid = 22;
+            string auId = "3";
+            var proj = new Project
+            {
+                Id = pid
+            };
+            var bissue = new Bissue
+            {
+                Id = id,
+                AppUserId = auId,
+                Project = proj
+            };
+            using (var context = new ApplicationDbContext(_options))
+            {
+                context.Bissues.Add(bissue);
+                context.Projects.Add(proj);
+                context.SaveChanges();
+            }
+            var name = "user1@user1.com";
+            var httpContext = new Mock<HttpContext>();
+            httpContext.Setup(m => m.User.Identity.Name)
+                .Returns(name);
+            httpContext.Setup(m => m.User.IsInRole("Admin"))
+                .Returns(false);
+
+            var concontext = new ControllerContext(
+                new ActionContext(
+                    httpContext.Object, 
+                    new Microsoft.AspNetCore.Routing.RouteData(), 
+                    new ControllerActionDescriptor()
+                    ));
+            var user1 = new AppUser{
+                Id = "1",
+                Email = "user1@user1.com",
+                UserName = "user1@user1.com",
+                FirstName = "user1",
+                LastName = "asdf",
+                DisplayName = "user1",
+                EmailConfirmed = true
+            };
+            // Mock UserManager
+            var store = new Mock<IUserStore<AppUser>>();
+            // store.Setup(x => x.FindByNameAsync(name, CancellationToken.None))
+            //     .ReturnsAsync(user);
+            var mockUser = new Mock<UserManager<AppUser>>(store.Object, null, 
+                null, null, null, null, null, null, null);
+            mockUser.Setup(userManager =>  userManager.FindByNameAsync(name)).ReturnsAsync(user1);
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new BissuesController(context, mockUser.Object, _logger);
+                _sut.ControllerContext = concontext;
+                var result = await _sut.Delete(id);
+                var viewResult = Assert.IsType<ForbidResult>(result);
+            }
+        }
+        [Fact]
+        public async Task Delete_ReturnsAView()
+        {
+            // Arrange
+            int id = 116;
+            int pid = 226;
+            string auId = "3";
+            var proj = new Project
+            {
+                Id = pid
+            };
+            var bissue = new Bissue
+            {
+                Id = id,
+                AppUserId = auId,
+                Project = proj
+            };
+            using (var context = new ApplicationDbContext(_options))
+            {
+                context.Bissues.Add(bissue);
+                context.Projects.Add(proj);
+                context.SaveChanges();
+            }
+            var name = "user1@user1.com";
+            var httpContext = new Mock<HttpContext>();
+            httpContext.Setup(m => m.User.Identity.Name)
+                .Returns(name);
+            httpContext.Setup(m => m.User.IsInRole("Admin"))
+                .Returns(false);
+
+            var concontext = new ControllerContext(
+                new ActionContext(
+                    httpContext.Object, 
+                    new Microsoft.AspNetCore.Routing.RouteData(), 
+                    new ControllerActionDescriptor()
+                    ));
+            var user1 = new AppUser{
+                Id = auId,
+                Email = "user1@user1.com",
+                UserName = "user1@user1.com",
+                FirstName = "user1",
+                LastName = "asdf",
+                DisplayName = "user1",
+                EmailConfirmed = true
+            };
+            // Mock UserManager
+            var store = new Mock<IUserStore<AppUser>>();
+            // store.Setup(x => x.FindByNameAsync(name, CancellationToken.None))
+            //     .ReturnsAsync(user);
+            var mockUser = new Mock<UserManager<AppUser>>(store.Object, null, 
+                null, null, null, null, null, null, null);
+            mockUser.Setup(userManager =>  userManager.FindByNameAsync(name)).ReturnsAsync(user1);
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new BissuesController(context, mockUser.Object, _logger);
+                _sut.ControllerContext = concontext;
+                var result = await _sut.Delete(id);
+                var viewResult = Assert.IsType<ViewResult>(result);
+            }
+        }
+        [Fact]
+        public async Task DeleteConfirm_Deletes()
+        {
+            // Arrange
+            int id = 117;
+            int pid = 227;
+            string auId = "3";
+            var proj = new Project
+            {
+                Id = pid
+            };
+            var bissue = new Bissue
+            {
+                Id = id,
+                AppUserId = auId,
+                Project = proj
+            };
+            using (var context = new ApplicationDbContext(_options))
+            {
+                context.Bissues.Add(bissue);
+                context.Projects.Add(proj);
+                context.SaveChanges();
+            }
+            var name = "user1@user1.com";
+            var httpContext = new Mock<HttpContext>();
+            httpContext.Setup(m => m.User.Identity.Name)
+                .Returns(name);
+            httpContext.Setup(m => m.User.IsInRole("Admin"))
+                .Returns(false);
+
+            var concontext = new ControllerContext(
+                new ActionContext(
+                    httpContext.Object, 
+                    new Microsoft.AspNetCore.Routing.RouteData(), 
+                    new ControllerActionDescriptor()
+                    ));
+            var user1 = new AppUser{
+                Id = auId,
+                Email = "user1@user1.com",
+                UserName = "user1@user1.com",
+                FirstName = "user1",
+                LastName = "asdf",
+                DisplayName = "user1",
+                EmailConfirmed = true
+            };
+            // Mock UserManager
+            var store = new Mock<IUserStore<AppUser>>();
+            // store.Setup(x => x.FindByNameAsync(name, CancellationToken.None))
+            //     .ReturnsAsync(user);
+            var mockUser = new Mock<UserManager<AppUser>>(store.Object, null, 
+                null, null, null, null, null, null, null);
+            mockUser.Setup(userManager =>  userManager.FindByNameAsync(name)).ReturnsAsync(user1);
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new BissuesController(context, mockUser.Object, _logger);
+                _sut.ControllerContext = concontext;
+                var result = await _sut.DeleteConfirmed(id);
+                var viewResult = Assert.IsType<RedirectToActionResult>(result);
+                var delBissue = context.Bissues.FirstOrDefault(b => b.Id == id);
+                Assert.Null(delBissue);
+            }
+        }
+        [Fact]
+        public async Task DeleteConfirm_WithWrongUser_ReturnsForbid()
+        {
+            // Arrange
+            int id = 118;
+            int pid = 228;
+            string auId = "3";
+            var proj = new Project
+            {
+                Id = pid
+            };
+            var bissue = new Bissue
+            {
+                Id = id,
+                AppUserId = auId,
+                Project = proj
+            };
+            using (var context = new ApplicationDbContext(_options))
+            {
+                context.Bissues.Add(bissue);
+                context.Projects.Add(proj);
+                context.SaveChanges();
+            }
+            var name = "user1@user1.com";
+            var httpContext = new Mock<HttpContext>();
+            httpContext.Setup(m => m.User.Identity.Name)
+                .Returns(name);
+            httpContext.Setup(m => m.User.IsInRole("Admin"))
+                .Returns(false);
+
+            var concontext = new ControllerContext(
+                new ActionContext(
+                    httpContext.Object, 
+                    new Microsoft.AspNetCore.Routing.RouteData(), 
+                    new ControllerActionDescriptor()
+                    ));
+            var user1 = new AppUser{
+                Id = "1",
+                Email = "user1@user1.com",
+                UserName = "user1@user1.com",
+                FirstName = "user1",
+                LastName = "asdf",
+                DisplayName = "user1",
+                EmailConfirmed = true
+            };
+            // Mock UserManager
+            var store = new Mock<IUserStore<AppUser>>();
+            // store.Setup(x => x.FindByNameAsync(name, CancellationToken.None))
+            //     .ReturnsAsync(user);
+            var mockUser = new Mock<UserManager<AppUser>>(store.Object, null, 
+                null, null, null, null, null, null, null);
+            mockUser.Setup(userManager =>  userManager.FindByNameAsync(name)).ReturnsAsync(user1);
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new BissuesController(context, mockUser.Object, _logger);
+                _sut.ControllerContext = concontext;
+                var result = await _sut.DeleteConfirmed(id);
+                var viewResult = Assert.IsType<ForbidResult>(result);
+            }
+        }
+        [Fact]
         public void Search_WithNulls_ReturnsAView()
         {
             // Arrange
@@ -629,5 +879,192 @@ namespace BissuesTest.UnitTests
                 Assert.Equal("Details", redirectResult.ActionName);
             }
         }
-    }
+        [Fact]
+        public async Task EditPOST_WithMismatchId_ReturnsNotFound()
+        {
+            // while(!Debugger.IsAttached) Thread.Sleep(500);
+            // Arrange
+            int id = 222;
+            int bid = 333;
+            Bissue bissue = new Bissue { Id = bid };
+            
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new BissuesController(context, _userManager, _logger);
+                var result = await _sut.Edit(id,bissue);
+                var viewResult = Assert.IsType<NotFoundResult>(result);
+            }
+        }
+
+        [Fact]
+        public async Task EditPOST_WithWrongUser_ReturnsForbid()
+        {
+            // while(!Debugger.IsAttached) Thread.Sleep(500);
+            // Arrange
+            int id = 223;
+            string auId = "2";
+            Bissue bissue = new Bissue { Id = id, AppUserId = auId };
+            var name = "user1@user1.com";
+            var httpContext = new Mock<HttpContext>();
+            httpContext.Setup(m => m.User.Identity.Name)
+                .Returns(name);
+            httpContext.Setup(m => m.User.IsInRole("Admin"))
+                .Returns(false);
+
+            var concontext = new ControllerContext(
+                new ActionContext(
+                    httpContext.Object, 
+                    new Microsoft.AspNetCore.Routing.RouteData(), 
+                    new ControllerActionDescriptor()
+                    ));
+            var user1 = new AppUser{
+                Id = "1",
+                Email = "user1@user1.com",
+                UserName = "user1@user1.com",
+                FirstName = "user1",
+                LastName = "asdf",
+                DisplayName = "user1",
+                EmailConfirmed = true
+            };
+            // Mock UserManager
+            var store = new Mock<IUserStore<AppUser>>();
+            // store.Setup(x => x.FindByNameAsync(name, CancellationToken.None))
+            //     .ReturnsAsync(user);
+            var mockUser = new Mock<UserManager<AppUser>>(store.Object, null, 
+                null, null, null, null, null, null, null);
+            mockUser.Setup(userManager =>  userManager.FindByNameAsync(name)).ReturnsAsync(user1);
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new BissuesController(context, mockUser.Object, _logger);
+                _sut.ControllerContext = concontext;
+                var result = await _sut.Edit(id,bissue);
+                var viewResult = Assert.IsType<ForbidResult>(result);
+            }
+        }
+
+        [Fact]
+        public async Task EditPOST_ReturnsARedirect()
+        {
+            // while(!Debugger.IsAttached) Thread.Sleep(500);
+            // Arrange
+            int id = 223;
+            string auId = "1";
+            Bissue bissue = new Bissue 
+            { 
+                Id = id,
+                AppUserId = auId,
+                IsOpen = false,
+                ClosedDate = null,
+                Description = "Test<script>alert('test sani')</script>"
+            };
+            using (var context = new ApplicationDbContext(_options))
+            {
+                context.Bissues.Add(bissue);
+                context.SaveChanges();
+            }
+            var name = "user1@user1.com";
+            var httpContext = new Mock<HttpContext>();
+            httpContext.Setup(m => m.User.Identity.Name)
+                .Returns(name);
+            httpContext.Setup(m => m.User.IsInRole("Admin"))
+                .Returns(false);
+
+            var concontext = new ControllerContext(
+                new ActionContext(
+                    httpContext.Object, 
+                    new Microsoft.AspNetCore.Routing.RouteData(), 
+                    new ControllerActionDescriptor()
+                    ));
+            var user1 = new AppUser{
+                Id = "1",
+                Email = "user1@user1.com",
+                UserName = "user1@user1.com",
+                FirstName = "user1",
+                LastName = "asdf",
+                DisplayName = "user1",
+                EmailConfirmed = true
+            };
+            // Mock UserManager
+            var store = new Mock<IUserStore<AppUser>>();
+            // store.Setup(x => x.FindByNameAsync(name, CancellationToken.None))
+            //     .ReturnsAsync(user);
+            var mockUser = new Mock<UserManager<AppUser>>(store.Object, null, 
+                null, null, null, null, null, null, null);
+            mockUser.Setup(userManager =>  userManager.FindByNameAsync(name)).ReturnsAsync(user1);
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new BissuesController(context, mockUser.Object, _logger);
+                _sut.ControllerContext = concontext;
+                var result = await _sut.Edit(id,bissue);
+                var viewResult = Assert.IsType<RedirectToActionResult>(result);
+            }
+        }
+
+        // [Fact]
+        // public async Task CreatePOST_ReturnsARedirect()
+        // {
+        //     // while(!Debugger.IsAttached) Thread.Sleep(500);
+        //     // Arrange
+        //     int id = 222;
+        //     int pid = 333;
+        //     Project proj = new Project
+        //     {
+        //         Id = pid
+        //     };
+        //     Bissue bissue = new Bissue
+        //     {
+        //         Id = id,
+        //         ProjectId = pid,
+        //         Description = "asdf"
+        //     };
+        //     using (var context = new ApplicationDbContext(_options))
+        //     {
+        //         context.Projects.Add(proj);
+        //         context.SaveChanges();
+        //     }
+        //     var name = "user1@user1.com";
+        //     var httpContext = new Mock<HttpContext>();
+        //     httpContext.Setup(m => m.User.Identity.Name)
+        //         .Returns(name);
+
+        //     var concontext = new ControllerContext(
+        //         new ActionContext(
+        //             httpContext.Object, 
+        //             new Microsoft.AspNetCore.Routing.RouteData(), 
+        //             new ControllerActionDescriptor()
+        //             ));
+        //     var user1 = new AppUser{
+        //         Id = "1",
+        //         Email = "user1@user1.com",
+        //         UserName = "user1@user1.com",
+        //         FirstName = "user1",
+        //         LastName = "asdf",
+        //         DisplayName = "user1",
+        //         EmailConfirmed = true
+        //     };
+        //     // Mock UserManager
+        //     var store = new Mock<IUserStore<AppUser>>();
+        //     // store.Setup(x => x.FindByNameAsync(name, CancellationToken.None))
+        //     //     .ReturnsAsync(user);
+        //     var mockUser = new Mock<UserManager<AppUser>>(store.Object, null, 
+        //         null, null, null, null, null, null, null);
+        //     mockUser.Setup(userManager =>  userManager.FindByNameAsync(name)).ReturnsAsync(user1);
+        //     // Act
+        //     // Assert
+        //     using (var context = new ApplicationDbContext(_options))
+        //     {
+        //         _sut = new BissuesController(context, mockUser.Object, _logger);
+        //         _sut.ControllerContext = concontext;
+        //         var result = await _sut.Create(bissue);
+        //         var viewResult = Assert.IsType<RedirectToActionResult>(result);
+        //     }
+        // }
+
+    }//END Test Classs
 }
