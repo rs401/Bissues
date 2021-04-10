@@ -79,7 +79,7 @@ namespace Bissues.Controllers
             {
                 message.CreatedDate = DateTime.UtcNow;
                 message.ModifiedDate = DateTime.UtcNow;
-                message.AppUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                message.AppUser = await _userManager.FindByNameAsync(User.Identity.Name);
 
                 // Sanitize html if any
                 var sanitizedBody = SanitizeString(message.Body);
@@ -147,7 +147,7 @@ namespace Bissues.Controllers
             var message = await _context.Messages.FindAsync(id);
 
             // Authorization
-            var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var reqUser = await _userManager.FindByNameAsync(User.Identity.Name);
             if(reqUser.Id != message.AppUserId && !User.IsInRole("Admin"))
             {
                 return new ForbidResult();
@@ -178,7 +178,7 @@ namespace Bissues.Controllers
                 return NotFound();
             }
             // Authorization
-            var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var reqUser = await _userManager.FindByNameAsync(User.Identity.Name);
             if(reqUser.Id != message.AppUserId && !User.IsInRole("Admin"))
             {
                 return new ForbidResult();
@@ -202,7 +202,7 @@ namespace Bissues.Controllers
                     // Construct notification
                     await CreateNotification(bissue);
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException dbce)
                 {
                     if (!MessageExists(message.Id))
                     {
@@ -210,7 +210,7 @@ namespace Bissues.Controllers
                     }
                     else
                     {
-                        throw;
+                        _logger.LogError(AppLogEvents.Error, dbce, "Edit POST");
                     }
                 }
                 // return RedirectToAction(nameof(Index));
@@ -243,7 +243,7 @@ namespace Bissues.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             // Authorization
-            var reqUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var reqUser = await _userManager.FindByNameAsync(User.Identity.Name);
             if(reqUser.Id != message.AppUserId && !User.IsInRole("Admin"))
             {
                 return new ForbidResult();
@@ -264,6 +264,10 @@ namespace Bissues.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var message = await _context.Messages.FindAsync(id);
+            if(message == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
             _context.Messages.Remove(message);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
