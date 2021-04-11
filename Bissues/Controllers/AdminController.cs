@@ -78,6 +78,14 @@ namespace Bissues.Controllers
             var model = _context.AppUsers.ToList();
             return View(model);
         }
+        public IActionResult UserSearch(string query)
+        {
+            var model = _context.AppUsers.Where(u => 
+                u.FirstName.ToLower().Contains(query.ToLower()) ||
+                u.LastName.ToLower().Contains(query.ToLower()) ||
+                u.DisplayName.ToLower().Contains(query.ToLower())).ToList();
+            return View(model);
+        }
         /// <summary>
         /// Toggle Locked state for a User. Takes a user id string.
         /// </summary>
