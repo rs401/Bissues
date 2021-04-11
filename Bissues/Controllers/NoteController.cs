@@ -80,7 +80,7 @@ namespace Bissues.Controllers
             {
                 officialNote.CreatedDate = DateTime.UtcNow;
                 officialNote.ModifiedDate = DateTime.UtcNow;
-                officialNote.AppUser = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                officialNote.AppUser = await _userManager.FindByNameAsync(User.Identity.Name);
 
                 // Sanitize html if any
                 string sanitizedNote = SanitizeString(officialNote.Note);
