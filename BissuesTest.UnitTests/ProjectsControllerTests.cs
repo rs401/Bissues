@@ -147,6 +147,23 @@ namespace BissuesTest.UnitTests
         }
 
         [Fact]
+        public async Task Create_CreatesProject_ReturnsRedirect()
+        {
+            // Arrange
+            int id = 100;
+            var proj = new Project{Id = id};
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new ProjectsController(context);
+                var result = await _sut.Create(proj);
+                var viewResult = Assert.IsType<RedirectToActionResult>(result);
+                Assert.NotNull(await context.Projects.FirstOrDefaultAsync(p => p.Id == id));
+            }
+        }
+
+        [Fact]
         public async Task Edit_ReturnsAView_WithAProjectModel()
         {
             // Arrange
@@ -200,6 +217,50 @@ namespace BissuesTest.UnitTests
         }
 
         [Fact]
+        public async Task EditPOST_WithMissMatchId_ReturnsNotFound()
+        {
+            // Arrange
+            int id = 101;
+            int badId = 102;
+            Project proj = new Project{Id = id};
+            
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new ProjectsController(context);
+                var result = await _sut.Edit(badId, proj);
+                var viewResult = Assert.IsType<NotFoundResult>(result);
+            }
+        }
+
+        [Fact]
+        public async Task EditPOST_ReturnsRedirect()
+        {
+            // Arrange
+            int id = 103;
+            Project proj = new Project
+            {
+                Id = id,
+                CreatedDate = DateTime.UtcNow,
+                ModifiedDate = DateTime.UtcNow,
+            };
+            using (var context = new ApplicationDbContext(_options))
+            {
+                context.Projects.Add(proj);
+                await context.SaveChangesAsync();
+            }
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new ProjectsController(context);
+                var result = await _sut.Edit(id, proj);
+                var viewResult = Assert.IsType<RedirectToActionResult>(result);
+            }
+        }
+
+        [Fact]
         public async Task DeleteWithNullId_ReturnsNotFound()
         {
             // Arrange
@@ -249,6 +310,44 @@ namespace BissuesTest.UnitTests
                 var result = await _sut.Delete(5);
                 var viewResult = Assert.IsType<ViewResult>(result);
                 var model = Assert.IsAssignableFrom<Project>(viewResult.ViewData.Model);
+            }
+        }
+
+        [Fact]
+        public async Task DeleteConfirm_WithNullProject_ReturnsNotFound()
+        {
+            // Arrange
+            int id = 104;
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new ProjectsController(context);
+                var result = await _sut.DeleteConfirmed(id);
+                var viewResult = Assert.IsType<NotFoundResult>(result);
+            }
+        }
+
+        [Fact]
+        public async Task DeleteConfirm_DeletesProject_ReturnsRedirect()
+        {
+            // Arrange
+            int id = 105;
+            Project proj = new Project{ Id = id };
+            using (var context = new ApplicationDbContext(_options))
+            {
+                context.Projects.Add(proj);
+                await context.SaveChangesAsync();
+            }
+            // Act
+            // Assert
+            using (var context = new ApplicationDbContext(_options))
+            {
+                _sut = new ProjectsController(context);
+                var result = await _sut.DeleteConfirmed(id);
+                var viewResult = Assert.IsType<RedirectToActionResult>(result);
+                var delProj = context.Projects.FirstOrDefaultAsync(p => p.Id == id);
+                Assert.Null(delProj.Result);
             }
         }
         

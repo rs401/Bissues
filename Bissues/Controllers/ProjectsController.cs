@@ -217,6 +217,10 @@ namespace Bissues.Controllers
         /// <returns>Project Index view</returns>
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if(!ProjectExists(id))
+            {
+                return NotFound();
+            }
             var project = await _context.Projects.FindAsync(id);
             _context.Projects.Remove(project);
             await _context.SaveChangesAsync();
