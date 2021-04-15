@@ -407,6 +407,10 @@ namespace Bissues.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if(!BissueExists(id))
+            {
+                return NotFound();
+            }
             var bissue = await _context.Bissues.FindAsync(id);
             // Verify user is owner or admin
             var reqUser = await _userManager.FindByNameAsync(User.Identity.Name);
