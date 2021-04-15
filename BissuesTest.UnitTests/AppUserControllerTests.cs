@@ -238,7 +238,7 @@ namespace BissuesTest.UnitTests
                 Assert.Equal("Details", redirectResult.ActionName);
 
                 var notification = context.Notifications.Where(n => n.Id == id).FirstOrDefault();
-                Assert.Equal(null, notification);
+                Assert.Null(notification);
             }
         }
     }
