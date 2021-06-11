@@ -16,6 +16,7 @@ using System.Security.Claims;
 using Westwind.AspNetCore.Markdown;
 using Ganss.XSS;
 using Microsoft.Extensions.Logging;
+using Bissues.Services;
 
 namespace Bissues.Controllers
 {
@@ -27,12 +28,14 @@ namespace Bissues.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly ILogger<BissuesController> _logger;
+        private readonly ISanitizer sanitizer;
 
-        public BissuesController(ApplicationDbContext context, UserManager<AppUser> userManager, ILogger<BissuesController> logger)
+        public BissuesController(ApplicationDbContext context, UserManager<AppUser> userManager, ILogger<BissuesController> logger, ISanitizer sani)
         {
             _context = context;
             _userManager = userManager;
             _logger = logger;
+            sanitizer = sani;
         }
 
         // GET: Bissues
@@ -267,7 +270,7 @@ namespace Bissues.Controllers
 
         private string SanitizeString(string str)
         {
-            var sanitizer = new HtmlSanitizer();
+            // var sanitizer = new HtmlSanitizer();
             var original = str.ToString();
             var sanitized = sanitizer.Sanitize(str);
             if(original != sanitized)

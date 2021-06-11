@@ -11,6 +11,7 @@ using Bissues;
 using Bissues.Controllers;
 using Bissues.Data;
 using Bissues.Models;
+using Bissues.Services;
 using Bissues.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -31,6 +32,7 @@ namespace BissuesTest.UnitTests
         private UserManager<AppUser> _userManager;
         private DbContextOptions<ApplicationDbContext> _options;
         private NullLogger<BissuesController> _logger = new NullLogger<BissuesController>();
+        private ISanitizer sanitizer = new Sanitizer();
         public BissuesControllerTests()
         {
             var store = new Mock<IUserStore<AppUser>>();
@@ -51,7 +53,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 var result = _sut.Index(id);
 
                 var viewResult = Assert.IsType<ViewResult>(result);
@@ -69,7 +71,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 var result = _sut.Index(index);
 
                 var viewResult = Assert.IsType<ViewResult>(result);
@@ -87,7 +89,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 var result = await _sut.Details(id,1);
 
                 var viewResult = Assert.IsType<NotFoundResult>(result);
@@ -104,7 +106,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 var result = await _sut.Details(id,1);
 
                 var viewResult = Assert.IsType<NotFoundResult>(result);
@@ -137,7 +139,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 var result = await _sut.Details(id,currentIndex);
 
                 var viewResult = Assert.IsType<ViewResult>(result);
@@ -166,7 +168,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 var result = await _sut.Details(id,currentIndex);
 
                 var viewResult = Assert.IsType<ViewResult>(result);
@@ -196,7 +198,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 var result = await _sut.Details(id,currentIndex);
 
                 var viewResult = Assert.IsType<ViewResult>(result);
@@ -211,7 +213,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 var result = _sut.Create(pid);
                 var viewResult = Assert.IsType<ViewResult>(result);
             }
@@ -225,7 +227,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 var result = _sut.Create(pid);
                 var viewResult = Assert.IsType<ViewResult>(result);
             }
@@ -283,7 +285,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, mockUser.Object, _logger);
+                _sut = new BissuesController(context, mockUser.Object, _logger, sanitizer);
                 _sut.ControllerContext = concontext;
                 var result = await _sut.Create(bissue);
                 var viewResult = Assert.IsType<RedirectToActionResult>(result);
@@ -298,7 +300,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 var result = await _sut.Edit(id);
                 var viewResult = Assert.IsType<NotFoundResult>(result);
             }
@@ -312,7 +314,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 var result = await _sut.Edit(id);
                 var viewResult = Assert.IsType<NotFoundResult>(result);
             }
@@ -368,7 +370,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, mockUser.Object, _logger);
+                _sut = new BissuesController(context, mockUser.Object, _logger, sanitizer);
                 _sut.ControllerContext = concontext;
                 var result = await _sut.Edit(id);
                 var viewResult = Assert.IsType<ViewResult>(result);
@@ -425,7 +427,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, mockUser.Object, _logger);
+                _sut = new BissuesController(context, mockUser.Object, _logger, sanitizer);
                 _sut.ControllerContext = concontext;
                 var result = await _sut.Edit(id);
                 var viewResult = Assert.IsType<ForbidResult>(result);
@@ -440,7 +442,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 var result = await _sut.Delete(id);
                 var viewResult = Assert.IsType<NotFoundResult>(result);
             }
@@ -454,7 +456,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 var result = await _sut.Delete(id);
                 var viewResult = Assert.IsType<NotFoundResult>(result);
             }
@@ -515,7 +517,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, mockUser.Object, _logger);
+                _sut = new BissuesController(context, mockUser.Object, _logger, sanitizer);
                 _sut.ControllerContext = concontext;
                 var result = await _sut.Delete(id);
                 var viewResult = Assert.IsType<ForbidResult>(result);
@@ -577,7 +579,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, mockUser.Object, _logger);
+                _sut = new BissuesController(context, mockUser.Object, _logger, sanitizer);
                 _sut.ControllerContext = concontext;
                 var result = await _sut.Delete(id);
                 var viewResult = Assert.IsType<ViewResult>(result);
@@ -639,7 +641,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, mockUser.Object, _logger);
+                _sut = new BissuesController(context, mockUser.Object, _logger, sanitizer);
                 _sut.ControllerContext = concontext;
                 var result = await _sut.DeleteConfirmed(id);
                 var viewResult = Assert.IsType<RedirectToActionResult>(result);
@@ -703,7 +705,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, mockUser.Object, _logger);
+                _sut = new BissuesController(context, mockUser.Object, _logger, sanitizer);
                 _sut.ControllerContext = concontext;
                 var result = await _sut.DeleteConfirmed(id);
                 var viewResult = Assert.IsType<ForbidResult>(result);
@@ -718,7 +720,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 var result = _sut.Search(index,null);
                 var viewResult = Assert.IsType<ViewResult>(result);
             }
@@ -733,7 +735,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 var result = _sut.Search(index,query);
                 var viewResult = Assert.IsType<ViewResult>(result);
             }
@@ -748,7 +750,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 var result = _sut.Search(index,query);
                 var viewResult = Assert.IsType<ViewResult>(result);
             }
@@ -763,7 +765,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 var result = _sut.Search(index,query);
                 var viewResult = Assert.IsType<ViewResult>(result);
             }
@@ -777,7 +779,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 var result = await _sut.AddMeToo(id);
                 var viewResult = Assert.IsType<NotFoundResult>(result);
             }
@@ -791,7 +793,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 var result = await _sut.AddMeToo(id);
                 var viewResult = Assert.IsType<NotFoundResult>(result);
             }
@@ -826,7 +828,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 _sut.ControllerContext = concontext;
                 var result = await _sut.AddMeToo(id);
                 var viewResult = Assert.IsType<RedirectToActionResult>(result);
@@ -872,7 +874,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 _sut.ControllerContext = concontext;
                 var result = await _sut.AddMeToo(id);
                 var redirectResult = Assert.IsType<RedirectToActionResult>(result);
@@ -892,7 +894,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, _userManager, _logger);
+                _sut = new BissuesController(context, _userManager, _logger, sanitizer);
                 var result = await _sut.Edit(id,bissue);
                 var viewResult = Assert.IsType<NotFoundResult>(result);
             }
@@ -939,7 +941,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, mockUser.Object, _logger);
+                _sut = new BissuesController(context, mockUser.Object, _logger, sanitizer);
                 _sut.ControllerContext = concontext;
                 var result = await _sut.Edit(id,bissue);
                 var viewResult = Assert.IsType<ForbidResult>(result);
@@ -999,7 +1001,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new BissuesController(context, mockUser.Object, _logger);
+                _sut = new BissuesController(context, mockUser.Object, _logger, sanitizer);
                 _sut.ControllerContext = concontext;
                 var result = await _sut.Edit(id,bissue);
                 var viewResult = Assert.IsType<RedirectToActionResult>(result);
@@ -1059,7 +1061,7 @@ namespace BissuesTest.UnitTests
         //     // Assert
         //     using (var context = new ApplicationDbContext(_options))
         //     {
-        //         _sut = new BissuesController(context, mockUser.Object, _logger);
+        //         _sut = new BissuesController(context, mockUser.Object, _logger, sanitizer);
         //         _sut.ControllerContext = concontext;
         //         var result = await _sut.Create(bissue);
         //         var viewResult = Assert.IsType<RedirectToActionResult>(result);

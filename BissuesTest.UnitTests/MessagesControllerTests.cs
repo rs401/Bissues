@@ -6,6 +6,7 @@ using Bissues;
 using Bissues.Controllers;
 using Bissues.Data;
 using Bissues.Models;
+using Bissues.Services;
 using Bissues.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -26,6 +27,7 @@ namespace BissuesTest.UnitTests
         private UserManager<AppUser> _userManager;
         private DbContextOptions<ApplicationDbContext> _options;
         private NullLogger<MessagesController> _logger = new NullLogger<MessagesController>();
+        private ISanitizer sanitizer = new Sanitizer();
         public MessagesControllerTests()
         {
             var store = new Mock<IUserStore<AppUser>>();
@@ -56,7 +58,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, _userManager, _logger);
+                _sut = new MessagesController(context, _userManager, _logger, sanitizer);
                 var result = await _sut.Index();
 
                 var viewResult = Assert.IsType<ViewResult>(result);
@@ -90,7 +92,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, _userManager, _logger);
+                _sut = new MessagesController(context, _userManager, _logger, sanitizer);
                 var result = _sut.Create(id);
 
                 var viewResult = Assert.IsType<ViewResult>(result);
@@ -106,7 +108,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, _userManager, _logger);
+                _sut = new MessagesController(context, _userManager, _logger, sanitizer);
                 var result = _sut.Create(id);
 
                 var viewResult = Assert.IsType<ViewResult>(result);
@@ -168,7 +170,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, mockUser.Object, _logger);
+                _sut = new MessagesController(context, mockUser.Object, _logger, sanitizer);
                 _sut.ControllerContext = concontext;
                 var result = await _sut.Create(msg);
 
@@ -186,7 +188,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, _userManager, _logger);
+                _sut = new MessagesController(context, _userManager, _logger, sanitizer);
                 var result = await _sut.Edit(id);
 
                 var viewResult = Assert.IsType<NotFoundResult>(result);
@@ -203,7 +205,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, _userManager, _logger);
+                _sut = new MessagesController(context, _userManager, _logger, sanitizer);
                 var result = await _sut.Edit(id);
 
                 var viewResult = Assert.IsType<NotFoundResult>(result);
@@ -261,7 +263,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, mockUser.Object, _logger);
+                _sut = new MessagesController(context, mockUser.Object, _logger, sanitizer);
                 _sut.ControllerContext = concontext;
                 var result = await _sut.Edit(id);
 
@@ -319,7 +321,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, mockUser.Object, _logger);
+                _sut = new MessagesController(context, mockUser.Object, _logger, sanitizer);
                 _sut.ControllerContext = concontext;
                 var result = await _sut.Edit(id);
 
@@ -384,7 +386,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, mockUser.Object, _logger);
+                _sut = new MessagesController(context, mockUser.Object, _logger, sanitizer);
                 _sut.ControllerContext = concontext;
                 var result = await _sut.Edit(id, msg);
 
@@ -451,7 +453,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, mockUser.Object, _logger);
+                _sut = new MessagesController(context, mockUser.Object, _logger, sanitizer);
                 _sut.ControllerContext = concontext;
                 var result = await _sut.Edit(badId, msg);
 
@@ -517,7 +519,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, mockUser.Object, _logger);
+                _sut = new MessagesController(context, mockUser.Object, _logger, sanitizer);
                 _sut.ControllerContext = concontext;
                 var result = await _sut.Edit(id, msg);
 
@@ -583,7 +585,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, mockUser.Object, _logger);
+                _sut = new MessagesController(context, mockUser.Object, _logger, sanitizer);
                 _sut.ControllerContext = concontext;
                 var result = await _sut.Delete(id);
 
@@ -648,7 +650,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, mockUser.Object, _logger);
+                _sut = new MessagesController(context, mockUser.Object, _logger, sanitizer);
                 _sut.ControllerContext = concontext;
                 var result = await _sut.Delete(id);
 
@@ -666,7 +668,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, _userManager, _logger);
+                _sut = new MessagesController(context, _userManager, _logger, sanitizer);
                 var result = await _sut.Delete(id);
 
                 var viewResult = Assert.IsType<NotFoundResult>(result);
@@ -683,7 +685,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, _userManager, _logger);
+                _sut = new MessagesController(context, _userManager, _logger, sanitizer);
                 var result = await _sut.Delete(id);
 
                 var viewResult = Assert.IsType<NotFoundResult>(result);
@@ -705,7 +707,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, _userManager, _logger);
+                _sut = new MessagesController(context, _userManager, _logger, sanitizer);
                 var result = await _sut.DeleteConfirmed(id);
                 var delMsg = await context.Messages.FirstOrDefaultAsync(m => m.Id == id);
                 Assert.Null(delMsg);
@@ -722,7 +724,7 @@ namespace BissuesTest.UnitTests
             // Assert
             using (var context = new ApplicationDbContext(_options))
             {
-                _sut = new MessagesController(context, _userManager, _logger);
+                _sut = new MessagesController(context, _userManager, _logger, sanitizer);
                 var result = await _sut.DeleteConfirmed(id);
                 var viewResult = Assert.IsType<RedirectToActionResult>(result);
             }

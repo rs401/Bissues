@@ -43,6 +43,7 @@ namespace Bissues
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<ISanitizer, Sanitizer>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
             services.AddControllersWithViews();
         }

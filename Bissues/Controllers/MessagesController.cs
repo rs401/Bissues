@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Ganss.XSS;
 using Microsoft.Extensions.Logging;
+using Bissues.Services;
 
 namespace Bissues.Controllers
 {
@@ -23,12 +24,14 @@ namespace Bissues.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly ILogger<MessagesController> _logger;
+        private readonly ISanitizer sanitizer;
 
-        public MessagesController(ApplicationDbContext context, UserManager<AppUser> userManager, ILogger<MessagesController> logger)
+        public MessagesController(ApplicationDbContext context, UserManager<AppUser> userManager, ILogger<MessagesController> logger, ISanitizer sani)
         {
             _context = context;
             _userManager = userManager;
             _logger = logger;
+            sanitizer = sani;
         }
 
         // GET: Messages
@@ -102,7 +105,7 @@ namespace Bissues.Controllers
         }
         private string SanitizeString(string str)
         {
-            var sanitizer = new HtmlSanitizer();
+            // var sanitizer = new HtmlSanitizer();
             var original = str.ToString();
             var sanitized = sanitizer.Sanitize(str);
             if(original != sanitized)
